@@ -1,20 +1,26 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import Head from 'next/head';
+import Image from 'next/image';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ScaleFade, Heading, Link, Stack, Box, Button, Container, Center, VStack } from "@chakra-ui/react";
-import Navbar from '../components/Navbar';
-import NavbarSpace from '../components/NavbarSpace';
+import Navbar from '../../components/Navbar';
+import NavbarSpace from '../../components/NavbarSpace';
 import { FcGoogle } from 'react-icons/fc';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../../lib/auth';
 
-export default function Home() {
+export default function Chats() {
   const { auth, loading } = useAuth();
   const router = useRouter();
-
+  useEffect(() => {
+    if (!loading && !auth) {
+        router.replace('/marketplace');
+    }
+  }, [auth, loading, router]);
+  
   return (
     <div>
       <Head>
-        <title>Cloud Reservation</title>
+        <title>Chats</title>
         <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
@@ -25,7 +31,7 @@ export default function Home() {
           <Center mt={10}>
             <VStack spacing="4">
               <Heading fontSize="3xl" mb={2}>
-                Hello, Welcome to Cloud Reservation!
+                Chats
               </Heading>
             </VStack>
           </Center>

@@ -2,19 +2,19 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router';
 import { ScaleFade, Heading, Link, Stack, Box, Button, Container, Center, VStack } from "@chakra-ui/react";
-import Navbar from '../components/Navbar';
-import NavbarSpace from '../components/NavbarSpace';
+import Navbar from '../../components/Navbar';
+import NavbarSpace from '../../components/NavbarSpace';
 import { FcGoogle } from 'react-icons/fc';
-import { useAuth } from '../lib/auth';
+import { useAuth } from '../../lib/auth';
 
-export default function Home() {
+export default function Help() {
   const { auth, loading } = useAuth();
   const router = useRouter();
 
   return (
     <div>
       <Head>
-        <title>Cloud Reservation</title>
+        <title>Help</title>
         <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
@@ -25,7 +25,7 @@ export default function Home() {
           <Center mt={10}>
             <VStack spacing="4">
               <Heading fontSize="3xl" mb={2}>
-                Hello, Welcome to Cloud Reservation!
+                Help
               </Heading>
             </VStack>
           </Center>
