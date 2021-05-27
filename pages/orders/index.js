@@ -8,7 +8,7 @@ import NavbarSpace from '../../components/NavbarSpace';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../../lib/auth';
 
-export default function Purchases() {
+export default function Orders() {
   const { auth, loading } = useAuth();
   const router = useRouter();
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function Purchases() {
   return (
     <div>
       <Head>
-        <title>Purchases</title>
+        <title>Orders</title>
         <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
@@ -31,7 +31,7 @@ export default function Purchases() {
           <Center mt={10}>
             <VStack spacing="4">
               <Heading fontSize="3xl" mb={2}>
-                Purchases
+                Orders
               </Heading>
             </VStack>
           </Center>

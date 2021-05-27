@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { getSignature, uploadImages, uploadVideo, addNewService } from '../../lib/db';
+import { getSignature, uploadImages, uploadVideo, updateService } from '../../lib/db';
 import { motion } from "framer-motion";
 import ServiceForm from '../forms/ServiceForm';
 import { Flex, useToast,
@@ -13,12 +13,26 @@ import { Flex, useToast,
     CircularProgressLabel,
 } from '@chakra-ui/react';
 
-export default function AddService({auth}) {
+const getDetails = (data) => {
+    const temp = {
+        name: data.name,
+        description: data.description,
+    };
+    if (data.serviceType === 'service') {
+        temp['minPrice'] = data.minPrice;
+        temp['maxPrice'] = data.maxPrice;
+    }
+    else {
+        temp['price'] = data.price;
+    }
+    return temp;
+}
+
+export default function EditService({auth, serviceId, publicData}) {
     const router = useRouter();
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadingModal, setUploadingModal] = useState(false);
     const toast = useToast();
-
     const completeFormHandler = (data) => {
         setUploadingModal(true);
         getSignature((credentials) => {
@@ -35,22 +49,22 @@ export default function AddService({auth}) {
                 }, (videoUrl) => {
                     console.log('uploaded video');
                     console.log(videoUrl);
-                    addServiceToFirebase(data, imageUrls, videoUrl);
+                    updateServiceToFirebase(data, imageUrls, videoUrl);
                 })
             })
         });
     }
-    const addServiceToFirebase = (data, imageUrls, videoUrl) => {
+    const updateServiceToFirebase = (data, imageUrls, videoUrl) => {
         const temp = {};
         if (data.serviceType === 'service') {
-            temp['minPrice'] = parseFloat(data.details.minPrice.toFixed(2));
-            temp['maxPrice'] = parseFloat(data.details.maxPrice.toFixed(2));
+            temp['minPrice'] = data.details.minPrice;
+            temp['maxPrice'] = data.details.maxPrice;
             temp['availableDays'] = data.availableDays;
         }
         else {
-            temp['price'] = parseFloat(data.details.price.toFixed(2));
+            temp['price'] = data.details.price;
         }
-        addNewService(auth,
+        updateService(auth, serviceId,
         {
             type: data.serviceType,
             name: data.details.name,
@@ -59,18 +73,18 @@ export default function AddService({auth}) {
             imageUrls,
             videoUrl
         },
-        (serviceId) => {
+        () => {
             // Success
             console.log("Firebase Success");
             setUploadProgress(100);
             toast({
-                title: `Succesfully created service!`,
+                title: `Succesfully updated service!`,
                 description: "Cheers! 😃",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
             });
-            router.push(`/services/${serviceId}`);
+            router.reload();
         },
         () => {
             // Error
@@ -85,11 +99,26 @@ export default function AddService({auth}) {
             exit={{ rotateY: -90 }}
             transition={{ type: "tween" }}
         >
-        <ServiceForm update={false} completeFormHandler={completeFormHandler} />
+        <ServiceForm update={true} completeFormHandler={completeFormHandler}
+            initialServiceType={publicData.type}
+            initialDetails={getDetails(publicData)}
+            initialDays={publicData.availableDays ? publicData.availableDays : []}
+            initialImageFiles={publicData.imageUrls ? publicData.imageUrls.map((url) => ({
+                source: url,
+                options: {
+                    type: "local"
+                }
+            })) : []}
+            initialVideoFile={publicData.videoUrl ? [{
+                source: publicData.videoUrl,
+                options:{
+                    type: "local"
+                }
+            }] : []} />
         <Modal motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={uploadingModal} onClose={() => {setUploadingModal(false)}}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Creating service...</ModalHeader>
+                <ModalHeader>Updating service...</ModalHeader>
                 <ModalBody>
                     <Flex align="center" justify="center">
                         <CircularProgress value={uploadProgress} color="green.400">

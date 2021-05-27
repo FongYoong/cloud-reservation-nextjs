@@ -105,7 +105,7 @@ export default function Login() {
         </ScaleFade>
 
         {/* Auth Link account dialog */}
-        <Modal size="lg" closeOnOverlayClick={false} isOpen={linkDialogState.isOpen} onClose={linkDialogState.onClose}>
+        <Modal size="lg" motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={linkDialogState.isOpen} onClose={linkDialogState.onClose}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>

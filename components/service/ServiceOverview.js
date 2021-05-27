@@ -14,13 +14,7 @@ export default function ServiceOverview() {
                 <Heading fontSize="xl" mb={2}>
                     ServiceOverview
                 </Heading>
-                <Button leftIcon={<IoIosAddCircleOutline />} colorScheme="teal" onClick={() => {}}>
-                    ServiceOverview
-                </Button>
-
             </VStack>
         </motion.div>
     )
 }
-
-// <ScaleFade initialScale={0.9} in={true}>

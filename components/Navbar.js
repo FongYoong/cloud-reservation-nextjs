@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
 import { getUserProfile } from '../lib/db';
 import NavbarButton from './NavbarButton';
-import { useColorMode, useColorModeValue, Skeleton, SkeletonText, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
+import { useColorMode, useColorModeValue, Skeleton, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
 useBreakpointValue,
 AlertDialog,
 AlertDialogBody,
@@ -57,7 +57,7 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
             if (previousScrollPos > currentScrollPos) {
                 setTopOffset('0');
             } else {
-                setTopOffset('-4em');
+                setTopOffset(breakpoint==="base" ? '-4em':'-5em');
             }
             setPreviousScrollPos(currentScrollPos);
         }
@@ -70,9 +70,9 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
     return (
         <>
         <Skeleton isLoaded={!loading}>
-            <Flex transition='top 0.3s' zIndex={1000} bg={bg} position="fixed" w="100%" top={topOffset} align="center" justify="space-between" p={breakpoint==="base"? "0.4em": "1.5em"}>
+            <Flex transition='top 1s' zIndex={1000} bg={bg} position="fixed" w="100%" top={topOffset} align="center" justify="space-between" p={breakpoint==="base"? "0.4em": "1.5em"}>
                 <HStack spacing={4}>
-                    {showDrawerIcon && drawerState && auth && breakpoint==="base" && <>
+                    {showDrawerIcon && drawerState && breakpoint==="base" && <>
                         <IconButton variant="outline" colorScheme="teal" icon={<HiMenu />} onClick={drawerState.onOpen} />
                         <Drawer zIndex={2000} placement="left" onClose={drawerState.onClose} isOpen={drawerState.isOpen}>
                             <DrawerOverlay />
@@ -92,12 +92,14 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                         Cloud Reservation
                     </Heading>
                     <IconButton variant="outline" colorScheme="yellow" ml={4} icon={colorMode === "light" ? <BsSun /> : <BsMoon />} onClick={toggleColorMode} />
-                    {auth && breakpoint!=="base" && <>
+                    { breakpoint!=="base" &&
                         <NavbarButton path="/marketplace" icon={<IoStorefront />} >
                             Marketplace
                         </NavbarButton>
-                        <NavbarButton path="/purchases" icon={<MdLocalGroceryStore />} >
-                            My Purchases
+                    }
+                    {auth && breakpoint!=="base" && <>
+                        <NavbarButton path="/orders" icon={<MdLocalGroceryStore />} >
+                            My Orders
                         </NavbarButton>
                         <NavbarButton path="/services" icon={<MdWork />} >
                             My Services
@@ -109,9 +111,9 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                 </HStack>
                 <HStack spacing={4}>
                     {auth ? (<>
-                        <Menu autoSelect={false}>
+                        <Menu autoSelect={false} isLazy={true} >
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                                <MenuButton as={Avatar} cursor="pointer" _hover={{ boxShadow:"outline" }} boxShadow="lg" name={profile.username} email={profile.email} src={profile.profile_picture}>
+                                <MenuButton as={Avatar} cursor="pointer" _hover={{ boxShadow:"outline" }} boxShadow="lg" name={profile.username} src={profile.profile_picture}>
                                     {profile.email && <AvatarBadge boxSize="1.25em" bg="green.500" />}
                                 </MenuButton>
                             </motion.button>
@@ -122,7 +124,7 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                                 </MenuGroup>
                                 <MenuDivider />
                                 <MenuItem icon={<IoStorefront />} onClick={() => router.push('/marketplace')}>Marketplace</MenuItem>
-                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/purchases')}>Purchases</MenuItem>
+                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/orders')}>Orders</MenuItem>
                                 <MenuItem icon={<MdWork />} onClick={() => router.push('/services')}>Services</MenuItem>
                                 <MenuItem icon={<RiChatSmile3Line />} onClick={() => router.push('/chats')}>Chats</MenuItem>
                                 <MenuDivider />
