@@ -37,13 +37,11 @@ export default function Services() {
           <Flex direction="column" align="center" justify="center">
             <Flex p={4} w="100%" align="start" justify="space-between">
               {breakpoint!=="base" && <ServicesDrawer {...drawerProps} />}
-              <Box flex={5}>
-                <AnimatePresence exitBeforeEnter>
-                    {serviceMode === "add" && <AddService key="add" auth={auth} />}
-                    {serviceMode === "overview" && <ServicesOverview key="overview" auth={auth} />}
-                    {serviceMode === "all" && <AllServices key="all" auth={auth} />}
-                </AnimatePresence>
-              </Box>
+              <AnimatePresence exitBeforeEnter>
+                  {serviceMode === "add" && <AddService key="add" auth={auth} />}
+                  {serviceMode === "overview" && <ServicesOverview key="overview" auth={auth} />}
+                  {serviceMode === "all" && <AllServices key="all" auth={auth} />}
+              </AnimatePresence>
             </Flex>
           </Flex>
         </ScaleFade>

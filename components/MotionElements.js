@@ -28,7 +28,6 @@ export function MotionButton({children, hidden, disabled, getAttention, icon, co
                 repeatDelay: 0.5,
             },
         }
-        
     }
     let animateState;
     if (hidden) {
@@ -87,9 +86,10 @@ export function MotionGetAttention({attentionType='rotate', hover=false, childre
 
     return (
         <Fade triggerOnce>
-            <motion.div variants={variants} animate={animateState} whileHover={{ scale: hover ? 1.1 : 1 }}
+            <motion.div variants={variants} animate={animateState} whileHover={{ scale: hover ? 1.1 : 1 } }
                 onMouseEnter={() => {setAnimateState('normal')}}
                 onMouseLeave={() => {setAnimateState(attentionType)}}
+                {...props}
             >
                 {children}
             </motion.div>

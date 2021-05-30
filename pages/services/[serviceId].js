@@ -83,14 +83,12 @@ export default function Service () {
                     <Flex direction="column" align="center" justify="center">
                         <Flex p={4} w="100%" align="start" justify="space-between">
                             {breakpoint!=="base" && <ServiceDrawer {...drawerProps} />}
-                            <Box flex={5}>
-                                <AnimatePresence exitBeforeEnter>
-                                    {serviceMode === "edit" && isOwner && <EditService key="edit" {...{serviceId, publicData, auth}} />}
-                                    {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData: publicData, auth}} />}
-                                    {serviceMode === "overview" && <ServiceOverview key="overview" {...{serviceId, publicData, auth}} />}
-                                    {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{serviceId, auth}} />}
-                                </AnimatePresence>
-                            </Box>
+                            <AnimatePresence exitBeforeEnter>
+                                {serviceMode === "edit" && isOwner && <EditService key="edit" {...{serviceId, publicData, auth}} />}
+                                {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData: publicData, auth}} />}
+                                {serviceMode === "overview" && <ServiceOverview key="overview" {...{serviceId, publicData, auth}} />}
+                                {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{serviceId, auth}} />}
+                            </AnimatePresence>
                         </Flex>
                     </Flex>
                 </ScaleFade>

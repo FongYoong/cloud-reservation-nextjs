@@ -1,11 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
-import { updateOrderStatus } from '../../lib/db';
+import { updateOrder, addServiceReview } from '../../lib/db';
 import { motion } from "framer-motion";
-import { MotionButton, MotionGetAttention } from '../MotionElements';
+import { MotionButton, MotionGetAttention, MotionBox } from '../MotionElements';
+import Ratings from '../Ratings';
 import UserAvatar from '../UserAvatar';
 import { CanvasRain } from '../CanvasRain';
-import { Calendar, formatEvents, calculateEventHours } from '../Calendar';
+import { Calendar, formatEvents, calculateEventHours, dateIsToday } from '../Calendar';
 import { Views } from "react-big-calendar";
 import { Img, Flex, Box, VStack, HStack, Button, Heading, Text, Textarea, Stat, StatLabel, StatNumber, StatHelpText, Divider, Spacer, Avatar, AvatarBadge,
 useBreakpointValue,
@@ -23,7 +24,7 @@ CircularProgress
 } from '@chakra-ui/react';
 
 import { FaRegSmile, FaRegSadCry } from 'react-icons/fa';
-import { MdDelete, MdAttachMoney } from 'react-icons/md';
+import { MdDelete, MdAttachMoney, MdCheckCircle, MdRateReview, MdStarBorder, MdStar } from 'react-icons/md';
 
 export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, servicePublicData, orderData}) {
     const router = useRouter();
@@ -40,7 +41,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     const acceptModalState = useDisclosure();
     const acceptHandler = () => {
         setIsLoading(true);
-        updateOrderStatus(auth, serviceId, orderId, {
+        updateOrder(auth, serviceId, orderId, {
             status: 'accepted',
             approvalRemarks: acceptRemarksRef.current.value,
         }, () => {
@@ -60,7 +61,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     const rejectModalState = useDisclosure();
     const rejectHandler = () => {
         setIsLoading(true);
-        updateOrderStatus(auth, serviceId, orderId, {
+        updateOrder(auth, serviceId, orderId, {
             status: 'rejected',
             approvalRemarks: rejectRemarksRef.current.value,
         }, () => {
@@ -80,13 +81,13 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     const payModalState = useDisclosure();
     const payHandler = () => {
         setIsLoading(true);
-        updateOrderStatus(auth, serviceId, orderId, {
+        updateOrder(auth, serviceId, orderId, {
             status: 'paidByUser',
         }, () => {
             toast({
                 title: `Succesfully paid for order!`,
                 description: "Cheers! 😃",
-                status: "error",
+                status: "success",
                 duration: 5000,
                 isClosable: true,
             });
@@ -96,18 +97,70 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
             alert("Firebase Error");
         });
     }
+    const completedModalState = useDisclosure();
+    const completedHandler = () => {
+        setIsLoading(true);
+        updateOrder(auth, serviceId, orderId, {
+            status: 'completed',
+        }, () => {
+            toast({
+                title: `This order is fulfilled!`,
+                description: "Cheers! 😃",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+            });
+            setIsLoading(false);
+            completedModalState.onClose();
+        }, () => {
+            alert("Firebase Error");
+        });
+    }
+    const [currentStars, setCurrentStars] = useState(0);
+    const clientReviewRef = useRef(null);
+    const clientReviewModalState = useDisclosure();
+    const reviewHandler = () => {
+        setIsLoading(true);
+        addServiceReview(auth, serviceId, orderId, {
+            clientId: orderData.userId,
+            stars: currentStars,
+            clientReview: clientReviewRef.current.value,
+        }, () => {
+            toast({
+                title: `Your review has been submitted!`,
+                description: "Cheers! 😃",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+            });
+            setIsLoading(false);
+            clientReviewModalState.onClose();
+        }, () => {
+            alert("Firebase Error");
+        });
+    }
+
     const sellerRemarksBg = useColorModeValue("purple.100", "purple.500");
     const priceBg = useColorModeValue("green.100", "green.500");
     //const priceBg2 = useColorModeValue("pink.100", "pink.500");
     const remarksBg = useColorModeValue("orange.100", "orange.500");
     const addressBg = useColorModeValue("yellow.100", "yellow.500");
-    const calendarBg = useColorModeValue("cyan.50", "cyan.600");
-    const calendarBg2 = useColorModeValue("cyan.100", "cyan.800");
+    const calendarBg = useColorModeValue("yellow.50", "orange.400");
+    const calendarBg2 = useColorModeValue("yellow.100", "orange.500");
+    const todayColor = useColorModeValue('#87b5ff', '#002054');
+
+    useEffect(() => {
+        if (!isServiceOwner && !orderData.reviewGiven && clientReviewRef.current) {
+            clientReviewRef.current.focus();
+        }
+    }, [])
 
     const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
     return (
-        <motion.div
+        <MotionBox
+            flex={5}
+            minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
             exit={{ rotateY: -90 }}
@@ -154,15 +207,24 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         borderRadius="full"
                         boxSize="20vh"
                         src="/images/sleeping.gif"
-                        alt="Waiting"
+                        alt="Rejected"
                     /> </>
                 }
                 {isServiceOwner && orderData.status === 'paidByUser' && <>
                     <MotionGetAttention attentionType='expand'>
                         <Text fontSize="xl" align="center" >
-                            <b> The user has <Text as='span' color='green.500'> paid </Text> for the order! <span role='img' aria-label="happy">😃</span> </b>
+                            <b> The user has <Text as='span' color='green.500'> paid </Text> for the order! <span role='img' aria-label="happy">🚀</span> <br />
+                                It&apos;s time for work!
+                            </b>
                         </Text>
-                    </MotionGetAttention> </>
+                    </MotionGetAttention>
+                    <Img
+                        borderRadius="full"
+                        boxSize="20vh"
+                        src="/images/work.gif"
+                        alt="Work"
+                    />
+                    </>
                 }
 
 {/* Client view */}
@@ -185,11 +247,11 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> The seller has <Text as='span' color='green.500'> approved </Text> your order! <span role='img' aria-label="happy">😃</span> </b>
                         </Text>
                     </MotionGetAttention>
-                    <motion.div whileHover={{ scale: 1.1 }} >
+                    <motion.div style={{width:'100%'}} whileHover={{ scale: 1.1 }} >
                         <VStack p={2} bg={sellerRemarksBg} borderWidth={2} borderRadius="lg" boxShadow="lg" >
                             <Text fontSize="md" > Seller remarks: </Text>
                             <Divider borderColor='black.300' />
-                            <Text whiteSpace="pre-wrap" fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
+                            <Text w='100%' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
                         </VStack>
                     </motion.div>
                     <MotionGetAttention>
@@ -204,17 +266,17 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> The seller has <Text as='span' color='red.500'> rejected </Text> your order! <span role='img' aria-label="sad">😢</span> </b>
                         </Text>
                     </MotionGetAttention>
-                    <motion.div whileHover={{ scale: 1.1 }} >
+                    <motion.div style={{width:'100%'}} whileHover={{ scale: 1.1 }} >
                         <VStack p={2} bg={sellerRemarksBg} borderWidth={2} borderRadius="lg" boxShadow="lg" >
                             <Text fontSize="md" > Seller remarks: </Text>
                             <Divider borderColor='black.300' />
-                            <Text whiteSpace="pre-wrap" fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
+                            <Text w='100%' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
                         </VStack>
                     </motion.div>
                    <Img
                         boxSize="20vh"
                         src="/images/angry.gif"
-                        alt="Waiting"
+                        alt="Rejected"
                     />
                     <MotionButton icon={<FaRegSadCry />} colorScheme={"red"} onClick={() => {setShowRain(!showRain)}} >
                         Make it rain!
@@ -232,10 +294,59 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                 {!isServiceOwner && orderData.status === 'paidByUser' && <>
                     <MotionGetAttention attentionType='expand'>
                         <Text fontSize="xl" align="center" >
-                            <b> Payment successful! <span role='img' aria-label="happy">😃</span> <br/>
-                            The seller is <Text as='span' color='green.500'> now working </Text> on your order! </b>
+                            <b> Payment successful! <span role='img' aria-label="happy">🚀</span> <br/>
+                            The seller is <Text as='span' color='orange.500'> now working </Text> on your order! </b>
                         </Text>
-                    </MotionGetAttention> </>
+                    </MotionGetAttention>
+                    <Divider borderColor='black.500' />
+                    <Text fontSize="xl" align="center" >
+                        <b> <Text as='span' color='green.500'> Click </Text> the button below
+                        <Text as='span' color='red.500'> ONLY </Text>
+                        after your order is completed by the seller. </b>
+                    </Text>
+                    <MotionButton icon={<MdCheckCircle />} colorScheme={"green"} onClick={completedModalState.onOpen} >
+                        My order has been fulfilled by the seller.
+                    </MotionButton> </>
+                }
+                {orderData.status === 'completed' && <>
+                    <MotionGetAttention attentionType='expand'>
+                        <Text fontSize="xl" align="center" >
+                            <b> The order is <Text as='span' color='green.500'> completed </Text> ! <span role='img' aria-label="happy">😃</span> </b>
+                        </Text>
+                    </MotionGetAttention>
+                    <Img
+                        boxSize="20vh"
+                        src="/images/happy.gif"
+                        alt="Happy"
+                    />
+                    {!isServiceOwner && !orderData.reviewGiven && <>
+                        <Divider borderColor='black.500' />
+                        <MotionGetAttention>
+                            <Text my={2} fontSize="xl" align="center" >
+                                <b> Please leave a review. </b>
+                            </Text>
+                        </MotionGetAttention>
+                        <Ratings onChange={setCurrentStars} />
+                        <Textarea borderWidth={2} size="sm" ref={clientReviewRef} defaultValue=''  placeholder="Say something positive!" />
+                        <MotionButton icon={<MdRateReview />} colorScheme={"green"}
+                            onClick={ () => {
+                                if(currentStars > 0) {
+                                    clientReviewModalState.onOpen();
+                                }
+                                else {
+                                    toast({
+                                    title: `Please choose the number of stars!`,
+                                    description: "",
+                                    status: "error",
+                                    duration: 3000,
+                                    isClosable: true,
+                                    });
+                                }
+                            }} >
+                            Submit Review
+                        </MotionButton> </>
+                    }
+                    </>
                 }
                 
                 <Divider borderColor='black.500' />
@@ -247,24 +358,37 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         </Heading>
                         <Box flex={1} />
                     </Flex>
-                    <OrderDetailsRow>
-                        <Text flex={2}> Ordered by: </Text>
+                    <OrderDetailsRow noExpand >
+                        <Text flex={2}> {isServiceOwner?'Ordered by:':'Seller:'} </Text>
                         <Flex flex={5} p={2} justify={breakpoint==='base'?'center':'start'} >
-                            <UserAvatar name='abc' src='abc' />
+                            {isServiceOwner? <UserAvatar uid={orderData.userId} placement='right' />
+                            : <UserAvatar uid={servicePublicData.ownerId} placement='right' />}
                         </Flex>
                     </OrderDetailsRow>
                     <OrderDetailsRow>
                         <Text flex={2}> Created on: </Text>
                         <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > {new Date(orderData.dateCreated).toDateString()} </Text>
                     </OrderDetailsRow>
+                    <OrderDetailsRow>
+                        <Text flex={2}> {isServiceOwner?'Your':'Client'} remarks: </Text>
+                        <Text flex={5} as='b' whiteSpace="pre-wrap" align={breakpoint==='base'?'center':'left'} >
+                            {orderData.details.userRemarks}
+                        </Text>
+                    </OrderDetailsRow>
+                    <OrderDetailsRow>
+                        <Text flex={2}> Address: </Text>
+                        <Text flex={5} as='b' whiteSpace="pre-wrap" align={breakpoint==='base'?'center':'left'} >
+                            {orderData.details.address}
+                        </Text>
+                    </OrderDetailsRow>
                     {servicePublicData.type === 'service' && <>
                         <OrderDetailsRow>
                             <Text flex={2} > {isServiceOwner?'Your':'Seller'} price range:  </Text>
-                            <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {servicePublicData.minPrice} ~ {servicePublicData.maxPrice} </Text>
+                            <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {servicePublicData.minPrice.toFixed(2)} ~ {servicePublicData.maxPrice.toFixed(2)} </Text>
                         </OrderDetailsRow>
                         <OrderDetailsRow>
                             <Text flex={2} > {isServiceOwner?"Client's":'Your'} price/hour: </Text>
-                            <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {orderData.details.proposedPricePerHour} </Text>
+                            <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {orderData.details.proposedPricePerHour.toFixed(2)} </Text>
                         </OrderDetailsRow>
                         <OrderDetailsRow>
                             <Text flex={2} > Total hours: </Text>
@@ -275,7 +399,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                     {servicePublicData.type === 'product' && <>
                         <OrderDetailsRow>
                             <Text flex={2} > {isServiceOwner?'Your':'Seller'} price per item:  </Text>
-                            <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {servicePublicData.price} </Text>
+                            <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {servicePublicData.price.toFixed(2)} </Text>
                         </OrderDetailsRow>
                         <OrderDetailsRow>
                             <Text flex={2} > Quantity: </Text>
@@ -285,7 +409,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                     </> }
                     <OrderDetailsRow bg={priceBg}>
                         <Text fontSize="lg" flex={2} > Total price: </Text>
-                        <Text fontSize="lg" flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {totalPrice}  </Text>
+                        <Text fontSize="lg" flex={5} as='b' align={breakpoint==='base'?'center':'left'} > RM {totalPrice.toFixed(2)}  </Text>
                     </OrderDetailsRow>
                 </VStack>
 
@@ -293,6 +417,11 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                 {servicePublicData.type === 'service' &&
                     <Box p={1} width="100%" _hover={{bg:calendarBg2}} bg={calendarBg} borderWidth={1} borderRadius="lg" >
                         <Calendar
+                            dayPropGetter={(date) => ({
+                                style: {
+                                    backgroundColor: dateIsToday(date) ? todayColor : '',
+                                }
+                            })}
                             resizable={false}
                             views={[Views.DAY, Views.WEEK, Views.AGENDA]}
                             defaultView={Views.AGENDA}
@@ -323,7 +452,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                     </ModalBody>
                 </ModalContent>
             </Modal>
-            <Modal initialFocusRef={acceptRemarksRef} motionPreset="scale" closeOnOverlayClick={isLoading} closeOnEsc={isLoading} isCentered={true} isOpen={acceptModalState.isOpen} onClose={acceptModalState.onClose}>
+            <Modal initialFocusRef={acceptRemarksRef} motionPreset="scale" closeOnOverlayClick={!isLoading} closeOnEsc={!isLoading} isCentered={true} isOpen={acceptModalState.isOpen} onClose={acceptModalState.onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Accept Order?</ModalHeader>
@@ -353,7 +482,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <Modal initialFocusRef={rejectRemarksRef} motionPreset="scale" closeOnOverlayClick={isLoading} closeOnEsc={isLoading} isCentered={true} isOpen={rejectModalState.isOpen} onClose={rejectModalState.onClose}>
+            <Modal initialFocusRef={rejectRemarksRef} motionPreset="scale" closeOnOverlayClick={!isLoading} closeOnEsc={!isLoading} isCentered={true} isOpen={rejectModalState.isOpen} onClose={rejectModalState.onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Reject Order?</ModalHeader>
@@ -383,7 +512,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            <Modal motionPreset="scale" closeOnOverlayClick={isLoading} closeOnEsc={isLoading} isCentered={true} isOpen={payModalState.isOpen} onClose={payModalState.onClose}>
+            <Modal motionPreset="scale" closeOnOverlayClick={!isLoading} closeOnEsc={!isLoading} isCentered={true} isOpen={payModalState.isOpen} onClose={payModalState.onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Pay for Order?</ModalHeader>
@@ -406,14 +535,60 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-        </motion.div>
+            <Modal motionPreset="scale" closeOnOverlayClick={!isLoading} closeOnEsc={!isLoading} isCentered={true} isOpen={completedModalState.isOpen} onClose={completedModalState.onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Is your order completed by the seller?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Flex direction="column" align="center" justify="center">
+                            <Text as="b"> Note: This cannot be undone. </Text>
+                        </Flex>
+                    </ModalBody>
+                    <ModalFooter>
+                        {isLoading ?
+                            <Flex align="center" justify="center">
+                                <CircularProgress isIndeterminate color="green.400" />
+                            </Flex>
+                            :
+                            <Button colorScheme="green" mr={3} onClick={completedHandler}>
+                                Yes!
+                            </Button>
+                        }
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal motionPreset="scale" closeOnOverlayClick={!isLoading} closeOnEsc={!isLoading} isCentered={true} isOpen={clientReviewModalState.isOpen} onClose={clientReviewModalState.onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Submit Review?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Flex direction="column" align="center" justify="center">
+                            <Text as="b"> Note: This cannot be undone. </Text>
+                        </Flex>
+                    </ModalBody>
+                    <ModalFooter>
+                        {isLoading ?
+                            <Flex align="center" justify="center">
+                                <CircularProgress isIndeterminate color="green.400" />
+                            </Flex>
+                            :
+                            <Button colorScheme="green" mr={3} onClick={reviewHandler}>
+                                Yes!
+                            </Button>
+                        }
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </MotionBox>
     )
 }
 
-const OrderDetailsRow = ({children, ...props}) => {
+const OrderDetailsRow = ({children, noExpand, ...props}) => {
     return (
         <Box {...props} width="100%" >
-            <motion.div whileHover={{ scale: 1.05, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} >
+            <motion.div whileHover={{ scale: noExpand? 1 : 1.05, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} >
                 <Flex px={4} py={2} align="center" justify="center" >
                     {children}
                 </Flex>

@@ -48,6 +48,13 @@ export const Calendar = (props) => {
     )
 }
 
+export const dateIsToday = (date) => {
+    const today = new Date();
+    return date.getDate() == today.getDate() &&
+            date.getMonth() == today.getMonth() &&
+            date.getFullYear() == today.getFullYear();
+}
+
 export const dateIsInFuture = (date) => {
     const currentDate = new Date();
     return date.getTime() > currentDate.getTime();
@@ -57,6 +64,18 @@ export const datesAreOnSameDay = (date1, date2) => {
     return date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate();
+}
+
+export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const checkIfUnavailableDay = (date, availableDays) => {
+    const dateIndex = date.getDay();
+    for (const d of availableDays) {
+        if (dateIndex === d) {
+            return false;
+        }
+    }
+    return true;
 }
 
 export const checkIfMinutesExist = (date1, date2) => {
@@ -78,8 +97,17 @@ export const checkIfMinutesExist = (date1, date2) => {
     }
 }
 
-export const checkIfEventClashes = (event, events) => {
-    
+export const checkIfEventClashes = ({start, end, id}, events) => {
+    for(const e of events) {
+        if (id === e.id) {
+            continue;
+        }
+        if ( (start < e.start && end > e.start) ||
+             (start >= e.start && start < e.end) ) {
+            return true;
+        }
+    }
+    return false;
 }
 
 export const generateEventId = (event) => {

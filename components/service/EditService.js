@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSignature, uploadImages, uploadVideo, updateService } from '../../lib/db';
-import { motion } from "framer-motion";
+import { MotionBox } from '../MotionElements';
 import ServiceForm from '../forms/ServiceForm';
 import { Flex, useToast,
     Modal,
@@ -18,7 +18,7 @@ const getDetails = (data) => {
         name: data.name,
         description: data.description,
     };
-    if (data.serviceType === 'service') {
+    if (data.type === 'service') {
         temp['minPrice'] = data.minPrice;
         temp['maxPrice'] = data.maxPrice;
     }
@@ -93,41 +93,43 @@ export default function EditService({auth, serviceId, publicData}) {
     }
 
     return (
-        <motion.div
+        <MotionBox
+            flex={5}
+            minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
             exit={{ rotateY: -90 }}
             transition={{ type: "tween" }}
         >
-        <ServiceForm update={true} completeFormHandler={completeFormHandler}
-            initialServiceType={publicData.type}
-            initialDetails={getDetails(publicData)}
-            initialDays={publicData.availableDays ? publicData.availableDays : []}
-            initialImageFiles={publicData.imageUrls ? publicData.imageUrls.map((url) => ({
-                source: url,
-                options: {
-                    type: "local"
-                }
-            })) : []}
-            initialVideoFile={publicData.videoUrl ? [{
-                source: publicData.videoUrl,
-                options:{
-                    type: "local"
-                }
-            }] : []} />
-        <Modal motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={uploadingModal} onClose={() => {setUploadingModal(false)}}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Updating service...</ModalHeader>
-                <ModalBody>
-                    <Flex align="center" justify="center">
-                        <CircularProgress value={uploadProgress} color="green.400">
-                            <CircularProgressLabel>{uploadProgress}%</CircularProgressLabel>
-                        </CircularProgress>
-                    </Flex>
-                </ModalBody>
-            </ModalContent>
-        </Modal>
-        </motion.div>
+            <ServiceForm update={true} completeFormHandler={completeFormHandler}
+                initialServiceType={publicData.type}
+                initialDetails={getDetails(publicData)}
+                initialDays={publicData.availableDays ? publicData.availableDays : []}
+                initialImageFiles={publicData.imageUrls ? publicData.imageUrls.map((url) => ({
+                    source: url,
+                    options: {
+                        type: "local"
+                    }
+                })) : []}
+                initialVideoFile={publicData.videoUrl ? [{
+                    source: publicData.videoUrl,
+                    options:{
+                        type: "local"
+                    }
+                }] : []} />
+            <Modal motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={uploadingModal} onClose={() => {setUploadingModal(false)}}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Updating service...</ModalHeader>
+                    <ModalBody>
+                        <Flex align="center" justify="center">
+                            <CircularProgress value={uploadProgress} color="green.400">
+                                <CircularProgressLabel>{uploadProgress}%</CircularProgressLabel>
+                            </CircularProgress>
+                        </Flex>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </MotionBox>
     )
 }

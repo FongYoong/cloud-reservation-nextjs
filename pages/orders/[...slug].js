@@ -37,6 +37,12 @@ export default function Order () {
     }, [slug]);
 
     useEffect(() => {
+        if (!loading && !auth) {
+            router.replace('/marketplace');
+        }
+    }, [auth, loading, router]);
+
+    useEffect(() => {
         if (serviceId) {
             getServicePublicDetails(serviceId, (data) => {
                 setServicePublicData(data);
@@ -83,7 +89,7 @@ export default function Order () {
     const drawerProps = {isServiceOwner,
         serviceName : servicePublicData ? servicePublicData.name : '',
         serviceType : servicePublicData ? servicePublicData.type : '',
-    orderId, orderMode, setOrderMode, drawerState};
+    serviceId, orderId, orderMode, setOrderMode, drawerState};
     const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
     return (
@@ -100,11 +106,9 @@ export default function Order () {
                     <Flex direction="column" align="center" justify="center">
                         <Flex p={4} w="100%" align="start" justify="space-between">
                             {breakpoint!=="base" && <OrderDrawer {...drawerProps} />}
-                            <Box flex={5}>
-                                <AnimatePresence exitBeforeEnter>
-                                    {orderMode === "status" && <OrderStatus key="status" {...{auth, isServiceOwner, serviceId, orderId, servicePublicData, orderData}} />}
-                                </AnimatePresence>
-                            </Box>
+                            <AnimatePresence exitBeforeEnter>
+                                {orderMode === "status" && <OrderStatus key="status" {...{auth, isServiceOwner, serviceId, orderId, servicePublicData, orderData}} />}
+                            </AnimatePresence>
                         </Flex>
                     </Flex>
                 </ScaleFade>

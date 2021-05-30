@@ -1,27 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
 import { MotionButton, MotionBox, formVariants, initialFormVariants } from '../MotionElements';
-import { Calendar, dateIsInFuture, datesAreOnSameDay, checkIfMinutesExist, generateEventId, calculateEventHours } from '../Calendar';
+import { Calendar, dateIsInFuture, datesAreOnSameDay, days, checkIfUnavailableDay, checkIfMinutesExist,
+    checkIfEventClashes, generateEventId, calculateEventHours
+} from '../Calendar';
 import { Views } from "react-big-calendar";
-import { useToast, Box, Flex, Text, Stack, HStack, VStack, Button, Heading, Stat, StatLabel, StatNumber, StatHelpText,
-    Divider,
-    Input,
-    InputGroup,
-    InputLeftAddon,
-    Textarea,
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    NumberInput,
-    NumberInputField,
+import { useToast, Box, Flex, Text, Stack, HStack, VStack, Button, Heading, Stat, StatLabel, StatNumber, StatHelpText, Tag, TagLabel, Divider,
+    useColorModeValue,
+    Input, InputGroup, InputLeftAddon, Textarea, NumberInput, NumberInputField,
+    FormControl, FormLabel, FormErrorMessage,
     useDisclosure,
-    Modal,
-    ModalCloseButton,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
+    Modal, ModalCloseButton, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter,
 } from '@chakra-ui/react';
 
 import { MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
@@ -102,6 +91,17 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
     const [tempEnd, setTempEnd] = useState(new Date());
 
     // Calendar
+    const [availableDays, _] = useState(serviceData.availableDays ? serviceData.availableDays.map((d) => {
+        if (d === '0') {
+            return 1;
+        }
+        else if (d === '6') {
+            return 0;
+        }
+        else {
+            return parseInt(d) + 1;
+        }
+    }) : null);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [totalHours, setTotalHours] = useState(0);
 
@@ -134,19 +134,41 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
         setCalendarEvents(newEvents);
         deleteEventModal.onClose();
     }
-    const validateEvent = (start, end, successCallback) => {
+    const validateEvent = (start, end, id, successCallback) => {
         if (dateIsInFuture(start)) {
-            if (checkIfMinutesExist(start, end) || start.getTime() === end.getTime()) {
+            if (checkIfUnavailableDay(start, availableDays)) {
                 toast({
-                    title: 'Choose an hourly interval!',
-                    description: "The price rate is hourly.",
+                    title: `${days[start.getDay()]} is unavailable!`,
+                    description: "Choose the days which are NOT red.",
                     status: "error",
                     duration: 3000,
                     isClosable: true,
                 });
             }
             else {
-                successCallback();
+                if (checkIfMinutesExist(start, end) || start.getTime() === end.getTime()) {
+                    toast({
+                        title: 'Choose an hourly interval!',
+                        description: "The price rate is hourly.",
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+                else {
+                    if (checkIfEventClashes({start, end, id}, calendarEvents)) {
+                        toast({
+                            title: 'Events must not clash!',
+                            description: "Services can only run one at a time.",
+                            status: "error",
+                            duration: 3000,
+                            isClosable: true,
+                        });
+                    }
+                    else {
+                        successCallback();
+                    }
+                }
             }
         }
         else {
@@ -189,7 +211,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                     end
                 } : existingEvent;
             });
-            validateEvent(start, end, () => {setCalendarEvents(nextEvents);});
+            validateEvent(start, end, event.id, () => {setCalendarEvents(nextEvents);});
         }
     }
     const onEventResize = ({ event, start, end }) => {
@@ -201,7 +223,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                 end,
             } : existingEvent;
         });
-        validateEvent(start, end, () => {setCalendarEvents(nextEvents);});
+        validateEvent(start, end, event.id, () => {setCalendarEvents(nextEvents);});
     }
     const onDropFromOutside = ({ start, end }) => {
         const event = {
@@ -216,11 +238,21 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
     const handleDragStart = event => {
         setDraggedEvent(event);
     }
-    console.log(details);
 
-    console.log(calendarEvents);
+    const dayNormalColor = useColorModeValue('#bdffe3', '#02b368');
+    const dayUnavailableColor = useColorModeValue('#ff5a47', '#ed1800');
+    const dayPastColor = useColorModeValue('#ed1800', '#b30000');
 
-    // -MaPTTtZR88pljfYJFh3
+    const getDayColor = (date) => {
+        if (!dateIsInFuture(date)) {
+            return dayPastColor;
+        }
+        else if (checkIfUnavailableDay(date, availableDays)) {
+            return dayUnavailableColor;
+        }
+        return dayNormalColor;
+    }
+    
     return (
         <motion.div
             initial={{ rotateY: 90 }}
@@ -339,18 +371,38 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                         <Heading m="4" textAlign="center">
                             Service Hours
                         </Heading>
-                        <motion.div whileHover={{ scale: 1.1 }} >
-                            <Stat p={2} borderWidth={2} borderRadius="lg">
-                                <StatLabel>Total Price</StatLabel>
-                                <StatNumber>RM {totalHours * (details.proposedPricePerHour)}</StatNumber>
-                                <StatHelpText>Hours: {totalHours}</StatHelpText>
-                                <StatHelpText>Per Hour: RM {details.proposedPricePerHour}</StatHelpText>
-                                <StatHelpText>Events: {calendarEvents.length}</StatHelpText>
-                            </Stat>
-                        </motion.div>
+                        <HStack>
+                            <motion.div whileHover={{ scale: 1.1 }} >
+                                <Stat p={2} borderWidth={2} borderRadius="lg">
+                                    <StatLabel>Total Price</StatLabel>
+                                    <StatNumber>RM {totalHours * (details.proposedPricePerHour)}</StatNumber>
+                                    <StatHelpText>Hours: {totalHours}</StatHelpText>
+                                    <StatHelpText>Per Hour: RM {details.proposedPricePerHour}</StatHelpText>
+                                    <StatHelpText>Events: {calendarEvents.length}</StatHelpText>
+                                </Stat>
+                            </motion.div>
+                            <motion.div whileHover={{ scale: 1.1 }} >
+                                <VStack p={2} >
+                                    <Tag size="lg" bg={dayNormalColor} borderRadius="full">
+                                        <TagLabel> • Available Days </TagLabel>
+                                    </Tag>
+                                    <Tag size="lg" bg={dayUnavailableColor} borderRadius="full">
+                                        <TagLabel textColor='white' > • Unavailable Days </TagLabel>
+                                    </Tag>
+                                    <Tag size="lg" bg={dayPastColor} borderRadius="full">
+                                        <TagLabel textColor='white' > • Past Days </TagLabel>
+                                    </Tag>
+                                </VStack>
+                            </motion.div>
+                        </HStack>
                         <Divider />
                         <Box width="100%" height="30em" >
                             <Calendar
+                                dayPropGetter={(date) => ({
+                                    style: {
+                                        backgroundColor: getDayColor(date)
+                                    }
+                                })}
                                 views={[Views.DAY, Views.WEEK, Views.AGENDA]}
                                 defaultView={Views.WEEK}
                                 events={calendarEvents}
@@ -366,7 +418,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                                     deleteEventModal.onOpen();
                                 }}
                                 onSelectSlot={({start,end}) => {
-                                    validateEvent(start, end, () => {
+                                    validateEvent(start, end, null, () => {
                                         setTempTitle('');
                                         setTempStart(start);
                                         setTempEnd(end);

@@ -1,10 +1,12 @@
-import { motion } from "framer-motion";
+import { MotionBox } from '../MotionElements';
 import { ScaleFade, Box, VStack, Button, Heading } from '@chakra-ui/react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 
 export default function ServicesOverview() {
     return (
-        <motion.div
+        <MotionBox
+            flex={5}
+            minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
             exit={{ rotateY: -90 }}
@@ -19,6 +21,6 @@ export default function ServicesOverview() {
                 </Button>
 
             </VStack>
-        </motion.div>
+        </MotionBox>
     )
 }

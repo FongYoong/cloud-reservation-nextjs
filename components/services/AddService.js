@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSignature, uploadImages, uploadVideo, addNewService } from '../../lib/db';
-import { motion } from "framer-motion";
+import { MotionBox } from '../MotionElements';
 import ServiceForm from '../forms/ServiceForm';
 import { Flex, useToast,
     Modal,
@@ -79,7 +79,9 @@ export default function AddService({auth}) {
     }
 
     return (
-        <motion.div
+        <MotionBox
+            flex={5}
+            minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
             exit={{ rotateY: -90 }}
@@ -99,6 +101,6 @@ export default function AddService({auth}) {
                 </ModalBody>
             </ModalContent>
         </Modal>
-        </motion.div>
+        </MotionBox>
     )
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { addNewOrder } from '../../lib/db';
-import { motion } from "framer-motion";
+import { MotionBox } from '../MotionElements';
 import OrderForm from '../forms/OrderForm';
 import { Flex, useToast,
     Modal,
@@ -50,24 +50,26 @@ export default function AddOrder({auth, serviceId, serviceData}) {
     }
 
     return (
-        <motion.div
+        <MotionBox
+            flex={5}
+            minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
             exit={{ rotateY: -90 }}
             transition={{ type: "tween" }}
         >
-        <OrderForm update={false} serviceType={serviceData.type} serviceData={serviceData} completeFormHandler={completeFormHandler} />
-        <Modal motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={creatingModal} onClose={() => {setCreatingModal(false)}}>
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>Creating order...</ModalHeader>
-                <ModalBody>
-                    <Flex align="center" justify="center">
-                        <CircularProgress isIndeterminate color="green.400" />
-                    </Flex>
-                </ModalBody>
-            </ModalContent>
-        </Modal>
-        </motion.div>
+            <OrderForm update={false} serviceType={serviceData.type} serviceData={serviceData} completeFormHandler={completeFormHandler} />
+            <Modal motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={creatingModal} onClose={() => {setCreatingModal(false)}}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Creating order...</ModalHeader>
+                    <ModalBody>
+                        <Flex align="center" justify="center">
+                            <CircularProgress isIndeterminate color="green.400" />
+                        </Flex>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </MotionBox>
     )
 }

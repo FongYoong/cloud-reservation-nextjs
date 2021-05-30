@@ -48,7 +48,7 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
     const [topOffset, setTopOffset] = useState('0');
     useEffect(() => {
         if (auth) {
-            getUserProfile(auth, (result) => {setProfile(result)});
+            getUserProfile(auth.uid, (result) => {setProfile(result)});
         }
     }, [auth]);
     useEffect(() => {
@@ -69,7 +69,6 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
     // {breakpoint!=="base" &&  <FcWorkflow size={70} />}
     return (
         <>
-        <Skeleton isLoaded={!loading}>
             <Flex transition='top 1s' zIndex={1000} bg={bg} position="fixed" w="100%" top={topOffset} align="center" justify="space-between" p={breakpoint==="base"? "0.4em": "1.5em"}>
                 <HStack spacing={4}>
                     {showDrawerIcon && drawerState && breakpoint==="base" && <>
@@ -142,7 +141,6 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                     )}
                 </HStack>
             </Flex>
-        </Skeleton>
 
         <AlertDialog
             isOpen={isLogoutOpen}
