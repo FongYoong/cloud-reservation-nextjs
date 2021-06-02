@@ -4,9 +4,10 @@ import { MotionBox } from '../MotionElements';
 import { Slide } from "react-awesome-reveal";
 import { Flex, VStack } from '@chakra-ui/react';
 import ServiceCard from './ServiceCard';
+import Searching from '../Searching';
 import Empty from '../Empty';
 
-export default function AllServices({servicesList}) {
+export default function AllServices({ fetchingServices, servicesList }) {
     const router = useRouter();
     const [targetCardKey, setTargetCardKey] = useState(null);
     return (
@@ -35,6 +36,12 @@ export default function AllServices({servicesList}) {
                     </Flex>
                     : 
                     <Empty />
+                }
+                {!fetchingServices && (!servicesList || servicesList.length == 0) &&
+                    <Empty />
+                }
+                {fetchingServices &&
+                    <Searching />
                 }
             </VStack>
         </MotionBox>

@@ -1,42 +1,71 @@
 import Head from 'next/head';
-import Image from 'next/image';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { ScaleFade, Heading, Link, Stack, Box, Button, Container, Center, VStack } from "@chakra-ui/react";
+import { useAuth } from '../../lib/auth';
+import { AnimatePresence } from "framer-motion";
+import { Flip } from "react-awesome-reveal";
+import { getUserOrders } from '../../lib/db';
+import { useBreakpointValue, ScaleFade, Flex } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
-import { FcGoogle } from 'react-icons/fc';
-import { useAuth } from '../../lib/auth';
+import Searching from '../../components/Searching';
+import Empty from '../../components/Empty';
 
 export default function Payments() {
   const { auth, loading } = useAuth();
   const router = useRouter();
+  const [fetchingOrders, setFetchingOrders] = useState(true);
+  const [ordersList, setOrdersList] = useState(null);
+
   useEffect(() => {
-    if (!loading && !auth) {
-        router.replace('/marketplace');
+    if (!loading) {
+      if (!auth) {
+          router.replace('/login');
+      }
+      else {
+        getUserOrders(true, auth, (data) => {
+          if (data) {
+              const array = Object.keys(data).map((key) => ({
+                orderId: key, ...data[key]
+              }));
+              array.reverse();
+              setOrdersList(array);
+          }
+          else {
+              setOrdersList(null);
+          }
+          setFetchingOrders(false);
+        });
+      }
     }
   }, [auth, loading, router]);
+
+  const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
   return (
     <div>
       <Head>
         <title>Payments</title>
-        <link rel="icon" href="../public/favicon.ico" />
+        <link rel="icon" href="../../public/favicon.ico" />
       </Head>
       <main>
         <Navbar />
         <NavbarSpace />
         <ScaleFade initialScale={0.9} in={true}>
-        <Container>
-          <Center mt={10}>
-            <VStack spacing="4">
-              <Heading fontSize="3xl" mb={2}>
-                Payments
-              </Heading>
-            </VStack>
-          </Center>
-        </Container>
+          <Flex p={2} w="100%" direction="column" align="center" justify="center">
+              <Flex w="100%" flexWrap='wrap' align="start" justify="start">
+                <Flip cascade duration={400} direction='vertical' triggerOnce >
+
+                </Flip>
+              </Flex>
+          </Flex>
         </ScaleFade>
+        {!fetchingOrders && !ordersList &&
+           <Empty />
+        }
+        {(fetchingOrders) &&
+          <Searching />
+        }
       </main>
       <footer>
 

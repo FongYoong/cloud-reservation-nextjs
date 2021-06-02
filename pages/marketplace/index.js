@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { Flip } from "react-awesome-reveal";
 import { getPublicServices } from '../../lib/db';
-import { ScaleFade, useBreakpointValue, useColorModeValue, Flex, Box, Heading, Text, Button, VStack } from "@chakra-ui/react";
+import { ScaleFade, Flex } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import ServiceCard from '../../components/marketplace/ServiceCard';
@@ -48,32 +48,32 @@ export default function Marketplace() {
         <ScaleFade initialScale={0.9} in={true}>
           <Flex p={2} w="100%" direction="column" align="center" justify="center">
               <Flex w="100%" flexWrap='wrap' align="start" justify="start">
-              <Flip cascade duration={400} direction='vertical' triggerOnce >
-              {services && services.map((data, i) => (
-                <ServiceCard blur={somethingHovered && targetCardKey !== i} hide={somethingClicked && targetCardKey !== i}  m={4} k={i} key={i} shallowData={data}
-                  onClick={() => {
-                    setTargetCardKey(i);
-                    setSomethingClicked(true);
-                    setTimeout(() => router.push(`/services/${data.serviceId}`), 400);
-                  }}
-                  onMouseEnter={ () => {
+                <Flip cascade duration={400} direction='vertical' triggerOnce >
+                {services && services.map((data, i) => (
+                  <ServiceCard blur={somethingHovered && targetCardKey !== i} hide={somethingClicked && targetCardKey !== i}  m={4} k={i} key={i} shallowData={data}
+                    onClick={() => {
                       setTargetCardKey(i);
-                      setSomethingHovered(true);
-                  }}
-                  onMouseLeave={ () => {
-                      setSomethingHovered(false);
-                  }}
-                />
-              ))
-              }
-              </Flip>
+                      setSomethingClicked(true);
+                      setTimeout(() => router.push(`/services/${data.serviceId}`), 400);
+                    }}
+                    onMouseEnter={ () => {
+                        setTargetCardKey(i);
+                        setSomethingHovered(true);
+                    }}
+                    onMouseLeave={ () => {
+                        setSomethingHovered(false);
+                    }}
+                  />
+                ))
+                }
+                </Flip>
               </Flex>
           </Flex>
         </ScaleFade>
         {!fetchingServices && !services &&
           <NotFound text="Failed to obtain profile! 😢"/>
         }
-        {(fetchingServices) &&
+        {fetchingServices &&
           <Searching />
         }
       </main>

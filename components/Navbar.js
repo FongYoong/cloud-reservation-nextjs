@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useAuth } from '../lib/auth';
 import { getUserProfile, listenUserChats } from '../lib/db';
 import NavbarButton from './NavbarButton';
-import { LinkOverlay, useToast, useColorMode, useColorModeValue, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
+import { useToast, useColorMode, useColorModeValue, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
 useBreakpointValue,
 AlertDialog,
 AlertDialogBody,
@@ -164,16 +165,44 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                             </motion.button>
                             <MenuList>
                                 <MenuGroup title="Profile">
-                                    <MenuItem icon={<RiUserLine />} onClick={() => router.push('/account')}>My Account</MenuItem>
-                                    <MenuItem icon={<MdAttachMoney />} onClick={() => router.push('/payments')}>Payments</MenuItem>
+                                    <MenuItem icon={<RiUserLine />} onClick={() => router.push('/account')}>
+                                        <Link href='/account' >
+                                            My Account
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem icon={<MdAttachMoney />} onClick={() => router.push('/payments')}>
+                                        <Link href='/payments' >
+                                            Payments
+                                        </Link>
+                                    </MenuItem>
                                 </MenuGroup>
                                 <MenuDivider />
-                                <MenuItem icon={<IoStorefront />} onClick={() => router.push('/marketplace')}>Marketplace</MenuItem>
-                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/orders')}>My Orders</MenuItem>
-                                <MenuItem icon={<MdWork />} onClick={() => router.push('/services')}>My Services</MenuItem>
-                                <MenuItem icon={<RiChatSmile3Line />} onClick={() => router.push('/chats')}>Chats</MenuItem>
+                                <MenuItem icon={<IoStorefront />} onClick={() => router.push('/marketplace')}>
+                                    <Link href='/marketplace' >
+                                        Marketplace
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/orders')}>
+                                    <Link href='/marketplace' >
+                                        My Orders
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem icon={<MdWork />} onClick={() => router.push('/services')}>
+                                    <Link href='/services' >
+                                        My Services
+                                    </Link>
+                                </MenuItem>
+                                <MenuItem icon={<RiChatSmile3Line />} onClick={() => router.push('/chats')}>
+                                    <Link href='/chats' >
+                                        Chats
+                                    </Link>
+                                </MenuItem>
                                 <MenuDivider />
-                                <MenuItem icon={<MdHelp />} onClick={() => router.push('/help')}>Help</MenuItem>
+                                <MenuItem icon={<MdHelp />} onClick={() => router.push('/help')}>
+                                    <Link href='/help' >
+                                        Help
+                                    </Link>
+                                </MenuItem>
                                 <MenuDivider />
                                 <MenuItem icon={<FiLogOut />} color="red.500" onClick={() => setIsLogoutOpen(true)}>
                                     Logout

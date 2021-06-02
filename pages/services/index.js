@@ -15,7 +15,8 @@ import AllServices from '../../components/services/AllServices';
 export default function Services() {
   const { auth, loading } = useAuth();
   const router = useRouter();
-  const [servicesList, setServicesList] = useState([]);
+  const [fetchingServices, setFetchingServices] = useState(true);
+  const [servicesList, setServicesList] = useState(null);
 
   useEffect(() => {
       if (router.query && Object.keys(router.query).length === 1) {
@@ -36,6 +37,7 @@ export default function Services() {
               }));
               array.reverse();
               setServicesList(array);
+              setFetchingServices(false);
           }
         });
       }
@@ -62,8 +64,8 @@ export default function Services() {
               {breakpoint!=="base" && <ServicesDrawer {...drawerProps} />}
               <AnimatePresence exitBeforeEnter>
                   {serviceMode === "add" && <AddService key="add" auth={auth} />}
-                  {serviceMode === "overview" && <ServicesOverview servicesList={servicesList} key="overview" auth={auth} />}
-                  {serviceMode === "all" && <AllServices servicesList={servicesList} key="all" auth={auth} />}
+                  {serviceMode === "overview" && <ServicesOverview fetchingServices={fetchingServices} servicesList={servicesList} key="overview" auth={auth} />}
+                  {serviceMode === "all" && <AllServices fetchingServices={fetchingServices} servicesList={servicesList} key="all" auth={auth} />}
               </AnimatePresence>
             </Flex>
           </Flex>

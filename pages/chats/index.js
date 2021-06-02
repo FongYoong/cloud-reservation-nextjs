@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { Flip } from "react-awesome-reveal";
@@ -12,6 +12,9 @@ import ChatsDrawer from '../../components/drawers/ChatsDrawer';
 import Chat from '../../components/chats/Chat';
 import Searching from '../../components/Searching';
 import Empty from '../../components/Empty';
+// Sound Effects
+import UIfx from 'uifx';
+import popMP3 from '../../public/sounds/pop.mp3';
 
 export default function Chats() {
     const { auth, loading } = useAuth();
@@ -22,6 +25,10 @@ export default function Chats() {
     const [chats, setChats] = useState(null);
     const [hasInitialised, setHasInitialised] = useState(false);
     const [hasScrolledBefore, setHasScrolledBefore] = useState(false);
+    const popSound = useRef(null);
+    useEffect(() => {
+        popSound.current = new UIfx(popMP3);
+    }, []);
   
     const transformMessages = (messages) => {
       const array = Object.keys(messages).map((key) => ({
@@ -98,7 +105,9 @@ export default function Chats() {
     const sendMessageHandler = (otherId, message) => {
       sendMessage(auth, otherId, message,
       () => {
-          //alert('Sent!');
+        if (popSound.current) {
+          popSound.current.play();
+        }
       },
       () => {
           alert("Firebase Error");
