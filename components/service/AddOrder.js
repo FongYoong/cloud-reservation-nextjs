@@ -22,7 +22,7 @@ export default function AddOrder({auth, serviceId, serviceData}) {
         addOrderToFirebase(data);
     }
     const addOrderToFirebase = (data) => {
-        addNewOrder(auth, serviceId, {
+        addNewOrder(auth, serviceId, serviceData.name, serviceData.type, serviceData.ownerId, {
             ...data,
             calendarEvents: data.calendarEvents.map((event) => {
                 return {

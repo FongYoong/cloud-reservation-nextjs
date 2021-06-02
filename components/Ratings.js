@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { HStack, Icon } from '@chakra-ui/react';
 
-export default function Ratings ({onChange = () => {}, ...props}) {
-    const [currentStars, setCurrentStars] = useState(0);
+export default function Ratings ({onChange = () => {}, initialStars = 0, fixed=false, ...props}) {
+    const [currentStars, setCurrentStars] = useState(initialStars);
     const [hoverStars, setHoverStars] = useState(0);
     useEffect(() => {
         if (currentStars > 0) {
@@ -13,14 +13,20 @@ export default function Ratings ({onChange = () => {}, ...props}) {
     return (
         <HStack {...props} >
             {[...Array(5).keys()].map((i) => (
-                <Star key={i} stars={i} fill={i < currentStars || i < hoverStars} onClick={() => setCurrentStars(i + 1)} setHoverStars={setHoverStars}/>
+                <Star fixed={fixed} key={i} stars={i} fill={i < currentStars || i < hoverStars}
+                onClick={() => {
+                    if(!fixed) {
+                        setCurrentStars(i + 1);
+                    }  
+                }}
+                setHoverStars={setHoverStars}/>
             ))
             }
         </HStack>
     )
 }
 
-const Star = ({stars, fill, onClick, setHoverStars, ...props}) => {
+const Star = ({stars, fill, onClick, setHoverStars, fixed, ...props}) => {
     const [fillState, setFillState] = useState(fill);
     const animateState = (!fill && fillState) || fill ? "fill" : "normal";
     const delay = 0.05;
@@ -46,11 +52,13 @@ const Star = ({stars, fill, onClick, setHoverStars, ...props}) => {
     return (
         <motion.div variants={variants} animate={animateState} style={{borderRadius:"2em"}} onClick={onClick}
             onMouseEnter={ () => {
-                setFillState(true);
-                setHoverStars(stars);
+                if (!fixed) {
+                    setFillState(true);
+                    setHoverStars(stars);
+                }
             }}
             onMouseLeave={ () => {
-                if (!fill) {
+                if (!fill && !fixed) {
                     setFillState(false);
                     setHoverStars(0);
                 }
@@ -64,8 +72,3 @@ const Star = ({stars, fill, onClick, setHoverStars, ...props}) => {
         </motion.div>
     )
 }
-/* bg='yellow'
-<Icon as={MdStarBorder} w={8} h={8} fill='yellow' color="yellow.500" {...props} />
-
-<MotionButton icon={<MdStarBorder />} colorScheme={"yellow"} />
-*/

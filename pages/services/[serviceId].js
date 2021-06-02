@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
-import { getServicePublicDetails, deleteService } from '../../lib/db';
+import { getServicePublicDetails, getServiceReviews, getServiceOrders, deleteService } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
 import { useBreakpointValue, useDisclosure, useToast, ScaleFade, Heading, Box, Button, VStack, Flex,
 Modal,
@@ -22,6 +22,7 @@ import ServiceDrawer from '../../components/drawers/ServiceDrawer';
 import EditService from '../../components/service/EditService';
 import AddOrder from '../../components/service/AddOrder';
 import ServiceOverview from '../../components/service/ServiceOverview';
+import Reviews from '../../components/service/Reviews';
 import AllOrders from '../../components/service/AllOrders';
 
 export default function Service () {
@@ -29,14 +30,52 @@ export default function Service () {
     const router = useRouter();
     const { serviceId } = router.query;
     const { auth, loading } = useAuth();
-    const [fetchingData, setFetchingData] = useState(true);
+    const [fetchingPublic, setFetchingPublic] = useState(true);
+    const [fetchingOrders, setFetchingOrders] = useState(true);
+    const [fetchingReviews, setFetchingReviews] = useState(true);
     const [publicData, setPublicData] = useState(null);
+    const [ordersList, setOrdersList] = useState(null);
+    const [reviews, setReviews] = useState(null);
+
+    useEffect(() => {
+        if (router.query && Object.keys(router.query).length === 2) {
+            setServiceMode(Object.keys(router.query)[0]);
+        }
+    }, [router.query]);
+
     useEffect(() => {
         if (serviceId) {
             getServicePublicDetails(serviceId, (data) => {
-                console.log(data);
                 setPublicData(data);
-                setFetchingData(false);
+                setFetchingPublic(false);
+                if (data) {
+                    getServiceOrders(true, serviceId, (data) => {
+                        if (data) {
+                            const array = Object.keys(data).map((key) => ({
+                                orderId: key, ...data[key]
+                            }));
+                            array.reverse();
+                            setOrdersList(array);
+                        }
+                        else {
+                            setOrdersList(null);
+                        }
+                        setFetchingOrders(false);
+                    });
+                    getServiceReviews(true, serviceId, (data) => {
+                        if (data) {
+                            const array = Object.keys(data).map((key) => ({
+                                ...data[key]
+                            }));
+                            array.reverse();
+                            setReviews(array);
+                        }
+                        else {
+                            setReviews(null);
+                        }
+                        setFetchingReviews(false);
+                    });
+                }
             });
         }
     }, [serviceId]);
@@ -45,7 +84,7 @@ export default function Service () {
     const [isDeleting, setIsDeleting] = useState(false);
     const deleteModalState = useDisclosure();
     const drawerState = useDisclosure();
-    const [serviceMode, setServiceMode] = useState("overview"); // edit, addOrder, overview, allOrders
+    const [serviceMode, setServiceMode] = useState("overview"); // edit, addOrder, events, overview, reviews, allOrders
     let isOwner = false;
     if (!loading && publicData && auth && publicData.ownerId === auth.uid) {
         isOwner = true;
@@ -66,7 +105,10 @@ export default function Service () {
             alert("Firebase Error");
         });
     }
-    const drawerProps = {isOwner, serviceName: publicData ? publicData.name : 'Unnamed Service', serviceMode, setServiceMode, drawerState, deleteHandler: ()=>{deleteModalState.onOpen()}};
+    const drawerProps = {isOwner, serviceId, serviceName: publicData ? publicData.name : 'Unnamed Service',
+        serviceType: publicData ? publicData.type : null,
+        serviceMode, setServiceMode, drawerState, deleteHandler: ()=>{deleteModalState.onOpen()}};
+    const cannotModify = ordersList && ordersList.length > 0;
     const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
     return (
@@ -84,19 +126,20 @@ export default function Service () {
                         <Flex p={4} w="100%" align="start" justify="space-between">
                             {breakpoint!=="base" && <ServiceDrawer {...drawerProps} />}
                             <AnimatePresence exitBeforeEnter>
-                                {serviceMode === "edit" && isOwner && <EditService key="edit" {...{serviceId, publicData, auth}} />}
-                                {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData: publicData, auth}} />}
+                                {serviceMode === "edit" && isOwner && <EditService key="edit" {...{cannotModify, serviceId, publicData, auth}} />}
+                                {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData:publicData, auth}} />}
                                 {serviceMode === "overview" && <ServiceOverview key="overview" {...{serviceId, publicData, auth}} />}
-                                {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{serviceId, auth}} />}
+                                {serviceMode === "reviews" && <Reviews key="reviews" {...{fetchingReviews, reviews, auth}} />}
+                                {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{fetchingOrders, serviceId, serviceData:publicData, ordersList, auth}} />}
                             </AnimatePresence>
                         </Flex>
                     </Flex>
                 </ScaleFade>
             }
-            {!loading && !fetchingData && !publicData &&
+            {!loading && !fetchingPublic && !publicData &&
                 <NotFound text="Service not found! 😢"/>
             }
-            {(loading || fetchingData) &&
+            {(loading || fetchingPublic) &&
                 <Searching />
             }
             <Modal motionPreset="scale" closeOnOverlayClick={isDeleting} closeOnEsc={isDeleting} isCentered={true} isOpen={deleteModalState.isOpen} onClose={deleteModalState.onClose}>
@@ -105,7 +148,10 @@ export default function Service () {
                     <ModalHeader>Delete Service?</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        This cannot be undone.
+                    {ordersList && ordersList.length > 0 ?
+                        "This service already has orders so it cannot be deleted."
+                        :"This cannot be undone."
+                    }
                     </ModalBody>
                     <ModalFooter>
                         {isDeleting ?
@@ -113,7 +159,7 @@ export default function Service () {
                                 <CircularProgress isIndeterminate color="green.400" />
                             </Flex>
                             :
-                            <Button colorScheme="red" mr={3} onClick={deleteHandler}>
+                            <Button isDisabled={cannotModify} colorScheme="red" mr={3} onClick={deleteHandler}>
                                 Delete!
                             </Button>
                         }

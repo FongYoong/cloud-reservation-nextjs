@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../lib/auth';
-import { getUserProfile } from '../lib/db';
+import { getUserProfile, listenUserChats } from '../lib/db';
 import NavbarButton from './NavbarButton';
-import { useColorMode, useColorModeValue, Skeleton, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
+import { LinkOverlay, useToast, useColorMode, useColorModeValue, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
 useBreakpointValue,
 AlertDialog,
 AlertDialogBody,
@@ -23,20 +23,66 @@ MenuGroup,
 MenuDivider,
 } from '@chakra-ui/react';
 import { motion } from "framer-motion";
+import { MotionButton } from "./MotionElements";
 import { BsSun, BsMoon } from 'react-icons/bs';
 import { MdLocalGroceryStore, MdHome, MdWork, MdAttachMoney, MdHelp } from 'react-icons/md';
 import { RiChatSmile3Line, RiUserLine } from 'react-icons/ri';
 import { HiMenu } from 'react-icons/hi';
 import { FiLogOut } from 'react-icons/fi';
 import { IoReturnUpBack, IoStorefront } from 'react-icons/io5';
+// Sound Effects
+import UIfx from 'uifx';
+import popMP3 from '../public/sounds/pop.mp3';
 
-const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
-    const { colorMode, toggleColorMode } = useColorMode();
-    const bg = useColorModeValue("gray.100", "gray.600")
+const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }) => {
     const { auth, loading, signOut } = useAuth();
     const router = useRouter();
+    const { colorMode, toggleColorMode } = useColorMode();
+    const bg = useColorModeValue("gray.100", "gray.600");
+    const toast = useToast();
+    const toastId = "messageToast";
+    const [newMessage, setNewMessage] = useState(false);
+    const [popSound, setPopSound] = useState(false);
+    useEffect(() => {
+        setPopSound(new UIfx(popMP3));
+    }, []);
+
+    useEffect(() => {
+        if (!loading && auth && router.pathname !== '/chats') {
+            listenUserChats(auth, () => {
+                if (!toast.isActive(toastId)) {
+                    setNewMessage(true);
+                    popSound.play();
+                    toast({
+                        id: toastId,
+                        status: "info",
+                        duration: 5000,
+                        position: 'bottom-right',
+                        isClosable: true,
+                        // eslint-disable-next-line react/display-name
+                        render: () => (
+                            <VStack spacing={4} p={3} backdropFilter='blur(10px)' bgGradient="linear(to-l, #7928CA, #FF0080)" borderWidth={2} borderRadius="lg" boxShadow="lg" >
+                                <Text color='white' >
+                                    <span role='img' aria-label='Message' >💬 </span> Someone messaged you!
+                                </Text>
+                                <MotionButton getAttention={true} colorScheme={"teal"}
+                                onClick={() => {
+                                    toast.closeAll();
+                                    router.push('/chats');
+                                }} icon={<RiChatSmile3Line />} >
+                                    Chats
+                                </MotionButton>
+                            </VStack>
+                        )
+                    });
+                }
+            }, () => {
+                alert('Firebase chat error!')
+            });
+        }
+    }, [auth, loading, router]);
+
     // Drawer for small screens
-    //const drawerState = useDisclosure();
     // Logout
     const [isLogoutOpen, setIsLogoutOpen] = useState(false);
     const onLogoutClose = () => setIsLogoutOpen(false);
@@ -48,25 +94,25 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
     const [topOffset, setTopOffset] = useState('0');
     useEffect(() => {
         if (auth) {
-            getUserProfile(auth.uid, (result) => {setProfile(result)});
+            getUserProfile(true, auth.uid, (result) => {setProfile(result)});
         }
     }, [auth]);
     useEffect(() => {
-        window.onscroll = () => {
-            const currentScrollPos = window.pageYOffset;
-            if (previousScrollPos > currentScrollPos) {
-                setTopOffset('0');
-            } else {
-                setTopOffset(breakpoint==="base" ? '-4em':'-5em');
+        if (hideOnScroll) {
+            window.onscroll = () => {
+                const currentScrollPos = window.pageYOffset;
+                if (previousScrollPos > currentScrollPos) {
+                    setTopOffset('0');
+                } else {
+                    setTopOffset(breakpoint==="base" ? '-4em':'-5em');
+                }
+                setPreviousScrollPos(currentScrollPos);
             }
-            setPreviousScrollPos(currentScrollPos);
         }
     });
 
     const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
-    // const variant = useBreakpointValue({ base: "outline", md: "solid" })
-    // { base: "gray.100", md: "gray.100", lg: "gray.100" }
-    // {breakpoint!=="base" &&  <FcWorkflow size={70} />}
+
     return (
         <>
             <Flex transition='top 1s' zIndex={1000} bg={bg} position="fixed" w="100%" top={topOffset} align="center" justify="space-between" p={breakpoint==="base"? "0.4em": "1.5em"}>
@@ -103,7 +149,7 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                         <NavbarButton path="/services" icon={<MdWork />} >
                             My Services
                         </NavbarButton>
-                        <NavbarButton path="/chats" icon={<RiChatSmile3Line />} >
+                        <NavbarButton getAttention={newMessage} path="/chats" icon={<RiChatSmile3Line />} >
                             Chats
                         </NavbarButton>
                     </> }
@@ -113,7 +159,7 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                         <Menu autoSelect={false} isLazy={true} >
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                                 <MenuButton as={Avatar} cursor="pointer" _hover={{ boxShadow:"outline" }} boxShadow="lg" name={profile.username} src={profile.profile_picture}>
-                                    {profile.email && <AvatarBadge boxSize="1.25em" bg="green.500" />}
+                                    <AvatarBadge boxSize="1.25em" bg="green.500" />
                                 </MenuButton>
                             </motion.button>
                             <MenuList>
@@ -123,8 +169,8 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
                                 </MenuGroup>
                                 <MenuDivider />
                                 <MenuItem icon={<IoStorefront />} onClick={() => router.push('/marketplace')}>Marketplace</MenuItem>
-                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/orders')}>Orders</MenuItem>
-                                <MenuItem icon={<MdWork />} onClick={() => router.push('/services')}>Services</MenuItem>
+                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/orders')}>My Orders</MenuItem>
+                                <MenuItem icon={<MdWork />} onClick={() => router.push('/services')}>My Services</MenuItem>
                                 <MenuItem icon={<RiChatSmile3Line />} onClick={() => router.push('/chats')}>Chats</MenuItem>
                                 <MenuDivider />
                                 <MenuItem icon={<MdHelp />} onClick={() => router.push('/help')}>Help</MenuItem>
@@ -172,15 +218,5 @@ const Navbar = ({showDrawerIcon, drawerContent, drawerState}) => {
     </>
     );
 };
-
-// fontWeight={ router.pathname === '/login' ? 'extrabold' : 'normal'}
-
-/*
-{breakpoint!=="base" && <>
-    <Button leftIcon={<IoIosAddCircleOutline />} colorScheme="teal" onClick={() => router.push('/services/new')}>
-        Add service
-    </Button>
-</> }
-*/
 
 export default Navbar;

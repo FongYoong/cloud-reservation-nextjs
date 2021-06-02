@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
 import { MotionButton, MotionBox, formVariants, initialFormVariants } from '../MotionElements';
-import { Calendar, dateIsInFuture, datesAreOnSameDay, days, checkIfUnavailableDay, checkIfMinutesExist,
+import { Calendar, dateIsInFuture, datesAreOnSameDay, days, transformAvailableDays, checkIfUnavailableDay, checkIfMinutesExist,
     checkIfEventClashes, generateEventId, calculateEventHours
 } from '../Calendar';
 import { Views } from "react-big-calendar";
 import { useToast, Box, Flex, Text, Stack, HStack, VStack, Button, Heading, Stat, StatLabel, StatNumber, StatHelpText, Tag, TagLabel, Divider,
+    useBreakpointValue,
     useColorModeValue,
     Input, InputGroup, InputLeftAddon, Textarea, NumberInput, NumberInputField,
     FormControl, FormLabel, FormErrorMessage,
@@ -91,17 +92,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
     const [tempEnd, setTempEnd] = useState(new Date());
 
     // Calendar
-    const [availableDays, _] = useState(serviceData.availableDays ? serviceData.availableDays.map((d) => {
-        if (d === '0') {
-            return 1;
-        }
-        else if (d === '6') {
-            return 0;
-        }
-        else {
-            return parseInt(d) + 1;
-        }
-    }) : null);
+    const [availableDays, _] = useState(serviceData.availableDays ? transformAvailableDays(serviceData.availableDays) : null);
     const [calendarEvents, setCalendarEvents] = useState([]);
     const [totalHours, setTotalHours] = useState(0);
 
@@ -252,7 +243,9 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
         }
         return dayNormalColor;
     }
-    
+
+    const breakpoint = useBreakpointValue({ base: "base", sm:'sm', md: "md", lg: "lg" });
+
     return (
         <motion.div
             initial={{ rotateY: 90 }}
@@ -291,6 +284,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                             >
                             {({errors, touched, handleChange}) => (
                             <Form
+                                style={{width:breakpoint==='base'?'80vw':'50vw'}}
                                 onChange={e => {
                                     setDetailsConfirmed(false);
                                     handleChange(e);

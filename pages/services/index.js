@@ -2,8 +2,9 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
+import { getUserServices } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
-import { useBreakpointValue, useDisclosure, ScaleFade, Container, Heading, Spacer, Link, Box, Button, ButtonGroup, VStack, Flex } from "@chakra-ui/react";
+import { useBreakpointValue, useDisclosure, ScaleFade, Flex } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import ServicesDrawer from '../../components/drawers/ServicesDrawer';
@@ -14,11 +15,33 @@ import AllServices from '../../components/services/AllServices';
 export default function Services() {
   const { auth, loading } = useAuth();
   const router = useRouter();
+  const [servicesList, setServicesList] = useState([]);
+
   useEffect(() => {
-    if (!loading && !auth) {
-        router.replace('/login');
+      if (router.query && Object.keys(router.query).length === 1) {
+          setServiceMode(Object.keys(router.query)[0]);
+      }
+  }, [router.query]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!auth) {
+          router.replace('/login');
+      }
+      else {
+        getUserServices(true, auth.uid, (data) => {
+          if (data) {
+              const array = Object.keys(data).map((key) => ({
+                serviceId: key, ...data[key]
+              }));
+              array.reverse();
+              setServicesList(array);
+          }
+        });
+      }
     }
   }, [auth, loading, router]);
+
   const drawerState = useDisclosure();
   const [serviceMode, setServiceMode] = useState("overview"); // add, overview, all,
   const drawerProps = {serviceMode, setServiceMode, drawerState};
@@ -39,8 +62,8 @@ export default function Services() {
               {breakpoint!=="base" && <ServicesDrawer {...drawerProps} />}
               <AnimatePresence exitBeforeEnter>
                   {serviceMode === "add" && <AddService key="add" auth={auth} />}
-                  {serviceMode === "overview" && <ServicesOverview key="overview" auth={auth} />}
-                  {serviceMode === "all" && <AllServices key="all" auth={auth} />}
+                  {serviceMode === "overview" && <ServicesOverview servicesList={servicesList} key="overview" auth={auth} />}
+                  {serviceMode === "all" && <AllServices servicesList={servicesList} key="all" auth={auth} />}
               </AnimatePresence>
             </Flex>
           </Flex>

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
 import { updateOrder, addServiceReview } from '../../lib/db';
 import { motion } from "framer-motion";
 import { MotionButton, MotionGetAttention, MotionBox } from '../MotionElements';
@@ -8,7 +7,7 @@ import UserAvatar from '../UserAvatar';
 import { CanvasRain } from '../CanvasRain';
 import { Calendar, formatEvents, calculateEventHours, dateIsToday } from '../Calendar';
 import { Views } from "react-big-calendar";
-import { Img, Flex, Box, VStack, HStack, Button, Heading, Text, Textarea, Stat, StatLabel, StatNumber, StatHelpText, Divider, Spacer, Avatar, AvatarBadge,
+import { Img, Flex, Box, VStack, HStack, Button, Heading, Text, Textarea, Stat, StatLabel, StatNumber, StatHelpText, Divider, Tag, TagLabel, TagRightIcon,
 useBreakpointValue,
 useToast,
 useColorModeValue,
@@ -23,11 +22,10 @@ ModalFooter,
 CircularProgress
 } from '@chakra-ui/react';
 
-import { FaRegSmile, FaRegSadCry } from 'react-icons/fa';
-import { MdDelete, MdAttachMoney, MdCheckCircle, MdRateReview, MdStarBorder, MdStar } from 'react-icons/md';
+import { FaProductHunt, FaHammer, FaRegSmile, FaRegSadCry } from 'react-icons/fa';
+import { MdDelete, MdAttachMoney, MdCheckCircle, MdRateReview } from 'react-icons/md';
 
 export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, servicePublicData, orderData}) {
-    const router = useRouter();
     const toast = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [calendarEvents, setCalendarEvents] = useState(orderData.calendarEvents ? formatEvents(orderData.calendarEvents) : null);
@@ -142,9 +140,6 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
 
     const sellerRemarksBg = useColorModeValue("purple.100", "purple.500");
     const priceBg = useColorModeValue("green.100", "green.500");
-    //const priceBg2 = useColorModeValue("pink.100", "pink.500");
-    const remarksBg = useColorModeValue("orange.100", "orange.500");
-    const addressBg = useColorModeValue("yellow.100", "yellow.500");
     const calendarBg = useColorModeValue("yellow.50", "orange.400");
     const calendarBg2 = useColorModeValue("yellow.100", "orange.500");
     const todayColor = useColorModeValue('#87b5ff', '#002054');
@@ -251,7 +246,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         <VStack p={2} bg={sellerRemarksBg} borderWidth={2} borderRadius="lg" boxShadow="lg" >
                             <Text fontSize="md" > Seller remarks: </Text>
                             <Divider borderColor='black.300' />
-                            <Text w='100%' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
+                            <Text w='100%' whiteSpace='pre-line' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
                         </VStack>
                     </motion.div>
                     <MotionGetAttention>
@@ -270,7 +265,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         <VStack p={2} bg={sellerRemarksBg} borderWidth={2} borderRadius="lg" boxShadow="lg" >
                             <Text fontSize="md" > Seller remarks: </Text>
                             <Divider borderColor='black.300' />
-                            <Text w='100%' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
+                            <Text w='100%' whiteSpace='pre-line' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
                         </VStack>
                     </motion.div>
                    <Img
@@ -353,10 +348,22 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
 {/* Order details */}
                 <VStack width={breakpoint==='base'?'100%':'50%'} p={2} bg={useColorModeValue('white', 'gray.700')} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
                     <Flex p={2} width="100%" align="center" justify="start" borderBottomWidth={1}>
-                        <Heading flex={3} as="h2" fontSize="lg">
+                        <Box mr={2} >
+                            {servicePublicData.type === 'service' ?
+                            <Tag size='lg' colorScheme="teal">
+                                <TagLabel>Service</TagLabel>
+                                <TagRightIcon as={FaHammer} />
+                            </Tag>
+                            :
+                            <Tag size='lg' colorScheme="pink">
+                                <TagLabel>Product</TagLabel>
+                                <TagRightIcon as={FaProductHunt} />
+                            </Tag>
+                            }
+                        </Box>
+                        <Heading as="h2" fontSize="lg">
                             Order Details
                         </Heading>
-                        <Box flex={1} />
                     </Flex>
                     <OrderDetailsRow noExpand >
                         <Text flex={2}> {isServiceOwner?'Ordered by:':'Seller:'} </Text>
@@ -370,14 +377,14 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         <Text flex={5} as='b' align={breakpoint==='base'?'center':'left'} > {new Date(orderData.dateCreated).toDateString()} </Text>
                     </OrderDetailsRow>
                     <OrderDetailsRow>
-                        <Text flex={2}> {isServiceOwner?'Your':'Client'} remarks: </Text>
-                        <Text flex={5} as='b' whiteSpace="pre-wrap" align={breakpoint==='base'?'center':'left'} >
+                        <Text flex={2}> {isServiceOwner?'Client':'Your'} remarks: </Text>
+                        <Text flex={5} as='b' whiteSpace='pre-line' wordBreak='break-word' overflowWrap='break-word' align={breakpoint==='base'?'center':'left'} >
                             {orderData.details.userRemarks}
                         </Text>
                     </OrderDetailsRow>
                     <OrderDetailsRow>
                         <Text flex={2}> Address: </Text>
-                        <Text flex={5} as='b' whiteSpace="pre-wrap" align={breakpoint==='base'?'center':'left'} >
+                        <Text flex={5} as='b' wordBreak='break-word' overflowWrap='break-word' align={breakpoint==='base'?'center':'left'} >
                             {orderData.details.address}
                         </Text>
                     </OrderDetailsRow>
@@ -596,74 +603,3 @@ const OrderDetailsRow = ({children, noExpand, ...props}) => {
         </Box>
     )
 }
-
-/*
-                <Flex flexWrap='wrap' width='100%' align="center" justify="space-evenly" >
-                    <VStack p={2} m={2} spacing={4} bg={orderBg} borderWidth={1} borderRadius="lg" >
-                        <Heading as='u' fontSize="xl" textAlign="center" >
-                            Order Status
-                        </Heading>
-                        <HStack w="100%" h="50px" spacing={4} align="center" justify="center" >
-                            <Text fontSize="lg" >Ordered by</Text>
-                            <UserAvatar name='abc' src='abc' />
-                        </HStack>
-                        <Text fontSize="lg" > Created on <b> {new Date(orderData.dateCreated).toDateString()} </b> </Text>
-                    </VStack>
-                    <motion.div whileHover={{ scale: 1.1 }} >
-                        {servicePublicData.type === 'service' &&
-                            <HStack p={2} spacing={2} bg={priceBg} borderWidth={1} borderRadius="lg" >
-                                <VStack>
-                                    <Text fontSize={["xs", "sm"]} > {isServiceOwner?'Your':'Seller'} price range:  </Text>
-                                    <Text as='b' fontSize={["xs", "sm"]} > RM {servicePublicData.minPrice} ~ {servicePublicData.maxPrice} </Text>
-                                    <Divider borderColor='black.300' />
-                                    <VStack p={2} bg={priceBg2} borderWidth={2} borderRadius="lg" boxShadow="lg" >
-                                        <Text fontSize={["md", "lg"]} >
-                                            {isServiceOwner?"Client's":'Your'} price/hour:
-                                        </Text>
-                                        <Text as='b' fontSize={["md", "lg"]} >
-                                            RM {orderData.details.proposedPricePerHour}
-                                        </Text>
-                                    </VStack>
-                                </VStack>
-                                <Box height="7em">
-                                    <Divider orientation='vertical' borderColor='black.300' />
-                                </Box>
-                                <VStack p={2} bg={priceBg2} borderWidth={2} borderRadius="lg" boxShadow="lg" >
-                                    <Text fontSize="lg" ><b>{totalEventHours} hours</b> </Text>
-                                    <Divider borderColor='black.300' />
-                                    <Text fontSize={["md", "lg"]} > Total price: <b>RM {totalPrice} </b> </Text>
-                                </VStack>
-                            </HStack>
-                        }
-                    </motion.div>
-                    <VStack m={2} >
-                        { servicePublicData.type === 'product' &&
-                            <VStack p={2} spacing={2} bg={priceBg} borderWidth={1} borderRadius="lg" >
-                                <VStack>
-                                    <Text fontSize={["xs", "sm"]} > {isServiceOwner?'Your':'Seller'} base price: {servicePublicData.price} </Text>
-                                </VStack>
-                                <VStack p={2} bg={priceBg2} borderWidth={2} borderRadius="lg" boxShadow="lg" >
-                                    <Text fontSize={["md", "lg"]} > Quantity: <b>{orderData.details.quantity}</b> </Text>
-                                    <Divider borderColor='black.300' />
-                                    <Text fontSize={["md", "lg"]} > Total price: <b>RM {totalPrice} </b> </Text>
-                                </VStack>
-                            </VStack>
-                        }
-                        <motion.div whileHover={{ scale: 1.1 }} >
-                            <VStack p={2} spacing={1} bg={remarksBg} borderWidth={1} borderRadius="lg"  >
-                                <Heading as='b' fontSize="lg"> User Remarks </Heading>
-                                <Divider borderColor='black.500' />
-                                <Text fontSize="md"> {orderData.details.userRemarks} </Text>
-                            </VStack>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} >
-                            <VStack p={2} spacing={1} bg={addressBg} borderWidth={1} borderRadius="lg"  >
-                                <Heading as='b' fontSize="lg"> Address </Heading>
-                                <Divider borderColor='black.500' />
-                                <Text fontSize="md"> {orderData.details.address} </Text>
-                            </VStack>
-                        </motion.div>
-                    </VStack>
-                </Flex>
-
-*/

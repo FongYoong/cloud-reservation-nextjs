@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { getSignature, uploadImages, uploadVideo, updateService } from '../../lib/db';
 import { MotionBox } from '../MotionElements';
 import ServiceForm from '../forms/ServiceForm';
-import { Flex, useToast,
+import { Heading, Flex, useToast,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -28,7 +28,7 @@ const getDetails = (data) => {
     return temp;
 }
 
-export default function EditService({auth, serviceId, publicData}) {
+export default function EditService({auth, cannotModify, serviceId, publicData}) {
     const router = useRouter();
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadingModal, setUploadingModal] = useState(false);
@@ -101,6 +101,8 @@ export default function EditService({auth, serviceId, publicData}) {
             exit={{ rotateY: -90 }}
             transition={{ type: "tween" }}
         >
+        {cannotModify ? <Heading textAlign='center' fontSize="lg" > This service already has orders so it cannot be modified. </Heading>
+            : <>
             <ServiceForm update={true} completeFormHandler={completeFormHandler}
                 initialServiceType={publicData.type}
                 initialDetails={getDetails(publicData)}
@@ -130,6 +132,8 @@ export default function EditService({auth, serviceId, publicData}) {
                     </ModalBody>
                 </ModalContent>
             </Modal>
+            </>
+        }
         </MotionBox>
     )
 }

@@ -1,21 +1,47 @@
 import Head from 'next/head';
-import Image from 'next/image';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { ScaleFade, Heading, Link, Stack, Box, Button, Container, Center, VStack } from "@chakra-ui/react";
+import { useAuth } from '../../lib/auth';
+import { getUserProfile } from '../../lib/db';
+import { AnimatePresence } from "framer-motion";
+import { ScaleFade, useBreakpointValue, useDisclosure, Flex } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
-import { FcGoogle } from 'react-icons/fc';
-import { useAuth } from '../../lib/auth';
+import AccountDrawer from '../../components/drawers/AccountDrawer';
+import EditProfile from '../../components/account/EditProfile';
+import ProfileOverview from '../../components/account/ProfileOverview';
+import Searching from '../../components/Searching';
+import NotFound from '../../components/NotFound';
 
 export default function Account() {
   const { auth, loading } = useAuth();
   const router = useRouter();
+  const [fetchingProfile, setFetchingProfile] = useState(true);
+  const [profileData, setProfileData] = useState(null);
+
   useEffect(() => {
-    if (!loading && !auth) {
-        router.replace('/marketplace');
+      if (router.query && Object.keys(router.query).length === 1) {
+          setMode(Object.keys(router.query)[0]);
+      }
+  }, [router.query]);
+
+  useEffect(() => {
+    if (!loading) {
+        if (auth) {
+          getUserProfile(true, auth.uid, (result) => {
+            setFetchingProfile(false);
+            setProfileData(result);
+          });
+        }
+        else {
+          router.replace('/login');
+        }
     }
   }, [auth, loading, router]);
+  const drawerState = useDisclosure();
+  const [mode, setMode] = useState("overview"); // edit, overview
+  const drawerProps = { mode, setMode, drawerState };
+  const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
   return (
     <div>
@@ -24,19 +50,27 @@ export default function Account() {
         <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
-        <Navbar />
+        <Navbar showDrawerIcon={true} drawerContent={<AccountDrawer {...drawerProps} />} drawerState={drawerState} />
         <NavbarSpace />
-        <ScaleFade initialScale={0.9} in={true}>
-        <Container>
-          <Center mt={10}>
-            <VStack spacing="4">
-              <Heading fontSize="3xl" mb={2}>
-                Account
-              </Heading>
-            </VStack>
-          </Center>
-        </Container>
-        </ScaleFade>
+        {!loading && profileData &&
+          <ScaleFade initialScale={0.9} in={true}>
+            <Flex direction="column" align="center" justify="center">
+              <Flex p={4} w="100%" align="start" justify="space-between">
+                  {breakpoint!=="base" && <AccountDrawer {...drawerProps} />}
+                  <AnimatePresence exitBeforeEnter>
+                      {mode === "edit" && <EditProfile key="edit" {...{profileData, auth}} />}
+                      {mode === "overview" && <ProfileOverview key="overview" {...{uid: auth.uid, profileData, auth, sameUser:true}} />}
+                  </AnimatePresence>
+              </Flex>
+            </Flex>
+          </ScaleFade>
+        }
+        {!loading && !fetchingProfile && !profileData &&
+          <NotFound text="Failed to obtain profile! 😢"/>
+        }
+        {(loading || fetchingProfile) &&
+          <Searching />
+        }
       </main>
       <footer>
 

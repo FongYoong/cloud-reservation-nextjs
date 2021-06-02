@@ -1,22 +1,42 @@
-import { motion } from "framer-motion";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { MotionButton, MotionBox } from '../MotionElements';
-import { Box, VStack, Divider, Heading } from '@chakra-ui/react';
+import { VStack, Divider, Heading, Tag, TagRightIcon, TagLabel } from '@chakra-ui/react';
 import { IoIosAddCircleOutline, IoMdAnalytics } from 'react-icons/io';
-import { MdModeEdit, MdWork, MdDelete } from 'react-icons/md';
+import { MdModeEdit, MdWork, MdDelete, MdStars } from 'react-icons/md';
+import { FaProductHunt, FaHammer } from 'react-icons/fa';
 
+export default function ServiceDrawer({isOwner, serviceId, serviceName, serviceType, serviceMode, setServiceMode, drawerState, deleteHandler=()=>{}}) {
+    const router = useRouter();
 
-export default function ServiceDrawer({isOwner, serviceName, serviceMode, setServiceMode, drawerState, deleteHandler=()=>{}}) {
     const clickHandler = (mode) => {
         setServiceMode(mode);
+        router.replace({
+                pathname: serviceId,
+                query: { [mode]: '' }
+            }, 
+            undefined, { shallow: true }
+        );
         drawerState.onClose();
     }
     return (
         <MotionBox flex={1} minWidth={0} whileHover={{ scale: 1.1 }} >
             <VStack w='100%' m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <Heading w='100%' fontSize="xl" mb={2} overflowWrap='break-word' >
+                {serviceType === 'service' ?
+                <Tag minWidth='7em' size='sm' colorScheme="teal">
+                    <TagLabel>Service</TagLabel>
+                    <TagRightIcon as={FaHammer} />
+                </Tag>
+                :
+                <Tag minWidth='7em' size='sm' colorScheme="pink">
+                    <TagLabel>Product</TagLabel>
+                    <TagRightIcon as={FaProductHunt} />
+                </Tag>
+                }
+                <Heading textAlign="center" w='100%' fontSize="xl" mb={2} overflowWrap='break-word' >
                     {serviceName}
                 </Heading>
-                <Divider />
+                <Divider borderColor='black.300' />
                 { isOwner &&
                 <MotionButton icon={<MdModeEdit />} colorScheme={serviceMode === 'edit'?"purple":"gray"} onClick={() => clickHandler('edit')} >
                     Edit Service
@@ -29,6 +49,9 @@ export default function ServiceDrawer({isOwner, serviceName, serviceMode, setSer
                 }
                 <MotionButton icon={<IoMdAnalytics />} colorScheme={serviceMode === 'overview'?"purple":"gray"} onClick={() => clickHandler('overview')} >
                     Overview
+                </MotionButton>
+                <MotionButton icon={<MdStars />} colorScheme={serviceMode === 'reviews'?"purple":"gray"} onClick={() => clickHandler('reviews')} >
+                    Reviews
                 </MotionButton>
                 { isOwner &&
                 <MotionButton icon={<MdWork />} colorScheme={serviceMode === 'allOrders'?"purple":"gray"} onClick={() => clickHandler('allOrders')} >

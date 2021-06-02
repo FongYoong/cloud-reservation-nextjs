@@ -19,7 +19,7 @@ import '@vime/core/themes/default.css';
 
 import { motion } from "framer-motion";
 import { MotionButton, MotionBox, formVariants, initialFormVariants } from '../MotionElements';
-import { ScaleFade, Box, Flex, Text, Stack, HStack, VStack, Button, Heading, UnorderedList, ListItem, CheckboxGroup, Checkbox,
+import { useBreakpointValue, ScaleFade, Box, Flex, Text, Stack, HStack, VStack, Button, Heading, UnorderedList, ListItem, CheckboxGroup, Checkbox,
     Input,
     Textarea,
     FormControl,
@@ -116,6 +116,8 @@ export default function ServiceForm({ update, completeFormHandler, initialServic
     const [availableDays, setAvailableDays] = useState(initialDays);
     const [imageFiles, setImageFiles] = useState(initialImageFiles);
     const [videoFile, setVideoFile] = useState(initialVideoFile);
+    const breakpoint = useBreakpointValue({ base: "base", sm:'sm', md: "md", lg: "lg" });
+
     return (
         <motion.div
             initial={{ rotateY: 90 }}
@@ -184,58 +186,59 @@ export default function ServiceForm({ update, completeFormHandler, initialServic
                                 >
                                 {({errors, touched, handleChange}) => (
                                 <Form
+                                    style={{width:breakpoint==='base'?'80vw':'50vw'}}
                                     onChange={e => {
                                         setDetailsConfirmed(false);
                                         handleChange(e);
                                     }}
                                 >
-                                    <VStack p={4} spacing={4} borderWidth={2} borderRadius="lg" boxShadow="lg">
-                                    <Field name="name" >
-                                        {({ field }) => (
-                                        <FormControl isInvalid={errors.name && touched.name} isRequired>
-                                        <FormLabel htmlFor="nameService">Service Name</FormLabel>
-                                        <Input {...field} id="nameService" placeholder="" />
-                                        <FormErrorMessage>{errors.name}</FormErrorMessage>
-                                        </FormControl>
-                                        )}
-                                    </Field>
-                                    <Field name="description" >
-                                        {({ field }) => (
-                                        <FormControl isInvalid={errors.description && touched.description} isRequired>
-                                        <FormLabel htmlFor="descriptionService">Description</FormLabel>
-                                        <Textarea size="sm" id="descriptionService" placeholder="Once upon a time..."  {...field} />
-                                        <FormErrorMessage>{errors.description}</FormErrorMessage>
-                                        </FormControl>
-                                        )}
-                                    </Field>
-                                    <Field name="minPrice" >
-                                        {({ field }) => (
-                                        <FormControl isInvalid={errors.minPrice && touched.minPrice} isRequired>
-                                        <FormLabel htmlFor="minPrice">Minimum Price per Hour</FormLabel>
-                                        <NumberInput id="minPrice" defaultValue={initialDetails.minPrice ? initialDetails.minPrice : 1} min={0.01} precision={2} >
-                                            <HStack>
-                                                <Text>RM</Text>
-                                                <NumberInputField {...field} />
-                                            </HStack>
-                                        </NumberInput>
-                                        <FormErrorMessage>{errors.minPrice}</FormErrorMessage>
-                                        </FormControl>
-                                        )}
-                                    </Field>
-                                    <Field name="maxPrice" >
-                                        {({ field }) => (
-                                        <FormControl isInvalid={errors.maxPrice && touched.maxPrice} isRequired>
-                                        <FormLabel htmlFor="maxPrice">Maximum Price per Hour</FormLabel>
-                                        <NumberInput id="maxPrice" defaultValue={initialDetails.maxPrice ? initialDetails.maxPrice : 2} min={0.01} precision={2} >
-                                            <HStack>
-                                                <Text>RM</Text>
-                                                <NumberInputField {...field} />
-                                            </HStack>
-                                        </NumberInput>
-                                        <FormErrorMessage>{errors.maxPrice}</FormErrorMessage>
-                                        </FormControl>
-                                        )}
-                                    </Field>
+                                    <VStack w='100%' p={4} spacing={4} borderWidth={2} borderRadius="lg" boxShadow="lg">
+                                        <Field name="name" >
+                                            {({ field }) => (
+                                            <FormControl isInvalid={errors.name && touched.name} isRequired>
+                                            <FormLabel htmlFor="nameService">Service Name</FormLabel>
+                                            <Input {...field} id="nameService" placeholder="" />
+                                            <FormErrorMessage>{errors.name}</FormErrorMessage>
+                                            </FormControl>
+                                            )}
+                                        </Field>
+                                        <Field name="description" >
+                                            {({ field }) => (
+                                            <FormControl isInvalid={errors.description && touched.description} isRequired>
+                                            <FormLabel htmlFor="descriptionService">Description</FormLabel>
+                                            <Textarea size="sm" id="descriptionService" placeholder="Once upon a time..."  {...field} />
+                                            <FormErrorMessage>{errors.description}</FormErrorMessage>
+                                            </FormControl>
+                                            )}
+                                        </Field>
+                                        <Field name="minPrice" >
+                                            {({ field }) => (
+                                            <FormControl isInvalid={errors.minPrice && touched.minPrice} isRequired>
+                                            <FormLabel htmlFor="minPrice">Minimum Price per Hour</FormLabel>
+                                            <NumberInput id="minPrice" defaultValue={initialDetails.minPrice ? initialDetails.minPrice : 1} min={0.01} precision={2} >
+                                                <HStack>
+                                                    <Text>RM</Text>
+                                                    <NumberInputField {...field} />
+                                                </HStack>
+                                            </NumberInput>
+                                            <FormErrorMessage>{errors.minPrice}</FormErrorMessage>
+                                            </FormControl>
+                                            )}
+                                        </Field>
+                                        <Field name="maxPrice" >
+                                            {({ field }) => (
+                                            <FormControl isInvalid={errors.maxPrice && touched.maxPrice} isRequired>
+                                            <FormLabel htmlFor="maxPrice">Maximum Price per Hour</FormLabel>
+                                            <NumberInput id="maxPrice" defaultValue={initialDetails.maxPrice ? initialDetails.maxPrice : 2} min={0.01} precision={2} >
+                                                <HStack>
+                                                    <Text>RM</Text>
+                                                    <NumberInputField {...field} />
+                                                </HStack>
+                                            </NumberInput>
+                                            <FormErrorMessage>{errors.maxPrice}</FormErrorMessage>
+                                            </FormControl>
+                                            )}
+                                        </Field>
                                         <Button
                                             visibility={serviceType==='service'?"visible":"hidden"}
                                             isLoading={detailsConfirmed}
@@ -270,6 +273,7 @@ export default function ServiceForm({ update, completeFormHandler, initialServic
                                 >
                                 {({errors, touched, handleChange}) => (
                                 <Form
+                                    style={{width:breakpoint==='base'?'80vw':'50vw'}}
                                     onChange={e => {
                                         setDetailsConfirmed(false);
                                         handleChange(e);

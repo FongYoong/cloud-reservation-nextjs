@@ -2,7 +2,7 @@ import { MotionBox } from '../MotionElements';
 import { ScaleFade, Box, VStack, Button, Heading } from '@chakra-ui/react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 
-export default function ServicesOverview() {
+export default function OrdersOverview() {
     return (
         <MotionBox
             flex={5}
@@ -14,10 +14,10 @@ export default function ServicesOverview() {
         >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
                 <Heading fontSize="xl" mb={2}>
-                    ServicesOverview
+                    OrdersOverview
                 </Heading>
                 <Button leftIcon={<IoIosAddCircleOutline />} colorScheme="teal" onClick={() => {}}>
-                    ServicesOverview
+                    OrdersOverview
                 </Button>
 
             </VStack>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Calendar as BigCalendar, momentLocalizer, Views } from "react-big-calendar";
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import moment from 'moment';
@@ -67,7 +66,19 @@ export const datesAreOnSameDay = (date1, date2) => {
 }
 
 export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
+export const transformAvailableDays = (availableDays) => {
+    return availableDays.map((d) => {
+        if (d === '0') {
+            return 1;
+        }
+        else if (d === '6') {
+            return 0;
+        }
+        else {
+            return parseInt(d) + 1;
+        }
+    });
+}
 export const checkIfUnavailableDay = (date, availableDays) => {
     const dateIndex = date.getDay();
     for (const d of availableDays) {

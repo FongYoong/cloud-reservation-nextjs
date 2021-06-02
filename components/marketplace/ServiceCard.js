@@ -1,15 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
 import { motion } from "framer-motion";
 import { MotionBox } from '../MotionElements';
-import { Flip } from "react-awesome-reveal";
 import { getServicePublicDetails } from '../../lib/db';
-import { useColorModeValue, Flex, Box, Img, Divider, Heading, Text, Button, VStack, Tag, TagRightIcon, TagLabel, Stat, StatNumber } from "@chakra-ui/react";
+import { useColorModeValue, useBreakpointValue, Flex, Box, Img, Divider, Heading, Text, VStack, Tag, TagRightIcon, TagLabel, Stat, StatNumber } from "@chakra-ui/react";
 import UserAvatar from '../../components/UserAvatar';
 import { FaProductHunt, FaHammer } from 'react-icons/fa';
 
-export default function ServiceCard ({shallowData, blur, hide, ...props}) {
-    const router = useRouter();
+export default function ServiceCard ({shallowData, blur, k, hide, ...props}) {
     const [fetchingData, setFetchingData] = useState(true);
     const [publicData, setPublicData] = useState(null);
     useEffect(() => {
@@ -34,11 +31,14 @@ export default function ServiceCard ({shallowData, blur, hide, ...props}) {
         }
     }
     const animateState = hide ? 'hide' : 'normal';
+    const breakpoint = useBreakpointValue({ base: "base", sm:'sm', md: "md", lg: "lg" });
+
     return (
-        <Flip direction='vertical' triggerOnce >
-        <MotionBox variants={variants} animate={animateState} initial={false} _hover={{cursor: "pointer"}} width="18em" height='24em' m={2}
-            style={{
-                filter: blur?'blur(2px)':''
+        <MotionBox m={2} variants={variants} animate={animateState} initial={false} _hover={{cursor: "pointer"}}
+            w={breakpoint==='base'?'90%':'18em'}
+            h={'24em'}
+            __css={{
+                filter: blur?'blur(2px)':'',
             }}
             whileHover={{scale: 1.05} } whileTap={{scale: 0.95}}
             {...props}
@@ -60,7 +60,7 @@ export default function ServiceCard ({shallowData, blur, hide, ...props}) {
                             </Tag>
                             }
                             <Box flex={5} minWidth={0} >
-                                <Heading textAlign="center" fontSize="md" lineHeight='normal' noOfLines={2} > {shallowData.name} </Heading>
+                                <Heading textAlign="center" fontSize="md" wordBreak='break-word' lineHeight='normal' noOfLines={2} > {shallowData.name} </Heading>
                             </Box>
                         </Flex>
                         <Divider borderColor='black.300' />
@@ -77,20 +77,18 @@ export default function ServiceCard ({shallowData, blur, hide, ...props}) {
                                 }
                                 <Text fontSize="sm" > Created on: {(new Date(shallowData.dateCreated)).toLocaleDateString()} </Text>
                             </VStack>
-                            <UserAvatar flex={1} uid={shallowData.ownerId} flip={false} placement='left' />
+                            <UserAvatar flex={1} uid={shallowData.ownerId} flip={false} placement='bottom' />
                         </Flex>
                     </VStack>
                 </>
                 }
             </VStack>
         </MotionBox>
-        </Flip>
     );
 }
 
 const MediaPreview = ({imageUrls, videoUrl, ...props}) => {
     const playerRef = useRef();
-    console.log(playerRef.current);
     const [animateState, setAnimateState] = useState('normal');
     const variants = {
         normal: {

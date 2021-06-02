@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { getServicePublicDetails, getOrderDetails } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
-import { useBreakpointValue, useDisclosure, useToast, ScaleFade, Heading, Box, Button, VStack, Flex } from "@chakra-ui/react";
+import { useBreakpointValue, useDisclosure, ScaleFade, Flex } from "@chakra-ui/react";
 import Searching from '../../components/Searching';
 import NotFound from '../../components/NotFound';
 import Navbar from '../../components/Navbar';
@@ -16,13 +16,18 @@ export default function Order () {
     // Only can view if owner of order or owner of service
     const router = useRouter();
     const slug = router.query.slug;
-    // http://localhost:3000/orders/-MaPTTtZR88pljfYJFh3/-MaanMeEBWxjbJDRfMMK
     const [serviceId, setServiceId] = useState(null);
     const [orderId, setOrderId] = useState(null);
     const { auth, loading } = useAuth();
     const [fetchingData, setFetchingData] = useState(true);
     const [servicePublicData, setServicePublicData] = useState(null);
     const [orderData, setOrderData] = useState(null);
+
+    useEffect(() => {
+        if (router.query && Object.keys(router.query).length === 2) {
+            setOrderMode(Object.keys(router.query)[0]);
+        }
+    }, [router.query]);
 
     useEffect(() => {
         if (slug) {
@@ -52,9 +57,11 @@ export default function Order () {
                         setFetchingData(false);
                     }, () => {
                         // Error or permission denied
-                        setOrderData(null);
                         setFetchingData(false);
                     });
+                }
+                else {
+                    setFetchingData(false);
                 }
             });
         }
@@ -79,8 +86,8 @@ export default function Order () {
             else {
                 router.replace('/marketplace');
             }
-            console.log(servicePublicData);
-            console.log(orderData);
+            //console.log(servicePublicData);
+            //console.log(orderData);
         }
     }, [auth, loading, router, servicePublicData, orderData]);
 
@@ -91,11 +98,12 @@ export default function Order () {
         serviceType : servicePublicData ? servicePublicData.type : '',
     serviceId, orderId, orderMode, setOrderMode, drawerState};
     const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
+    console.log(orderMode);
 
     return (
     <div>
         <Head>
-            <title>{servicePublicData ? `Order Details - ${servicePublicData.name}` : (loading ? 'Searching...' :'Order Not Found!')}</title>
+            <title>{servicePublicData ? `Order Details - ${servicePublicData.name}` : (fetchingData ? 'Searching...' :'Order Not Found!')}</title>
             <link rel="icon" href="../public/favicon.ico" />
         </Head>
         <main>

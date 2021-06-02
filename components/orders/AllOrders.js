@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import { MotionBox } from '../MotionElements';
 import { Slide } from "react-awesome-reveal";
 import { Flex, VStack } from '@chakra-ui/react';
-import OrderCard from './OrderCard';
+import OrderCard from '../service/OrderCard';
 import Searching from '../Searching';
 import Empty from '../Empty';
 
-export default function AllOrders({fetchingOrders, serviceId, serviceData, ordersList, auth}) {
+export default function AllOrders({fetchingOrders, ordersList, auth}) {
     const router = useRouter();
     const [targetCardKey, setTargetCardKey] = useState(null);
-    console.log(ordersList);
+    //console.log(ordersList);
     return (
         <MotionBox
             flex={5}
@@ -25,10 +25,10 @@ export default function AllOrders({fetchingOrders, serviceId, serviceData, order
                     <Flex p={2} w="100%" direction="column" align="start" justify="center">
                         <Slide cascade duration={500} direction='right' triggerOnce >
                             {ordersList.map((data, i) => (
-                                <OrderCard mb={4} key={i} order={data} hide={targetCardKey === i}
+                                <OrderCard isAllOrdersPage={true} mb={4} key={i} order={data} hide={targetCardKey === i}
                                 onClick={() => {
                                     setTargetCardKey(i);
-                                    router.push(`/orders/${serviceId}/${data.orderId}`);
+                                    router.push(`/orders/${data.serviceId}/${data.orderId}`);
                                 }}
                                 />
                             ))
@@ -36,7 +36,7 @@ export default function AllOrders({fetchingOrders, serviceId, serviceData, order
                         </Slide>
                     </Flex>
                     :
-                    (fetchingOrders ? <Searching text='Obtaining orders...' /> : <Empty />)
+                    (fetchingOrders ? <Searching text='Obtaining your orders...' /> : <Empty />)
                 }
             </VStack>
         </MotionBox>

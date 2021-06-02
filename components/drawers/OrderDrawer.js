@@ -1,13 +1,21 @@
-import { motion } from "framer-motion";
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { motion } from "framer-motion";
 import { MotionButton, MotionBox } from '../MotionElements';
 import { useColorModeValue, Box, Button, Tooltip, VStack, Divider, Text } from '@chakra-ui/react';
 import { IoMdAnalytics } from 'react-icons/io';
 
-export default function ServiceDrawer({isServiceOwner, serviceName, serviceType, serviceId, orderId, orderMode, setOrderMode, drawerState}) {
+export default function OrderDrawer({isServiceOwner, serviceName, serviceType, serviceId, orderId, orderMode, setOrderMode, drawerState}) {
     const router = useRouter();
+
     const clickHandler = (mode) => {
         setOrderMode(mode);
+        router.replace({
+                pathname: `${serviceId}/${orderId}`,
+                query: { [mode]: '' }
+            }, 
+            undefined, { shallow: true }
+        );
         drawerState.onClose();
     };
     const bg1 = useColorModeValue("pink.200", "pink.500");
@@ -24,12 +32,12 @@ export default function ServiceDrawer({isServiceOwner, serviceName, serviceType,
                 </Tooltip>
                 <Tooltip placement="bottom" hasArrow label="Order ID" >
                     <Box p={1} textAlign="center" width="100%" bg={bg1} borderRadius="lg">
-                        <Text as="b" fontSize="lg" isTruncated >
+                        <Text as="b" fontSize="md" isTruncated >
                             {orderId}
                         </Text>
                     </Box>
                 </Tooltip>
-                <Divider borderColor='black.500' />
+                <Divider borderColor='black.300' />
                 <MotionButton icon={<IoMdAnalytics />} colorScheme={orderMode === 'status'?"purple":"gray"} onClick={() => clickHandler('status')} >
                     Status
                 </MotionButton>
