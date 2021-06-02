@@ -43,17 +43,20 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
     const toast = useToast();
     const toastId = "messageToast";
     const [newMessage, setNewMessage] = useState(false);
-    const [popSound, setPopSound] = useState(false);
+    const popSound = useRef(null);
     useEffect(() => {
-        setPopSound(new UIfx(popMP3));
+        popSound.current = new UIfx(popMP3);
     }, []);
 
     useEffect(() => {
         if (!loading && auth && router.pathname !== '/chats') {
             listenUserChats(auth, () => {
-                if (!toast.isActive(toastId)) {
+                if (router.pathname !== '/chats' && !toast.isActive(toastId)) {
+                    console.log(router.pathname);
                     setNewMessage(true);
-                    popSound.play();
+                    if (popSound.current) {
+                        popSound.current.play();
+                    }
                     toast({
                         id: toastId,
                         status: "info",

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { Flip } from "react-awesome-reveal";
-import { getUserChats, sendMessage } from '../../lib/db';
+import { getUserChats, sendMessage, deleteChatListeners } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
 import { ScaleFade, useBreakpointValue, useDisclosure, Flex,Text } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
@@ -40,6 +40,7 @@ export default function Chats() {
     useEffect(() => {
     if (!loading) {
         if (auth) {
+          deleteChatListeners(auth);
           getUserChats(true, auth, (result) => {
             let array = null;
             if (result) {

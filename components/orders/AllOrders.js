@@ -10,7 +10,7 @@ import Empty from '../Empty';
 export default function AllOrders({fetchingOrders, ordersList, auth}) {
     const router = useRouter();
     const [targetCardKey, setTargetCardKey] = useState(null);
-    //console.log(ordersList);
+
     return (
         <MotionBox
             flex={5}
