@@ -14,6 +14,7 @@ import AllOrders from '../../components/orders/AllOrders';
 export default function Orders() {
   const { auth, loading } = useAuth();
   const router = useRouter();
+  const [fetchingOrders, setFetchingOrders] = useState(true);
   const [ordersList, setOrdersList] = useState(null);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function Orders() {
           else {
               setOrdersList(null);
           }
+          setFetchingOrders(false);
         });
       }
     }
@@ -63,8 +65,8 @@ export default function Orders() {
             <Flex p={4} w="100%" align="start" justify="space-between">
               {breakpoint!=="base" && <OrdersDrawer {...drawerProps} />}
               <AnimatePresence exitBeforeEnter>
-                  {orderMode === "overview" && <OrdersOverview ordersList={ordersList} key="overview" auth={auth} />}
-                  {orderMode === "all" && <AllOrders ordersList={ordersList} key="all" auth={auth} />}
+                  {orderMode === "overview" && <OrdersOverview fetchingOrders={fetchingOrders} ordersList={ordersList} key="overview" auth={auth} />}
+                  {orderMode === "all" && <AllOrders fetchingOrders={fetchingOrders} ordersList={ordersList} key="all" auth={auth} />}
               </AnimatePresence>
             </Flex>
           </Flex>

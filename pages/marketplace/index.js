@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../lib/auth';
+//import { useAuth } from '../../lib/auth';
 import { Flip } from "react-awesome-reveal";
 import { getPublicServices } from '../../lib/db';
 import { ScaleFade, Flex } from "@chakra-ui/react";
@@ -12,7 +12,7 @@ import Searching from '../../components/Searching';
 import NotFound from '../../components/NotFound';
 
 export default function Marketplace() {
-  const { auth, loading } = useAuth();
+  //const { auth, loading } = useAuth();
   const router = useRouter();
   const [fetchingServices, setFetchingServices] = useState(true);
   const [services, setServices] = useState([]);
@@ -21,7 +21,7 @@ export default function Marketplace() {
   const [targetCardKey, setTargetCardKey] = useState(null);
   
   useEffect(() => {
-    getPublicServices((data) => {
+    getPublicServices(true, (data) => {
         if (data) {
           const array = Object.keys(data).map((key) => ({
             serviceId: key, ...data[key]
@@ -32,7 +32,6 @@ export default function Marketplace() {
         setFetchingServices(false);
     });
   }, []);
-
 
   //const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 

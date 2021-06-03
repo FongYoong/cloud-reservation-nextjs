@@ -136,7 +136,7 @@ export default function Chats() {
                   <Flex p={4} w="100%" align="start" justify="space-between">
                       {breakpoint!=="base" && <ChatsDrawer {...drawerProps} />}
                       <AnimatePresence exitBeforeEnter>
-                          <Chat key="overview" chatData={chats[currentChatIndex]} sendMessageHandler={sendMessageHandler}
+                          <Chat key={chats[currentChatIndex].otherId} chatData={chats[currentChatIndex]} sendMessageHandler={sendMessageHandler}
                             hasScrolledBefore={hasScrolledBefore} setHasScrolledBefore={setHasScrolledBefore}
                           />
                       </AnimatePresence>

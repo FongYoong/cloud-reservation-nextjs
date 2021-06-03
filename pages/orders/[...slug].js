@@ -98,8 +98,7 @@ export default function Order () {
         serviceType : servicePublicData ? servicePublicData.type : '',
     serviceId, orderId, orderMode, setOrderMode, drawerState};
     const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
-    console.log(orderMode);
-
+    
     return (
     <div>
         <Head>

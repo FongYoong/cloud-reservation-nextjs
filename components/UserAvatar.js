@@ -45,7 +45,7 @@ export default function UserAvatar({ customProfile=null, uid, ...props }) {
                     </MenuButton>
                 </motion.button>
                 <Portal>
-                    <MenuList borderWidth={3} boxShadow="lg" bg={useColorModeValue('purple.50', 'purple.700')}>
+                    <MenuList borderWidth={3} boxShadow="lg" bg={useColorModeValue('green.50', 'green.700')}>
                         <Box px={4} textAlign="left">
                             <Text lineHeight='normal' noOfLines={1} > <b>{profile.username}</b> </Text>
                         </Box>

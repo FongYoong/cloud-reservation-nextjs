@@ -7,10 +7,9 @@ import OrderCard from '../service/OrderCard';
 import Searching from '../Searching';
 import Empty from '../Empty';
 
-export default function AllOrders({fetchingOrders, ordersList, auth}) {
+export default function AllOrders({ fetchingOrders, ordersList }) {
     const router = useRouter();
     const [targetCardKey, setTargetCardKey] = useState(null);
-
     return (
         <MotionBox
             flex={5}
@@ -21,7 +20,7 @@ export default function AllOrders({fetchingOrders, ordersList, auth}) {
             transition={{ type: "tween" }}
         >
             <VStack w='100%' m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                {ordersList && ordersList.length > 0 ?
+                {ordersList && ordersList.length > 0 &&
                     <Flex p={2} w="100%" direction="column" align="start" justify="center">
                         <Slide cascade duration={500} direction='right' triggerOnce >
                             {ordersList.map((data, i) => (
@@ -35,8 +34,12 @@ export default function AllOrders({fetchingOrders, ordersList, auth}) {
                             }
                         </Slide>
                     </Flex>
-                    :
-                    (fetchingOrders ? <Searching text='Obtaining your orders...' /> : <Empty />)
+                }
+                {!fetchingOrders && (!ordersList || ordersList.length == 0) &&
+                    <Empty />
+                }
+                {fetchingOrders &&
+                    <Searching />
                 }
             </VStack>
         </MotionBox>

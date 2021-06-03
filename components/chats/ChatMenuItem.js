@@ -3,7 +3,7 @@ import { MotionBox } from '../MotionElements';
 import TextTransition, { presets } from "react-text-transition";
 import UserAvatar from '../UserAvatar';
 import { getUserProfile } from '../../lib/db';
-import { useBreakpointValue, useColorModeValue, useDisclosure, Divider, Flex, Box, Heading, Text, Button, VStack } from "@chakra-ui/react";
+import { useBreakpointValue, useColorModeValue, Flex, Heading, VStack } from "@chakra-ui/react";
 
 export default function ChatMenuItem ({ selected, uid, latestMessage, ...props }) {
     const [profile, setProfile] = useState({});
@@ -62,14 +62,3 @@ export default function ChatMenuItem ({ selected, uid, latestMessage, ...props }
         </MotionBox>
     )
 }
-/*
-                    <Text w={breakpoint==='base'?'8em':'13vw'} display='inline-block' fontSize='sm' textOverflow='ellipsis' whiteSpace='nowrap' overflow='hidden' lineHeight='normal' >
-                        {latestMessage.sender==='user'?'You: ':''}{latestMessage.content}
-                    </Text>
-                <MotionButton icon={<MdModeEdit />} colorScheme={mode === 'edit'?"purple":"gray"} onClick={() => clickHandler('edit')} >
-                    Edit Profile
-                </MotionButton>
-                <MotionButton icon={<IoMdAnalytics />} colorScheme={mode === 'overview'?"purple":"gray"} onClick={() => clickHandler('overview')} >
-                    Overview
-                </MotionButton>
-            */

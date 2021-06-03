@@ -39,7 +39,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     const acceptModalState = useDisclosure();
     const acceptHandler = () => {
         setIsLoading(true);
-        updateOrder(auth, serviceId, orderId, {
+        updateOrder(orderData.userId, serviceId, orderId, {
             status: 'accepted',
             approvalRemarks: acceptRemarksRef.current.value,
         }, () => {
@@ -52,14 +52,15 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
             });
             setIsLoading(false);
             acceptModalState.onClose();
-        }, () => {
+        }, (e) => {
+            console.log(e);
             alert("Firebase Error");
         });
     }
     const rejectModalState = useDisclosure();
     const rejectHandler = () => {
         setIsLoading(true);
-        updateOrder(auth, serviceId, orderId, {
+        updateOrder(orderData.userId, serviceId, orderId, {
             status: 'rejected',
             approvalRemarks: rejectRemarksRef.current.value,
         }, () => {
@@ -79,7 +80,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     const payModalState = useDisclosure();
     const payHandler = () => {
         setIsLoading(true);
-        updateOrder(auth, serviceId, orderId, {
+        updateOrder(orderData.userId, serviceId, orderId, {
             status: 'paidByUser',
         }, () => {
             toast({
@@ -98,7 +99,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     const completedModalState = useDisclosure();
     const completedHandler = () => {
         setIsLoading(true);
-        updateOrder(auth, serviceId, orderId, {
+        updateOrder(orderData.userId, serviceId, orderId, {
             status: 'completed',
         }, () => {
             toast({
@@ -242,7 +243,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> The seller has <Text as='span' color='green.500'> approved </Text> your order! <span role='img' aria-label="happy">😃</span> </b>
                         </Text>
                     </MotionGetAttention>
-                    <motion.div style={{width:'100%'}} whileHover={{ scale: 1.1 }} >
+                    <motion.div style={{width:'100%'}} whileHover={{ scale: 1.05 }} >
                         <VStack p={2} bg={sellerRemarksBg} borderWidth={2} borderRadius="lg" boxShadow="lg" >
                             <Text fontSize="md" > Seller remarks: </Text>
                             <Divider borderColor='black.300' />
@@ -261,7 +262,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> The seller has <Text as='span' color='red.500'> rejected </Text> your order! <span role='img' aria-label="sad">😢</span> </b>
                         </Text>
                     </MotionGetAttention>
-                    <motion.div style={{width:'100%'}} whileHover={{ scale: 1.1 }} >
+                    <motion.div style={{width:'100%'}} whileHover={{ scale: 1.05 }} >
                         <VStack p={2} bg={sellerRemarksBg} borderWidth={2} borderRadius="lg" boxShadow="lg" >
                             <Text fontSize="md" > Seller remarks: </Text>
                             <Divider borderColor='black.300' />

@@ -76,6 +76,10 @@ export default function Service () {
                         setFetchingReviews(false);
                     });
                 }
+                else {
+                    setFetchingOrders(false);
+                    setFetchingReviews(false);
+                }
             });
         }
     }, [serviceId]);

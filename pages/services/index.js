@@ -37,8 +37,11 @@ export default function Services() {
               }));
               array.reverse();
               setServicesList(array);
-              setFetchingServices(false);
           }
+          else {
+              setServicesList(null);
+          }
+          setFetchingServices(false);
         });
       }
     }

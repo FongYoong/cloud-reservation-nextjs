@@ -34,7 +34,7 @@ export default function ChatsDrawer({fetchingChats, chats, currentChatIndex, set
                 >
                 <AnimateSharedLayout>
                     {chats && chats.map((otherUser, i) => (
-                        <ChatMenuItem selected={i == currentChatIndex} key={i} uid={otherUser.otherId}
+                        <ChatMenuItem selected={i == currentChatIndex} key={otherUser.otherId} uid={otherUser.otherId}
                             latestMessage={otherUser.messages ? otherUser.messages[otherUser.messages.length - 1] : ''}
                             onClick={() => clickHandler(i)}
                         />

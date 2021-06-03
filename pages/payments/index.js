@@ -2,10 +2,9 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
-import { AnimatePresence } from "framer-motion";
 import { Slide } from "react-awesome-reveal";
 import { getUserOrders } from '../../lib/db';
-import { useBreakpointValue, ScaleFade, Flex } from "@chakra-ui/react";
+import { useBreakpointValue, ScaleFade, Flex, Heading } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import OrderCard from '../../components/service/OrderCard';
@@ -30,9 +29,20 @@ export default function Payments() {
               const array = Object.keys(data).map((key) => ({
                 orderId: key, ...data[key]
               })).filter((order) => {
-                return order.status === 'accepted' || order.status === 'paidByUser'
+                return order.status === 'accepted' || order.status === 'paidByUser' || order.status === 'completed';
               });
               array.reverse();
+              array.sort((a, b) => {
+                if ((a.status === 'paidByUser' || a.status === 'completed') && b.status === 'accepted') {
+                  return 1;
+                }
+                else {
+                  if (a.status === 'completed'  && b.status === 'paidByUser') {
+                    return 1;
+                  }
+                  return -1;
+                }
+              })
               setOrdersList(array);
           }
           else {
@@ -46,8 +56,6 @@ export default function Payments() {
 
   const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
-  // accepted(pending payment), paidByUser(already paid so it's a past purchase)
-
   return (
     <div>
       <Head>
@@ -58,7 +66,10 @@ export default function Payments() {
         <Navbar />
         <NavbarSpace />
         <ScaleFade initialScale={0.9} in={true}>
-          <Flex p={2} w="100%" direction="column" align="start" justify="center" >
+          <Flex p={2} w="100%" direction="column" align="center" justify="center" >
+            <Heading mb={4} >
+              Payments
+            </Heading>
             {ordersList && ordersList.length > 0 &&
               <Slide cascade duration={500} direction='right' triggerOnce >
                   {ordersList.map((data, i) => (
