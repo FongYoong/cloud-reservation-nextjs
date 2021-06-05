@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { MotionBox } from '../MotionElements';
 import TextTransition, { presets } from "react-text-transition";
 import UserAvatar from '../UserAvatar';
 import { getUserProfile } from '../../lib/db';
 import { useBreakpointValue, useColorModeValue, Flex, Heading, VStack } from "@chakra-ui/react";
 
-export default function ChatMenuItem ({ selected, uid, latestMessage, ...props }) {
+export default memo(function ChatMenuItem ({ selected, uid, latestMessage, ...props }) {
     const [profile, setProfile] = useState({});
     useEffect(() => {
         if (uid) {
@@ -61,4 +61,4 @@ export default function ChatMenuItem ({ selected, uid, latestMessage, ...props }
             </Flex>
         </MotionBox>
     )
-}
+});

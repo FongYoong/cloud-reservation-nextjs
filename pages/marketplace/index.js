@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-//import { useAuth } from '../../lib/auth';
-import { Flip } from "react-awesome-reveal";
+import { AnimateSharedLayout } from "framer-motion";
 import { getPublicServices } from '../../lib/db';
 import { ScaleFade, Flex } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
@@ -12,7 +11,6 @@ import Searching from '../../components/Searching';
 import NotFound from '../../components/NotFound';
 
 export default function Marketplace() {
-  //const { auth, loading } = useAuth();
   const router = useRouter();
   const [fetchingServices, setFetchingServices] = useState(true);
   const [services, setServices] = useState([]);
@@ -46,17 +44,17 @@ export default function Marketplace() {
         <NavbarSpace />
         <ScaleFade initialScale={0.9} in={true}>
           <Flex p={2} w="100%" direction="column" align="center" justify="center">
-              <Flex w="100%" flexWrap='wrap' align="start" justify="start">
-                <Flip cascade duration={400} direction='vertical' triggerOnce >
-                {services && services.map((data, i) => (
-                  <ServiceCard blur={somethingHovered && targetCardKey !== i} hide={somethingClicked && targetCardKey !== i}  m={4} k={i} key={i} shallowData={data}
+              <Flex w="100%" flexWrap='wrap' align="start" justify="center">
+                <AnimateSharedLayout>
+                {services && services.map((data) => (
+                  <ServiceCard blur={somethingHovered && targetCardKey !== data.serviceId} hide={somethingClicked && targetCardKey !== data.serviceId} m={4} key={data.serviceId} shallowData={data}
                     onClick={() => {
-                      setTargetCardKey(i);
+                      setTargetCardKey(data.serviceId);
                       setSomethingClicked(true);
                       setTimeout(() => router.push(`/services/${data.serviceId}`), 400);
                     }}
                     onMouseEnter={ () => {
-                        setTargetCardKey(i);
+                        setTargetCardKey(data.serviceId);
                         setSomethingHovered(true);
                     }}
                     onMouseLeave={ () => {
@@ -65,7 +63,7 @@ export default function Marketplace() {
                   />
                 ))
                 }
-                </Flip>
+                </AnimateSharedLayout>
               </Flex>
           </Flex>
         </ScaleFade>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Fade } from "react-awesome-reveal";
 
 // File Pond
@@ -43,7 +43,7 @@ const filepondServerConfig = {
     },
 }
 
-export default function ProfileForm({ completeFormHandler, initialUsername='', initialDescription='', initialImageFile=[] }) {
+export default memo(function ProfileForm({ completeFormHandler, initialUsername='', initialDescription='', initialImageFile=[] }) {
 
     const [imageFile, setImageFile] = useState(initialImageFile);
 
@@ -130,4 +130,4 @@ export default function ProfileForm({ completeFormHandler, initialUsername='', i
             </VStack>
         </motion.div>
     )
-}
+});

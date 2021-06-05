@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { MotionBox, MotionButton } from '../MotionElements';
 import { Slide } from "react-awesome-reveal";
@@ -9,7 +9,7 @@ import Searching from '../../components/Searching';
 import Empty from '../Empty';
 import { RiChatSmile3Line } from 'react-icons/ri';
 
-export default function ProfileOverview({uid, sameUser=false, profileData}) {
+export default memo(function ProfileOverview({uid, sameUser=false, profileData}) {
     const router = useRouter();
     const [servicesList, setServicesList] = useState([]);
     const [fetchingServices, setFetchingServices] = useState(true);
@@ -76,9 +76,9 @@ export default function ProfileOverview({uid, sameUser=false, profileData}) {
                 {!fetchingServices ? <>
                     {servicesList && servicesList.length > 0 ?
                         <Flex p={2} w="100%" direction="column" align="start" justify="center">
-                            <Slide cascade duration={500} direction='right' triggerOnce >
+                            <Slide cascade duration={500} direction='up' triggerOnce >
                                 {servicesList.map((data, i) => (
-                                    <ServiceCard mb={4} key={i} shallowData={data} hide={targetCardKey === i}
+                                    <ServiceCard mb={4} key={data.serviceId} shallowData={data} hide={targetCardKey === i}
                                     onClick={() => {
                                         setTargetCardKey(i);
                                         router.push(`/services/${data.serviceId}`);
@@ -97,19 +97,4 @@ export default function ProfileOverview({uid, sameUser=false, profileData}) {
             </VStack>
         </MotionBox>
     )
-}
-/*
-hide={somethingClicked && targetCardKey !== i}
-onClick={() => {
-    setTargetCardKey(i);
-    setSomethingClicked(true);
-    setTimeout(() => router.push(`/services/${data.serviceId}`), 400);
-}}
-onMouseEnter={ () => {
-    setTargetCardKey(i);
-    setSomethingHovered(true);
-}}
-onMouseLeave={ () => {
-    setSomethingHovered(false);
-}}
-*/
+});

@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { useRouter } from 'next/router';
 import { MotionButton, MotionBox } from '../MotionElements';
 import { VStack, Divider, Heading } from '@chakra-ui/react';
 import { IoMdAnalytics } from 'react-icons/io';
 import { MdModeEdit } from 'react-icons/md';
 
-export default function ServicesDrawer({mode, setMode, drawerState}) {
+export default memo(function ServicesDrawer({mode, setMode, drawerState}) {
     const router = useRouter();
 
     const clickHandler = (type) => {
@@ -33,4 +34,4 @@ export default function ServicesDrawer({mode, setMode, drawerState}) {
             </VStack>
         </MotionBox>
     )
-}
+});

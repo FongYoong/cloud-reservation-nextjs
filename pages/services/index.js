@@ -48,7 +48,7 @@ export default function Services() {
   }, [auth, loading, router]);
 
   const drawerState = useDisclosure();
-  const [serviceMode, setServiceMode] = useState("overview"); // add, overview, all,
+  const [serviceMode, setServiceMode] = useState("all"); // add, overview, all,
   const drawerProps = {serviceMode, setServiceMode, drawerState};
   const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 

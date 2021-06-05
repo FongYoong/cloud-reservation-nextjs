@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { useAuth } from '../lib/auth';
 import { useRouter } from 'next/router';
 import { getUserProfile } from '../lib/db';
@@ -7,7 +7,7 @@ import { Portal, useColorModeValue, Box, Text, MenuButton, Menu, MenuList, MenuI
 import { FaEye } from 'react-icons/fa';
 import { RiChatSmile3Line } from 'react-icons/ri';
 
-export default function UserAvatar({ customProfile=null, uid, ...props }) {
+export default memo(function UserAvatar({ customProfile=null, uid, ...props }) {
     const { auth, loading } = useAuth();
     const router = useRouter();
     const menuRef = useRef();
@@ -65,4 +65,4 @@ export default function UserAvatar({ customProfile=null, uid, ...props }) {
             </Menu>
         </Box>
     );
-}
+});

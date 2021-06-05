@@ -71,7 +71,7 @@ export default function Payments() {
               Payments
             </Heading>
             {ordersList && ordersList.length > 0 &&
-              <Slide cascade duration={500} direction='right' triggerOnce >
+              <Slide cascade duration={500} direction='up' triggerOnce >
                   {ordersList.map((data, i) => (
                       <OrderCard isAllOrdersPage={true} mb={4} key={i} order={data} hide={targetCardKey === i}
                       onClick={() => {

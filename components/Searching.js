@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Flex, Heading, CircularProgress } from '@chakra-ui/react';
 
-export default function Searching({text = 'Searching...'}) {
+export default memo(function Searching({text = 'Searching...'}) {
     return (
         <Flex align="center" justify="center">
             <Heading fontSize="xl" mb={2}>
@@ -9,4 +10,4 @@ export default function Searching({text = 'Searching...'}) {
             <CircularProgress isIndeterminate color="green.400" />
         </Flex>
     )
-}
+});

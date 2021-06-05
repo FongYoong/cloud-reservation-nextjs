@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { memo } from 'react';
 import { useRouter } from 'next/router';
 import { MotionButton, MotionBox } from '../MotionElements';
 import { VStack, Divider, Heading } from '@chakra-ui/react';
 import { IoMdAnalytics } from 'react-icons/io';
 import { MdWork } from 'react-icons/md';
 
-export default function OrdersDrawer({orderMode, setOrderMode, drawerState}) {
+export default memo(function OrdersDrawer({orderMode, setOrderMode, drawerState}) {
     const router = useRouter();
     
     const clickHandler = (orderType) => {
@@ -34,4 +34,4 @@ export default function OrdersDrawer({orderMode, setOrderMode, drawerState}) {
             </VStack>
         </MotionBox>
     )
-}
+});

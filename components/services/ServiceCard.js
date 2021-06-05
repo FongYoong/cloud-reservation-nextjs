@@ -45,7 +45,7 @@ export default function ServiceCard ({shallowData, hide, ...props}) {
                         }
                         <Box ml={2} minWidth={0} >
                             <Text textAlign='center' fontSize={breakpoint==='base'?"xs":"sm"} >
-                                Created at {dateCreated.getHours()}:{dateCreated.getMinutes()}, {dateCreated.toLocaleDateString()}
+                                Created at {dateCreated.getHours()}:{dateCreated.getMinutes()}, {dateCreated.toDateString()}
                             </Text>
                         </Box>
                     </Flex>

@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { memo, useState } from 'react';
 import { getSignature, uploadImages, updateProfile } from '../../lib/db';
 import { MotionBox } from '../MotionElements';
 import ProfileForm from '../forms/ProfileForm';
-import { Heading, Flex, useToast,
+import { Flex, useToast,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -13,8 +12,7 @@ import { Heading, Flex, useToast,
     CircularProgressLabel,
 } from '@chakra-ui/react';
 
-export default function EditProfile({auth, profileData}) {
-    const router = useRouter();
+export default memo(function EditProfile({auth, profileData}) {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadingModal, setUploadingModal] = useState(false);
     const toast = useToast();
@@ -92,4 +90,4 @@ export default function EditProfile({auth, profileData}) {
             </Modal>
         </MotionBox>
     )
-}
+});

@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { MotionGetAttention } from './MotionElements';
 import UserAvatar from './UserAvatar';
 import { Tag, TagRightIcon, TagLabel } from "@chakra-ui/react";
 import { FaArrowAltCircleRight } from 'react-icons/fa';
 
-export default function OrderCard ({isAllOrdersPage, uid, status, ...props}) {
+export default memo(function OrderCard ({isAllOrdersPage, uid, status, ...props}) {
     let getAttention = false;
     let label; // initial, accepted, rejected, paidByUser, completed
     let colorScheme = 'grey';
@@ -40,4 +41,4 @@ export default function OrderCard ({isAllOrdersPage, uid, status, ...props}) {
             </Tag>
         </MotionGetAttention>
     );
-}
+});

@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { Zoom } from "react-awesome-reveal";
 import { VStack, Heading, Img } from '@chakra-ui/react';
 
-export default function Empty ({ children, ...props }) {
+export default memo(function Empty ({ children, ...props }) {
     return ( 
         <Zoom>
             <VStack p={2} w='100%'>
@@ -16,4 +17,4 @@ export default function Empty ({ children, ...props }) {
             </VStack>
         </Zoom>
     )
-}
+});

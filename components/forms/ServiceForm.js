@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Fade } from "react-awesome-reveal";
 
 // File Pond
@@ -70,7 +70,7 @@ const serviceTypeVariants = {
     selected: { scale: 1.2 },
 };
 
-export default function ServiceForm({ update, completeFormHandler, initialServiceType='service', initialDetails={}, initialDays=[], initialImageFiles=[], initialVideoFile=[] }) {
+export default memo(function ServiceForm({ update, completeFormHandler, initialServiceType='service', initialDetails={}, initialDays=[], initialImageFiles=[], initialVideoFile=[] }) {
     //formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     //const serviceTypeFlipRef = useRef();
     const [isFlipped, setIsFlipped] = useState(initialServiceType !== 'service'); // service, product
@@ -434,4 +434,4 @@ export default function ServiceForm({ update, completeFormHandler, initialServic
         </Stack>
         </motion.div>
     )
-}
+});

@@ -1,11 +1,11 @@
 
-import React, { forwardRef } from 'react';
+import { memo, forwardRef } from 'react';
 import { MotionBox } from '../MotionElements';
 import { Slide } from "react-awesome-reveal";
 import { useBreakpointValue, Tooltip, Flex, Text } from "@chakra-ui/react";
 
 // eslint-disable-next-line react/display-name
-const ChatMessage = React.memo(forwardRef(({ animate, sender, content, dateCreated }, ref) => {
+const ChatMessage = memo(forwardRef(({ animate, sender, content, dateCreated }, ref) => {
     const date = new Date(dateCreated);
     const userBg = "linear(to-b, #809cff, #406aff)";
     const otherBg = "linear(to-b, yellow.50, yellow.200)";
@@ -32,6 +32,5 @@ const ChatMessage = React.memo(forwardRef(({ animate, sender, content, dateCreat
         </MotionBox>
     )
 }));
-//             <Slide duration={500} direction={sender==='other'?'left':'right'} triggerOnce >
 
 export default ChatMessage;

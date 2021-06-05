@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { memo } from 'react';
 import { useRouter } from 'next/router';
 import { motion } from "framer-motion";
 import { MotionButton, MotionBox } from '../MotionElements';
 import { useColorModeValue, Box, Button, Tooltip, VStack, Divider, Text } from '@chakra-ui/react';
 import { IoMdAnalytics } from 'react-icons/io';
 
-export default function OrderDrawer({isServiceOwner, serviceName, serviceType, serviceId, orderId, orderMode, setOrderMode, drawerState}) {
+export default memo(function OrderDrawer({isServiceOwner, serviceName, serviceType, serviceId, orderId, orderMode, setOrderMode, drawerState}) {
     const router = useRouter();
 
     const clickHandler = (mode) => {
@@ -44,4 +44,4 @@ export default function OrderDrawer({isServiceOwner, serviceName, serviceType, s
             </VStack>
         </MotionBox>
     )
-}
+});

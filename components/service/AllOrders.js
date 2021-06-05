@@ -23,7 +23,7 @@ export default function AllOrders({fetchingOrders, serviceId, serviceData, order
             <VStack w='100%' m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
                 {ordersList && ordersList.length > 0 ?
                     <Flex p={2} w="100%" direction="column" align="start" justify="center">
-                        <Slide cascade duration={500} direction='right' triggerOnce >
+                        <Slide cascade duration={500} direction='up' triggerOnce >
                             {ordersList.map((data, i) => (
                                 <OrderCard mb={4} key={i} order={data} hide={targetCardKey === i}
                                 onClick={() => {

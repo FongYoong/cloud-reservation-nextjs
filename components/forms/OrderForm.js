@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
 import { MotionButton, MotionBox, formVariants, initialFormVariants } from '../MotionElements';
 import { Calendar, dateIsInFuture, datesAreOnSameDay, days, transformAvailableDays, checkIfUnavailableDay, checkIfMinutesExist,
@@ -26,7 +26,7 @@ const processQuantityValue = (quantity) => {
     return Math.round(quantity);
 }
 
-export default function OrderForm({ update, serviceType, serviceData, completeFormHandler }) {
+export default memo(function OrderForm({ update, serviceType, serviceData, completeFormHandler }) {
     const toast = useToast();
     const [formSchema, setFormSchema] = useState(null);
     useEffect(() => {
@@ -276,6 +276,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                                 else {
                                     setDetails({
                                         ...values,
+                                        price: serviceData.price,
                                         quantity: processQuantityValue(values.quantity),
                                     });
                                 }
@@ -312,7 +313,13 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                                             </FormControl>
                                             )}
                                         </Field>
-                                        </> :
+                                        </> : <>
+                                        <motion.div whileHover={{ scale: 1.1 }} >
+                                            <Stat p={2} mb={2} borderWidth={2} borderRadius="lg">
+                                                <StatLabel>Selling Price</StatLabel>
+                                                <StatNumber>RM {serviceData.price.toFixed(2)}</StatNumber>
+                                            </Stat>
+                                        </motion.div>
                                         <Field name="quantity" >
                                             {({ field }) => (
                                             <FormControl isInvalid={errors.quantity && touched.quantity} isRequired>
@@ -323,7 +330,7 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
                                             <FormErrorMessage>{errors.quantity}</FormErrorMessage>
                                             </FormControl>
                                             )}
-                                        </Field>
+                                        </Field> </>
                                     }
                                     <Field name="userRemarks" >
                                         {({ field }) => (
@@ -493,4 +500,4 @@ export default function OrderForm({ update, serviceType, serviceData, completeFo
             </Modal>
         </motion.div>
     )
-}
+});

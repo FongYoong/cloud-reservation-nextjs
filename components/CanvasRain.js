@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 
-export const CanvasRain = ({ fullScreen, ...props }) => {
+export const CanvasRain = memo(({ fullScreen, ...props }) => {
     const canvasRef = useRef();
-    const [mousePos, setMousePos] = useState({x: 0, y:0});
+    const [mousePos, setMousePos] = useState({x: 0, y: 0});
     const mousePosRef = useRef();
     mousePosRef.current = mousePos;
     const [hasStarted, setHasStarted] = useState(false);
@@ -84,4 +84,4 @@ export const CanvasRain = ({ fullScreen, ...props }) => {
         <canvas ref={canvasRef} {...props} >
         </canvas>
     )
-}
+});

@@ -1,25 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { updateOrder, addServiceReview } from '../../lib/db';
 import { motion } from "framer-motion";
 import { MotionButton, MotionGetAttention, MotionBox } from '../MotionElements';
+import { Fade, Zoom } from "react-awesome-reveal";
 import Ratings from '../Ratings';
 import UserAvatar from '../UserAvatar';
 import { CanvasRain } from '../CanvasRain';
 import { Calendar, formatEvents, calculateEventHours, dateIsToday } from '../Calendar';
 import { Views } from "react-big-calendar";
 import { Img, Flex, Box, VStack, HStack, Button, Heading, Text, Textarea, Stat, StatLabel, StatNumber, StatHelpText, Divider, Tag, TagLabel, TagRightIcon,
-useBreakpointValue,
-useToast,
-useColorModeValue,
-useDisclosure,
-Modal,
-ModalOverlay,
-ModalContent,
-ModalHeader,
-ModalCloseButton,
-ModalBody,
-ModalFooter,
-CircularProgress
+useBreakpointValue, useToast, useColorModeValue, useDisclosure,
+Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
+CircularProgress,
+Tabs, TabList, TabPanels, Tab, TabPanel,
+Table, Thead, Tbody, Tr, Th, Td,
 } from '@chakra-ui/react';
 
 import { FaProductHunt, FaHammer, FaRegSmile, FaRegSadCry } from 'react-icons/fa';
@@ -347,7 +341,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                 
                 <Divider borderColor='black.500' />
 {/* Order details */}
-                <VStack width={breakpoint==='base'?'100%':'50%'} p={2} bg={useColorModeValue('white', 'gray.700')} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
+                <VStack width={breakpoint==='base'?'100%':'70%'} p={2} bg={useColorModeValue('white', 'gray.700')} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
                     <Flex p={2} width="100%" align="center" justify="start" borderBottomWidth={1}>
                         <Box mr={2} >
                             {servicePublicData.type === 'service' ?
@@ -422,24 +416,55 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                 </VStack>
 
                 <Divider borderColor='black.500' />
-                {servicePublicData.type === 'service' &&
-                    <Box p={1} width="100%" _hover={{bg:calendarBg2}} bg={calendarBg} borderWidth={1} borderRadius="lg" >
-                        <Calendar
-                            dayPropGetter={(date) => ({
-                                style: {
-                                    backgroundColor: dateIsToday(date) ? todayColor : '',
-                                }
-                            })}
-                            resizable={false}
-                            views={[Views.DAY, Views.WEEK, Views.AGENDA]}
-                            defaultView={Views.AGENDA}
-                            events={calendarEvents}
-                            onSelectEvent={(event) => {
-                                setClickedEvent(event);
-                                eventModalState.onOpen();
-                            }}
-                        />
-                    </Box>
+                {servicePublicData.type === 'service' && <>
+                    <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                        Schedule
+                    </Heading>
+                    <Tabs isLazy isFitted width={breakpoint==='base'?'100%':'70%'} variant="soft-rounded" colorScheme="purple">
+                        <TabList>
+                            <Tab>All Events</Tab>
+                            <Tab>Calendar</Tab>
+                        </TabList>
+                        <TabPanels>
+                            <TabPanel>
+                                <Fade duration={500} >
+                                <Table variant="simple" width='100%' p={2} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
+                                    <Thead>
+                                        <EventRow noExpand isHead />
+                                    </Thead>
+                                    <Tbody>
+                                        {calendarEvents && calendarEvents.map((event) => (
+                                            <EventRow key={event.start} event={event} />
+                                        ))}
+                                    </Tbody>
+                                </Table>
+                                </Fade>
+                            </TabPanel>
+                            <TabPanel>
+                                <Box p={1} width="100%" _hover={{bg:calendarBg2}} bg={calendarBg} borderWidth={1} borderRadius="lg" >
+                                    <Fade duration={500} >
+                                        <Calendar
+                                            defaultDate={calendarEvents[0].start}
+                                            dayPropGetter={(date) => ({
+                                                style: {
+                                                    backgroundColor: dateIsToday(date) ? todayColor : '',
+                                                }
+                                            })}
+                                            resizable={false}
+                                            views={[Views.DAY, Views.WEEK, Views.AGENDA]}
+                                            defaultView={Views.WEEK}
+                                            events={calendarEvents}
+                                            onSelectEvent={(event) => {
+                                                setClickedEvent(event);
+                                                eventModalState.onOpen();
+                                            }}
+                                        />
+                                    </Fade>
+                                </Box>
+                            </TabPanel>
+                        </TabPanels>
+                    </Tabs>
+                    </>
                 }
             </VStack>
 
@@ -593,14 +618,36 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
     )
 }
 
-const OrderDetailsRow = ({children, noExpand, ...props}) => {
+// eslint-disable-next-line react/display-name
+const OrderDetailsRow = memo(({children, noExpand, ...props}) => {
     return (
-        <Box {...props} width="100%" >
-            <motion.div whileHover={{ scale: noExpand? 1 : 1.05, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} >
-                <Flex px={4} py={2} align="center" justify="center" >
-                    {children}
-                </Flex>
-            </motion.div>
-        </Box>
+        <MotionBox w='100%' whileHover={{ scale: noExpand? 1 : 1.05, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} {...props} >
+            <Flex px={4} py={2} align="center" justify="center" >
+                {children}
+            </Flex>
+        </MotionBox>
     )
-}
+});
+
+// eslint-disable-next-line react/display-name
+const EventRow = memo(({noExpand, isHead=false, event, ...props}) => {
+    const start = new Date(isHead ? 0 : event.start);
+    const end = new Date(isHead ? 0 : event.end);
+    return (
+        <MotionBox as={Tr} w='100%'
+            whileHover={{ scale: noExpand? 1 : 1.05, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} {...props} >
+            {isHead && <>
+                <Th>Date</Th>
+                <Th>Time</Th>
+                <Th>Event Title</Th>
+                </>
+            }
+            {!isHead && <>
+                <Td>{start.toDateString()}</Td>
+                <Td>{start.toLocaleTimeString()} - {end.toLocaleTimeString()}</Td>
+                <Td>{event.title}</Td>
+                </>
+            }
+        </MotionBox>
+    )
+});

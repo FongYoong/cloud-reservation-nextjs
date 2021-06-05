@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { motion } from "framer-motion";
 import { Box, Button } from '@chakra-ui/react';
 import { Fade } from "react-awesome-reveal";
 
 export const MotionBox = motion(Box);
-
-export function MotionButton({children, hidden, disabled, getAttention, icon, colorScheme, ...props}) {
+// eslint-disable-next-line react/display-name
+export const MotionButton = memo(({children, hidden, disabled, getAttention, icon, colorScheme, ...props}) => {
     const variants = {
         normal: {
             scale: 1,
@@ -51,9 +51,9 @@ export function MotionButton({children, hidden, disabled, getAttention, icon, co
             </motion.div>
         </Fade>
     )
-}
-
-export function MotionGetAttention({attentionType='rotate', hover=false, children, ...props}) {
+});
+// eslint-disable-next-line react/display-name
+export const MotionGetAttention = memo(({attentionType='rotate', hover=false, children, ...props}) => {
     const variants = {
         normal: {
             scale: 1,
@@ -95,7 +95,7 @@ export function MotionGetAttention({attentionType='rotate', hover=false, childre
             </motion.div>
         </Fade>
     )
-}
+});
 
 export const initialFormVariants = {
     display: "none",

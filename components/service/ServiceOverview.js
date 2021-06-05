@@ -53,7 +53,7 @@ export default function ServiceOverview({publicData}) {
             transition={{ type: "tween" }}
         >
             <VStack m={breakpoint==='base'?0:2} p={breakpoint==='base'?2:4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <ImageGallery slideOnThumbnailOver={true} showIndex={true} showPlayButton={false} items={images} />
+                <ImageGallery slideOnThumbnailOver={false} showIndex={true} showPlayButton={false} items={images} />
                 <VStack width={breakpoint==='base'?'100%':'50%'} p={2} bg={useColorModeValue('white', 'gray.700')} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
                     <Flex p={2} width="100%" align="center" justify="start" borderBottomWidth={1}>
                         <Box flex={3} >

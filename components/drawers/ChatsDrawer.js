@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { AnimateSharedLayout } from "framer-motion";
 import { MotionBox } from '../MotionElements';
 import ChatMenuItem from '../chats/ChatMenuItem';
 import Searching from '../Searching';
 import { useColorModeValue, VStack, Divider, Heading, Flex } from '@chakra-ui/react';
 
-export default function ChatsDrawer({fetchingChats, chats, currentChatIndex, setCurrentChatIndex, drawerState}) {
+export default memo(function ChatsDrawer({fetchingChats, chats, currentChatIndex, setCurrentChatIndex, drawerState}) {
 
     const clickHandler = (index) => {
         setCurrentChatIndex(index);
@@ -48,4 +49,4 @@ export default function ChatsDrawer({fetchingChats, chats, currentChatIndex, set
             </VStack>
         </MotionBox>
     )
-}
+});

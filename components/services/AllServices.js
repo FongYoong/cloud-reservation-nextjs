@@ -20,9 +20,9 @@ export default function AllServices({ fetchingServices, servicesList }) {
             transition={{ type: "tween" }}
         >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                {servicesList && servicesList.length > 0 ?
+                {servicesList && servicesList.length > 0 &&
                     <Flex p={2} w="100%" direction="column" align="start" justify="center">
-                        <Slide cascade duration={500} direction='right' triggerOnce >
+                        <Slide cascade duration={500} direction='up' triggerOnce >
                             {servicesList.map((data, i) => (
                                 <ServiceCard mb={4} key={i} shallowData={data} hide={targetCardKey === i}
                                 onClick={() => {
@@ -34,8 +34,6 @@ export default function AllServices({ fetchingServices, servicesList }) {
                             }
                         </Slide>
                     </Flex>
-                    : 
-                    <Empty />
                 }
                 {!fetchingServices && (!servicesList || servicesList.length == 0) &&
                     <Empty />

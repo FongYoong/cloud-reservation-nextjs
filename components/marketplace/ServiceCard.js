@@ -1,12 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
 import { MotionBox } from '../MotionElements';
+import { Flip } from "react-awesome-reveal";
 import { getServicePublicDetails } from '../../lib/db';
 import { useColorModeValue, useBreakpointValue, Flex, Box, Img, Divider, Heading, Text, VStack, Tag, TagRightIcon, TagLabel, Stat, StatNumber } from "@chakra-ui/react";
 import UserAvatar from '../../components/UserAvatar';
 import { FaProductHunt, FaHammer } from 'react-icons/fa';
 
-export default function ServiceCard ({shallowData, blur, k, hide, ...props}) {
+export default function ServiceCard ({shallowData, blur, hide, ...props}) {
     const [fetchingData, setFetchingData] = useState(true);
     const [publicData, setPublicData] = useState(null);
     useEffect(() => {
@@ -28,13 +29,21 @@ export default function ServiceCard ({shallowData, blur, k, hide, ...props}) {
                 duration: 0.5,
                 ease: "easeInOut",
             },
+            transitionEnd: {
+                display: "none",
+            },
         }
     }
     const animateState = hide ? 'hide' : 'normal';
     const breakpoint = useBreakpointValue({ base: "base", sm:'sm', md: "md", lg: "lg" });
-
+    const spring = {
+        type: "spring",
+        damping: 25,
+        stiffness: 120
+    };
     return (
-        <MotionBox m={2} variants={variants} animate={animateState} initial={false} _hover={{cursor: "pointer"}}
+        <Flip duration={1000} direction='vertical' triggerOnce >
+        <MotionBox m={2} layout transition={spring} variants={variants} animate={animateState} initial={false} _hover={{cursor: "pointer"}}
             w={breakpoint==='base'?'90%':'18em'}
             h={'24em'}
             __css={{
@@ -60,7 +69,7 @@ export default function ServiceCard ({shallowData, blur, k, hide, ...props}) {
                             </Tag>
                             }
                             <Box flex={5} minWidth={0} >
-                                <Heading textAlign="center" fontSize="md" wordBreak='break-word' lineHeight='normal' noOfLines={2} > {shallowData.name} </Heading>
+                                <Heading textAlign="center" fontSize="md" wordBreak='break-word' lineHeight='normal' noOfLines={2} > {publicData.name} </Heading>
                             </Box>
                         </Flex>
                         <Divider borderColor='black.300' />
@@ -75,7 +84,7 @@ export default function ServiceCard ({shallowData, blur, k, hide, ...props}) {
                                         <StatNumber>RM {publicData.price.toFixed(2)}</StatNumber>
                                     </Stat>
                                 }
-                                <Text fontSize="sm" > Created on: {(new Date(shallowData.dateCreated)).toLocaleDateString()} </Text>
+                                <Text fontSize="sm" > Created on: {(new Date(shallowData.dateCreated)).toDateString()} </Text>
                             </VStack>
                             <UserAvatar flex={1} uid={shallowData.ownerId} flip={false} placement='bottom' />
                         </Flex>
@@ -84,10 +93,11 @@ export default function ServiceCard ({shallowData, blur, k, hide, ...props}) {
                 }
             </VStack>
         </MotionBox>
+        </Flip>
     );
 }
-
-const MediaPreview = ({imageUrls, videoUrl, ...props}) => {
+// eslint-disable-next-line react/display-name
+const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
     const playerRef = useRef();
     const [animateState, setAnimateState] = useState('normal');
     const variants = {
@@ -139,14 +149,24 @@ const MediaPreview = ({imageUrls, videoUrl, ...props}) => {
                 onMouseEnter={ () => {
                     setAnimateState('hide');
                     if (playerRef.current){
-                        playerRef.current.play();
+                        try {
+                            playerRef.current.play();
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
                     }
                 }}
                 onMouseLeave={ () => {
                     setAnimateState('normal');
                     if (playerRef.current){
-                        playerRef.current.currentTime = 0;
-                        playerRef.current.pause();
+                        try {
+                            playerRef.current.currentTime = 0;
+                            playerRef.current.pause();
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
                     }
                 }} >
                 <Img
@@ -160,4 +180,4 @@ const MediaPreview = ({imageUrls, videoUrl, ...props}) => {
             </motion.div>
         </Box>
     )
-}
+});

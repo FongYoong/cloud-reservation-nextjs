@@ -17,7 +17,7 @@ export default function Reviews({reviews}) {
         >
             <VStack m={breakpoint==='base'?0:2} p={breakpoint==='base'?2:4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
                 {reviews && reviews.length > 0 ?
-                <Slide cascade duration={500} direction='right' triggerOnce >
+                <Slide cascade duration={500} direction='up' triggerOnce >
                     {reviews.map((data, i) => (
                         <ReviewCard mb={4} key={i} data={data}  />
                     ))

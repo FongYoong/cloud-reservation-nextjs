@@ -47,7 +47,7 @@ export default function Orders() {
   }, [auth, loading, router]);
 
   const drawerState = useDisclosure();
-  const [orderMode, setOrderMode] = useState('overview'); // overview, all
+  const [orderMode, setOrderMode] = useState('all'); // overview, all
   const drawerProps = {orderMode, setOrderMode, drawerState};
   const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 

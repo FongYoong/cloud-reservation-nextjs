@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { memo } from 'react';
 import { useRouter } from 'next/router';
 import { MotionButton, MotionBox } from '../MotionElements';
 import { VStack, Divider, Heading } from '@chakra-ui/react';
 import { IoIosAddCircleOutline, IoMdAnalytics } from 'react-icons/io';
 import { MdWork } from 'react-icons/md';
 
-export default function ServicesDrawer({serviceMode, setServiceMode, drawerState}) {
+export default memo(function ServicesDrawer({serviceMode, setServiceMode, drawerState}) {
     const router = useRouter();
 
     const clickHandler = (serviceType) => {
@@ -37,4 +37,4 @@ export default function ServicesDrawer({serviceMode, setServiceMode, drawerState
             </VStack>
         </MotionBox>
     )
-}
+});

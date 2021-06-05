@@ -21,7 +21,7 @@ export default function ReviewCard ({data, ...props}) {
                     <Flex direction='column' align="center" justify="center" >
                         <Box ml={2} mb={2} minWidth={0} >
                             <Text textAlign='center' fontSize={breakpoint==='base'?"xs":"sm"} >
-                                Created at {dateCreated.getHours()}:{dateCreated.getMinutes()}, {dateCreated.toLocaleDateString()}
+                                Created at {dateCreated.getHours()}:{dateCreated.getMinutes()}, {dateCreated.toDateString()}
                             </Text>
                         </Box>
                         <Ratings fixed={true} initialStars={data.stars} />

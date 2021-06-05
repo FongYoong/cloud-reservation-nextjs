@@ -35,7 +35,7 @@ export default function OrderCard ({isAllOrdersPage=false, order, hide, ...props
                     <Flex flex={5} direction='column' >
                         <Box mt={2} ml={2} minWidth={0} >
                             <Text textAlign='center' fontSize={breakpoint==='base'?"xs":"sm"} >
-                                Created at {dateCreated.getHours()}:{dateCreated.getMinutes()}, {dateCreated.toLocaleDateString()}
+                                Created at {dateCreated.getHours()}:{dateCreated.getMinutes()}, {dateCreated.toDateString()}
                             </Text>
                         </Box>
                         <Box minWidth={0} >

@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { memo, useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useAuth } from '../lib/auth';
 import { getUserProfile, listenUserChats } from '../lib/db';
 import NavbarButton from './NavbarButton';
-import { useToast, useColorMode, useColorModeValue, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
+import { Link as CLink, useToast, useColorMode, useColorModeValue, LinkBox, LinkOverlay, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
 useBreakpointValue,
 AlertDialog,
 AlertDialogBody,
@@ -65,11 +65,11 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                         isClosable: true,
                         // eslint-disable-next-line react/display-name
                         render: () => (
-                            <VStack spacing={4} p={3} backdropFilter='blur(10px)' bgGradient="linear(to-l, #7928CA, #FF0080)" borderWidth={2} borderRadius="lg" boxShadow="lg" >
+                            <VStack spacing={4} p={3} backdropFilter='blur(10px)' bgGradient="linear(to-l, #551b8f, #c90065)" borderWidth={2} borderRadius="lg" boxShadow="lg" >
                                 <Text color='white' >
                                     <span role='img' aria-label='Message' >💬 </span> Someone messaged you!
                                 </Text>
-                                <MotionButton getAttention={true} colorScheme={"teal"}
+                                <MotionButton getAttention={true} colorScheme={"yellow"}
                                 onClick={() => {
                                     toast.closeAll();
                                     router.push('/chats');
@@ -180,32 +180,32 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                                     </MenuItem>
                                 </MenuGroup>
                                 <MenuDivider />
-                                <MenuItem icon={<IoStorefront />} onClick={() => router.push('/marketplace')}>
-                                    <Link href='/marketplace' >
+                                <Link href='/marketplace' >
+                                    <MenuItem icon={<IoStorefront />} >
                                         Marketplace
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem icon={<MdLocalGroceryStore />} onClick={() => router.push('/orders')}>
-                                    <Link href='/marketplace' >
+                                    </MenuItem>
+                                </Link>
+                                <Link href='/orders' >
+                                    <MenuItem icon={<MdLocalGroceryStore />} >
                                         My Orders
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem icon={<MdWork />} onClick={() => router.push('/services')}>
-                                    <Link href='/services' >
+                                    </MenuItem>
+                                </Link>
+                                <Link href='/services' >
+                                    <MenuItem icon={<MdWork />} >
                                         My Services
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem icon={<RiChatSmile3Line />} onClick={() => router.push('/chats')}>
-                                    <Link href='/chats' >
+                                    </MenuItem>
+                                </Link>
+                                <Link href='/chats' >
+                                    <MenuItem icon={<RiChatSmile3Line />} >
                                         Chats
-                                    </Link>
-                                </MenuItem>
+                                    </MenuItem>
+                                </Link>
                                 <MenuDivider />
-                                <MenuItem icon={<MdHelp />} onClick={() => router.push('/help')}>
-                                    <Link href='/help' >
+                                <Link href='/help' >
+                                    <MenuItem icon={<MdHelp />} >
                                         Help
-                                    </Link>
-                                </MenuItem>
+                                    </MenuItem>
+                                </Link>
                                 <MenuDivider />
                                 <MenuItem icon={<FiLogOut />} color="red.500" onClick={() => setIsLogoutOpen(true)}>
                                     Logout
@@ -213,9 +213,11 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                             </MenuList>
                         </Menu>
                     </>) : (
-                        <Button p={2} colorScheme="teal" onClick={() => router.push('/login')} >
-                            Login/Register
-                        </Button>
+                        <Link href='/login' >
+                            <Button p={2} colorScheme="teal" >
+                                Login/Register
+                            </Button>
+                        </Link>
                     )}
                 </HStack>
             </Flex>
@@ -250,5 +252,12 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
     </>
     );
 };
+const MarketLink = ({ children, ...props }) => {
+    return (
+        <Link {...props} href='/marketplace' >
+            {children}
+        </Link>
+    )
+}
 
-export default Navbar;
+export default memo(Navbar);

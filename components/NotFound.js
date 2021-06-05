@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { ScaleFade, Heading, VStack } from '@chakra-ui/react';
 
-export default function NotFound({text = 'Not found!'}) {
+export default memo(function NotFound({text = 'Not found!'}) {
     return (
         <ScaleFade initialScale={0.9} in={true}>
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
@@ -10,4 +11,4 @@ export default function NotFound({text = 'Not found!'}) {
             </VStack>
         </ScaleFade>
     )
-}
+});

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { HStack, Icon } from '@chakra-ui/react';
 
-export default function Ratings ({onChange = () => {}, initialStars = 0, fixed=false, ...props}) {
+export default memo(function Ratings ({onChange = () => {}, initialStars = 0, fixed=false, ...props}) {
     const [currentStars, setCurrentStars] = useState(initialStars);
     const [hoverStars, setHoverStars] = useState(0);
     useEffect(() => {
@@ -24,9 +24,9 @@ export default function Ratings ({onChange = () => {}, initialStars = 0, fixed=f
             }
         </HStack>
     )
-}
-
-const Star = ({stars, fill, onClick, setHoverStars, fixed, ...props}) => {
+});
+// eslint-disable-next-line react/display-name
+const Star = memo(({stars, fill, onClick, setHoverStars, fixed, ...props}) => {
     const [fillState, setFillState] = useState(fill);
     const animateState = (!fill && fillState) || fill ? "fill" : "normal";
     const delay = 0.05;
@@ -71,4 +71,4 @@ const Star = ({stars, fill, onClick, setHoverStars, fixed, ...props}) => {
             </Icon>
         </motion.div>
     )
-}
+});

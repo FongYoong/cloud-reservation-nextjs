@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { memo } from 'react';
 import { useRouter } from 'next/router';
 import { MotionButton, MotionBox } from '../MotionElements';
 import { VStack, Divider, Heading, Tag, TagRightIcon, TagLabel } from '@chakra-ui/react';
@@ -6,7 +6,7 @@ import { IoIosAddCircleOutline, IoMdAnalytics } from 'react-icons/io';
 import { MdModeEdit, MdWork, MdDelete, MdStars } from 'react-icons/md';
 import { FaProductHunt, FaHammer } from 'react-icons/fa';
 
-export default function ServiceDrawer({isOwner, serviceId, serviceName, serviceType, serviceMode, setServiceMode, drawerState, deleteHandler=()=>{}}) {
+export default memo(function ServiceDrawer({isOwner, serviceId, serviceName, serviceType, serviceMode, setServiceMode, drawerState, deleteHandler=()=>{}}) {
     const router = useRouter();
 
     const clickHandler = (mode) => {
@@ -66,4 +66,4 @@ export default function ServiceDrawer({isOwner, serviceId, serviceName, serviceT
             </VStack>
         </MotionBox>
     )
-}
+});
