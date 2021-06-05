@@ -12,7 +12,6 @@ function Error({ statusCode }) {
     <div>
       <Head>
         <title>Error!</title>
-        <link rel="icon" href="../../public/favicon.ico" />
       </Head>
       <main>
         <Navbar />

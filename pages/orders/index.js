@@ -55,7 +55,6 @@ export default function Orders() {
     <div>
       <Head>
         <title>Orders</title>
-        <link rel="icon" href="../../public/favicon.ico" />
       </Head>
       <main>
         <Navbar showDrawerIcon={true} drawerContent={<OrdersDrawer {...drawerProps} />} drawerState={drawerState} />

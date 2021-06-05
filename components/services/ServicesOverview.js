@@ -1,23 +1,26 @@
-import { useState, useEffect, useRef } from 'react';
-//import { useRouter } from 'next/router';
+import { useState, useEffect, memo } from 'react';
+import { useRouter } from 'next/router';
 import { getServiceOrders } from '../../lib/db';
 import { calculateEventHours } from '../Calendar';
 import { MotionBox } from '../MotionElements';
 import { Fade } from "react-awesome-reveal";
-import { useBreakpointValue, Divider, VStack, HStack, Heading, Button,
+import { useColorModeValue, useBreakpointValue, Box, Divider, VStack, HStack, Heading, Button, Tooltip,
 Tabs, TabList, TabPanels, Tab, TabPanel,
 Menu, MenuButton, MenuList, MenuItemOption, MenuOptionGroup, MenuDivider,
 Radio, RadioGroup,
+Table, Thead, Tbody, Tr, Th, Td,
 } from '@chakra-ui/react';
 import Searching from '../Searching';
 import Empty from '../Empty';
-import PieChart from './ServicesOverview/PieChart';
-import VerticalBar from './ServicesOverview/VerticalBar';
+import PieChart from '../charts/PieChart';
+import VerticalBar from '../charts/VerticalBar';
 import { IoFilter } from 'react-icons/io5';
+import { MdNavigateNext } from 'react-icons/md';
 
 export default function ServicesOverview({ fetchingServices, servicesList }) {
-    //const [fetchingServicesData, setFetchingServicesData] = useState(true);
     const [servicesData, setServicesData] = useState([]);
+    const [pendingOrders, setPendingOrders] = useState(null);
+    const [workInProgressEvents, setWorkInProgressEvents] = useState(null);
     const [numberOrdersPref, setNumberOrdersPref] = useState('all');
     const [numberOrdersData, setNumberOrdersData] = useState(null);
     const [earningsData, setEarningsData] = useState(null);
@@ -58,6 +61,106 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
             })
         }
     }, [servicesList]);
+//
+// Process data
+// 
+    useEffect(() => {
+        // pending orders
+        const servicesFiltered = servicesData.map((s) => {
+            return {
+                ...s,
+                orders: s.orders.filter((order) => {
+                    if (order.status === 'initial') {
+                        return true;
+                    }
+                    return false;
+                })
+            }
+        });
+        let array = [];
+        servicesFiltered.forEach((s) => {
+            const serviceDetails = {
+                name: s.name,
+                type: s.type,
+                serviceId: s.serviceId
+            }
+            s.orders.forEach((order) => {
+                array.push({
+                    serviceDetails,
+                    orderDetails: order,
+                });
+            })
+        });
+        array.sort((a, b) => {
+            if (a.orderDetails.dateCreated < b.orderDetails.dateCreated) {
+                return -1;
+            }
+            if (a.orderDetails.dateCreated > b.orderDetails.dateCreated) {
+                return 1;
+            }
+            return 0;
+        });
+        setPendingOrders(array);
+    }, [servicesData]);
+
+    useEffect(() => {
+        // work in progress
+        const servicesFiltered = servicesData.map((s) => {
+            return {
+                ...s,
+                orders: s.orders.filter((order) => {
+                    if (order.status === 'paidByUser') {
+                        return true;
+                    }
+                    return false;
+                })
+            }
+        });
+        let array = [];
+        servicesFiltered.forEach((s) => {
+            const serviceDetails = {
+                name: s.name,
+                type: s.type,
+                serviceId: s.serviceId
+            }
+            s.orders.forEach((order) => {
+                if (s.type === 'service') {
+                    order.calendarEvents.forEach((event) => {
+                        array.push({
+                            serviceDetails,
+                            orderDetails: {
+                                orderId: order.orderId,
+                                dateCreated: event.start,
+                                event
+                            }
+                        });
+                    })
+                }
+                else {
+                    array.push({
+                        serviceDetails,
+                        orderDetails: {
+                            orderId: order.orderId,
+                            dateCreated: order.dateCreated,
+                            quantity: order.details.quantity
+                        }
+                    });
+                }
+
+            })
+        });
+        array.sort((a, b) => {
+            if (a.orderDetails.dateCreated < b.orderDetails.dateCreated) {
+                return -1;
+            }
+            if (a.orderDetails.dateCreated > b.orderDetails.dateCreated) {
+                return 1;
+            }
+            return 0;
+        });
+        setWorkInProgressEvents(array);
+    }, [servicesData]);
+
     useEffect(() => {
         const numberOrdersFiltered = servicesData.map((s) => {
             return {
@@ -136,11 +239,71 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
         >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
                 <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                    Pending Confirmations
+                </Heading>
+                <Box maxHeight={breakpoint === 'base'?'100vh':'40vh'} w='100%' overflowX='auto' overflowY='auto'
+                    css={{
+                        '&::-webkit-scrollbar': {
+                            width: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            width: '6px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            borderRadius: '20px',
+                            border: '3px solid gray'
+                        },
+                    }}
+                >
+                    <Table size={breakpoint === 'base'?'sm':'md'} variant="simple" width='100%' p={2} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
+                        <Thead>
+                            <PendingRow noExpand isHead />
+                        </Thead>
+                        <Tbody>
+                            {pendingOrders && pendingOrders.map((e) => (
+                                <PendingRow key={e.orderDetails.orderId + e.orderDetails.dateCreated}
+                                    serviceDetails={e.serviceDetails}
+                                    orderDetails={e.orderDetails} />
+                            ))}
+                        </Tbody>
+                    </Table>
+                </Box>
+                <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                    Work In Progress
+                </Heading>
+                <Box maxHeight={breakpoint === 'base'?'100vh':'40vh'} w='100%' overflowX='auto' overflowY='auto'
+                    css={{
+                        '&::-webkit-scrollbar': {
+                            width: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            width: '6px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            borderRadius: '20px',
+                            border: '3px solid gray'
+                        },
+                    }}
+                >
+                    <Table size={breakpoint === 'base'?'sm':'md'} variant="simple" width='100%' p={2} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
+                        <Thead>
+                            <WIPRow noExpand isHead />
+                        </Thead>
+                        <Tbody>
+                            {workInProgressEvents && workInProgressEvents.map((e) => (
+                                <WIPRow key={e.orderDetails.orderId + e.orderDetails.dateCreated}
+                                    serviceDetails={e.serviceDetails}
+                                    orderDetails={e.orderDetails} />
+                            ))}
+                        </Tbody>
+                    </Table>
+                </Box>
+                <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
                     Number of Orders
                 </Heading>
                 {breakpoint === 'base' ?
                     <Menu isLazy closeOnSelect={true}>
-                        <MenuButton as={Button} icon={<IoFilter />} colorScheme="purple">
+                        <MenuButton as={Button} leftIcon={<IoFilter />} colorScheme="purple">
                             Filter
                         </MenuButton>
                         <MenuList>
@@ -231,3 +394,102 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
         </MotionBox>
     )
 }
+// eslint-disable-next-line react/display-name
+const PendingRow = memo(({noExpand, isHead=false, serviceDetails, orderDetails, ...props}) => {
+    const router = useRouter();
+    const dateCreated = isHead ? null : new Date(orderDetails.dateCreated);
+    return (
+        <MotionBox as={Tr} w='100%'
+            whileHover={{ scale: noExpand? 1 : 1, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} {...props} >
+            {isHead && <>
+                <Th>Date Created</Th>
+                <Th>Service</Th>
+                <Th>Info</Th>
+                <Th>User Remarks</Th>
+                <Th></Th>
+                </>
+            }
+            {!isHead && <>
+                <Td>
+                    {dateCreated.toDateString()}, {dateCreated.toLocaleTimeString()}
+                </Td>
+                <Td>
+                    <Tooltip placement="top" hasArrow label={`View ${serviceDetails.type === 'service' ? 'Service':'Product'}`} >
+                        <Button rightIcon={<MdNavigateNext />} lineHeight='normal' colorScheme="purple" fontSize="sm" isTruncated
+                            onClick={ () => router.push(`/services/${serviceDetails.serviceId}`) }>
+                            {serviceDetails.name}
+                        </Button>
+                    </Tooltip>
+                </Td>
+                {serviceDetails.type === 'service' ?
+                    <Td>{ calculateEventHours(orderDetails.calendarEvents) } hours </Td>
+                    :
+                    <Td> Quantity: { orderDetails.details.quantity } </Td>
+                }
+                <Td> 
+                    {orderDetails.details.userRemarks}
+                </Td>
+                <Td>
+                    <Tooltip placement="top" hasArrow label={`View ${serviceDetails.type === 'service' ? 'Service':'Product'}`} >
+                        <Button rightIcon={<MdNavigateNext />} lineHeight='normal' colorScheme="green" fontSize="lg" isTruncated
+                            onClick={ () => router.push(`/orders/${serviceDetails.serviceId}/${orderDetails.orderId}`) }>
+                            View
+                        </Button>
+                    </Tooltip>
+                </Td>
+                </>
+            }
+        </MotionBox>
+    )
+});
+
+// eslint-disable-next-line react/display-name
+const WIPRow = memo(({noExpand, isHead=false, serviceDetails, orderDetails, ...props}) => {
+    const router = useRouter();
+    const start = new Date(isHead || serviceDetails.type === 'product' ? 0 : orderDetails.event.start);
+    const end = new Date(isHead || serviceDetails.type === 'product' ? 0 : orderDetails.event.end);
+    return (
+        <MotionBox as={Tr} w='100%'
+            whileHover={{ scale: noExpand? 1 : 1, backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'), borderRadius: '0.5em' }} {...props} >
+            {isHead && <>
+                <Th>Date</Th>
+                <Th>Time</Th>
+                <Th>Info</Th>
+                <Th>Service</Th>
+                <Th></Th>
+                </>
+            }
+            {!isHead && <>
+                {serviceDetails.type === 'service' ? <>
+                    <Td>{ start.toDateString() }</Td>
+                    <Td>{ start.toLocaleTimeString() } - { end.toLocaleTimeString() }</Td>
+                    <Td>{orderDetails.event.title}</Td>
+                    </>
+                    :
+                    <>
+                    <Td>{ (new Date(orderDetails.dateCreated)).toDateString() }</Td>
+                    <Td>  Ship as fast as possible! </Td>
+                    <Td> Quantity: { orderDetails.quantity } </Td>
+                    </>
+                }
+                <Td>
+                    <Tooltip placement="top" hasArrow label={`View ${serviceDetails.type === 'service' ? 'Service':'Product'}`} >
+                        <Button rightIcon={<MdNavigateNext />} lineHeight='normal' colorScheme="purple" fontSize="sm" isTruncated
+                            onClick={ () => router.push(`/services/${serviceDetails.serviceId}`) }>
+                            {serviceDetails.name}
+                        </Button>
+                    </Tooltip>
+                </Td>
+                <Td>
+                    <Tooltip placement="top" hasArrow label={'View Order'} >
+                        <Button rightIcon={<MdNavigateNext />} lineHeight='normal' colorScheme="green" fontSize="lg" isTruncated
+                            onClick={ () => router.push(`/orders/${serviceDetails.serviceId}/${orderDetails.orderId}`) }>
+                            View
+                        </Button>
+                    </Tooltip>
+                </Td>
+                </>
+            }
+        </MotionBox>
+    )
+});

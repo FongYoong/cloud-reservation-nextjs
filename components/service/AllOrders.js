@@ -7,10 +7,9 @@ import OrderCard from './OrderCard';
 import Searching from '../Searching';
 import Empty from '../Empty';
 
-export default function AllOrders({fetchingOrders, serviceId, serviceData, ordersList, auth}) {
+export default function AllOrders({fetchingOrders, serviceId, ordersList, auth}) {
     const router = useRouter();
     const [targetCardKey, setTargetCardKey] = useState(null);
-    console.log(ordersList);
     return (
         <MotionBox
             flex={5}

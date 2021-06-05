@@ -119,7 +119,6 @@ export default function Service () {
     <div>
         <Head>
             <title>{publicData ? publicData.name : (loading ? 'Searching...' :'Service Not Found!')}</title>
-            <link rel="icon" href="../public/favicon.ico" />
         </Head>
         <main>
             <Navbar showDrawerIcon={true} drawerContent={<ServiceDrawer {...drawerProps} />} drawerState={drawerState} />
@@ -134,7 +133,7 @@ export default function Service () {
                                 {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData:publicData, auth}} />}
                                 {serviceMode === "overview" && <ServiceOverview key="overview" {...{serviceId, publicData, auth}} />}
                                 {serviceMode === "reviews" && <Reviews key="reviews" {...{fetchingReviews, reviews, auth}} />}
-                                {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{fetchingOrders, serviceId, serviceData:publicData, ordersList, auth}} />}
+                                {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{fetchingOrders, serviceId, ordersList, auth}} />}
                             </AnimatePresence>
                         </Flex>
                     </Flex>

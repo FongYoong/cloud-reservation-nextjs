@@ -39,26 +39,25 @@ export default function Profile() {
     return (
     <div>
         <Head>
-        <title>Profile</title>
-        <link rel="icon" href="../public/favicon.ico" />
+            <title>Profile</title>
         </Head>
         <main>
-        <Navbar />
-        <NavbarSpace />
-        {!loading && userId !== auth.uid && profileData &&
-        <ScaleFade initialScale={0.9} in={true}>
-            <Flex p={4} w="100%" direction="column" align="center" justify="center">
-                <ProfileOverview key="overview" {...{uid: userId, profileData, auth}} />
-            </Flex>
-        </ScaleFade>
-        }
-        {!loading && !fetchingProfile && !profileData &&
-          <NotFound text="Failed to obtain profile! 😢"/>
-        }
-        {(loading || fetchingProfile) &&
-          <Searching />
-        }
-        </main>
+            <Navbar />
+            <NavbarSpace />
+            {!loading && userId !== auth.uid && profileData &&
+            <ScaleFade initialScale={0.9} in={true}>
+                <Flex p={4} w="100%" direction="column" align="center" justify="center">
+                    <ProfileOverview key="overview" {...{uid: userId, profileData, auth}} />
+                </Flex>
+            </ScaleFade>
+            }
+            {!loading && !fetchingProfile && !profileData &&
+            <NotFound text="Failed to obtain profile! 😢"/>
+            }
+            {(loading || fetchingProfile) &&
+            <Searching />
+            }
+            </main>
         <footer>
 
         </footer>

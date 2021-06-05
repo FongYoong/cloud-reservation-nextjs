@@ -124,35 +124,34 @@ export default function Chats() {
     return (
     <div>
         <Head>
-        <title>Chats</title>
-        <link rel="icon" href="../public/favicon.ico" />
+          <title>Chats</title>
         </Head>
-        <main>
-          <Navbar hideOnScroll={false} showDrawerIcon={true} drawerContent={<ChatsDrawer {...drawerProps} />} drawerState={drawerState} />
-          <NavbarSpace />
-          {!loading && chats &&
-            <ScaleFade initialScale={0.9} in={true}>
-                <Flex direction="column" align="center" justify="center">
-                  <Flex p={4} w="100%" align="start" justify="space-between">
-                      {breakpoint!=="base" && <ChatsDrawer {...drawerProps} />}
-                      <AnimatePresence exitBeforeEnter>
-                          <Chat key={chats[currentChatIndex].otherId} chatData={chats[currentChatIndex]} sendMessageHandler={sendMessageHandler}
-                            hasScrolledBefore={hasScrolledBefore} setHasScrolledBefore={setHasScrolledBefore}
-                          />
-                      </AnimatePresence>
+          <main>
+            <Navbar hideOnScroll={false} showDrawerIcon={true} drawerContent={<ChatsDrawer {...drawerProps} />} drawerState={drawerState} />
+            <NavbarSpace />
+            {!loading && chats &&
+              <ScaleFade initialScale={0.9} in={true}>
+                  <Flex direction="column" align="center" justify="center">
+                    <Flex p={4} w="100%" align="start" justify="space-between">
+                        {breakpoint!=="base" && <ChatsDrawer {...drawerProps} />}
+                        <AnimatePresence exitBeforeEnter>
+                            <Chat key={chats[currentChatIndex].otherId} chatData={chats[currentChatIndex]} sendMessageHandler={sendMessageHandler}
+                              hasScrolledBefore={hasScrolledBefore} setHasScrolledBefore={setHasScrolledBefore}
+                            />
+                        </AnimatePresence>
+                    </Flex>
                   </Flex>
-                </Flex>
-            </ScaleFade>
-          }
-          {!loading && !fetchingChats && !chats &&
-            <Empty>
-              <Text fontSize='lg' > Chat with a seller or potential client by finding their profile from the marketplace. </Text>
-            </Empty>
-          }
-          {(loading || fetchingChats) &&
-            <Searching />
-          }
-        </main>
+              </ScaleFade>
+            }
+            {!loading && !fetchingChats && !chats &&
+              <Empty>
+                <Text fontSize='lg' > Chat with a seller or potential client by finding their profile from the marketplace. </Text>
+              </Empty>
+            }
+            {(loading || fetchingChats) &&
+              <Searching />
+            }
+          </main>
         <footer>
 
         </footer>

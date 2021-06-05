@@ -52,7 +52,6 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
         if (!loading && auth && router.pathname !== '/chats') {
             listenUserChats(auth, () => {
                 if (router.pathname !== '/chats' && !toast.isActive(toastId)) {
-                    console.log(router.pathname);
                     setNewMessage(true);
                     if (popSound.current) {
                         popSound.current.play();
@@ -65,11 +64,11 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                         isClosable: true,
                         // eslint-disable-next-line react/display-name
                         render: () => (
-                            <VStack spacing={4} p={3} backdropFilter='blur(10px)' bgGradient="linear(to-l, #551b8f, #c90065)" borderWidth={2} borderRadius="lg" boxShadow="lg" >
+                            <VStack spacing={4} p={3} backdropFilter='blur(10px)' bgGradient="linear(to-l, #36D1DC, #5B86E5)" borderWidth={2} borderRadius="lg" boxShadow="lg" >
                                 <Text color='white' >
                                     <span role='img' aria-label='Message' >💬 </span> Someone messaged you!
                                 </Text>
-                                <MotionButton getAttention={true} colorScheme={"yellow"}
+                                <MotionButton getAttention={true} colorScheme={"green"}
                                 onClick={() => {
                                     toast.closeAll();
                                     router.push('/chats');

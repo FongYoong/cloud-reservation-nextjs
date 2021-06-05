@@ -47,7 +47,6 @@ export default function Account() {
     <div>
       <Head>
         <title>Account</title>
-        <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
         <Navbar showDrawerIcon={true} drawerContent={<AccountDrawer {...drawerProps} />} drawerState={drawerState} />

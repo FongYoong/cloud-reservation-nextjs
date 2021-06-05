@@ -52,7 +52,6 @@ export default function Login() {
     <div>
       <Head>
         <title>Login</title>
-        <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
         <Navbar />

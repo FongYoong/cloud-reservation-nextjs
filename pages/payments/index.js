@@ -60,7 +60,6 @@ export default function Payments() {
     <div>
       <Head>
         <title>Payments</title>
-        <link rel="icon" href="../../public/favicon.ico" />
       </Head>
       <main>
         <Navbar />

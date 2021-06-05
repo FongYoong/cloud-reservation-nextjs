@@ -1,8 +1,10 @@
+import { memo } from 'react';
 import { MotionBox } from '../MotionElements';
-import { ScaleFade, Box, VStack, Button, Heading } from '@chakra-ui/react';
-import { IoIosAddCircleOutline } from 'react-icons/io';
+import { Box, VStack, Heading, Text } from '@chakra-ui/react';
+import { Player, Youtube } from '@vime/react';
+import '@vime/core/themes/default.css';
 
-export default function OrdersOverview() {
+export default memo(function OrdersOverview({ fetchingOrders, ordersList}) {
     return (
         <MotionBox
             flex={5}
@@ -13,14 +15,20 @@ export default function OrdersOverview() {
             transition={{ type: "tween" }}
         >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <Heading fontSize="xl" mb={2}>
-                    OrdersOverview
+                <Heading fontSize="xl" m={2}>
+                    Overview
                 </Heading>
-                <Button leftIcon={<IoIosAddCircleOutline />} colorScheme="teal" onClick={() => {}}>
-                    OrdersOverview
-                </Button>
-
+                <Text fontSize="lg" m={2}>
+                    This section is supposed to display some stats about your orders but the developer is too lazy to code something here.
+                    After all, who would want to see a summary of everything they&apos;ve bought without feeling guilty for overspending?
+                    <span role='img' aria-label='Grin' >😁</span>
+                </Text>
+                <Box width="60%" >
+                    <Player controls >
+                        <Youtube videoId="cUSVfImfAD8" />
+                    </Player>
+                </Box>
             </VStack>
         </MotionBox>
     )
-}
+});

@@ -103,7 +103,6 @@ export default function Order () {
     <div>
         <Head>
             <title>{servicePublicData ? `Order Details - ${servicePublicData.name}` : (fetchingData ? 'Searching...' :'Order Not Found!')}</title>
-            <link rel="icon" href="../public/favicon.ico" />
         </Head>
         <main>
             <Navbar showDrawerIcon={true} drawerContent={<OrderDrawer {...drawerProps} />} drawerState={drawerState} />

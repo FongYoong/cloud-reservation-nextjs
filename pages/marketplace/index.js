@@ -37,7 +37,6 @@ export default function Marketplace() {
     <div>
       <Head>
         <title>Marketplace</title>
-        <link rel="icon" href="../public/favicon.ico" />
       </Head>
       <main>
         <Navbar />

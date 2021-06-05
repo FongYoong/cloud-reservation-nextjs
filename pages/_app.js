@@ -18,8 +18,8 @@ function MyApp({ Component, pageProps }) {
     <ChakraProvider theme={customTheme}>
       <AuthProvider>
         <Head>
-        {/* Import CSS for nprogress */}
-          <link rel="stylesheet" type="text/css" href="/nprogress/nprogress.css" />
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="stylesheet" type="text/css" href="/nprogress/nprogress.css" /> {/* Import CSS for nprogress */}
         </Head>
         <Component {...pageProps} />
       </AuthProvider>
