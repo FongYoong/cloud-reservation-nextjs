@@ -18,11 +18,11 @@ export default memo(function ChatMenuItem ({ selected, uid, latestMessage, ...pr
             scale: 1,
             rotate: 0,
             opacity: 1,
-            backgroundColor: useColorModeValue('#eed6ff', '#9559ba'),
+            backgroundColor: useColorModeValue('#eed6ff', '#480048'),
         },
         selected: {
             scale: 1.1,
-            backgroundColor: useColorModeValue('#d6ffd6', '#5db65d'),
+            backgroundColor: useColorModeValue('#d6ffd6', '#52c234'),
             transition:{
                 duration: 1,
                 ease: "easeInOut",

@@ -124,7 +124,9 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                     {!showDrawerIcon && breakpoint==="base" && <IconButton icon={<MdHome size={20} />} onClick={() => router.push('/')}/>}
                     {breakpoint!=="base" &&  <IconButton icon={<MdHome size={40} />} onClick={() => router.push('/')}/>}
                     <Heading fontSize={["sm", "md", "lg", "2xl"]} onClick={() => router.push('/')} as="button">
-                        Cloud Reservation
+                        <Link href='/' >
+                            Cloud Reservation
+                        </Link>
                     </Heading>
                     <IconButton variant="outline" colorScheme="yellow" ml={4} icon={colorMode === "light" ? <BsSun /> : <BsMoon />} onClick={toggleColorMode} />
                     { breakpoint!=="base" &&

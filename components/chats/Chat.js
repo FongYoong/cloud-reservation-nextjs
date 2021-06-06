@@ -88,7 +88,7 @@ export default function Chat ({ chatData, sendMessageHandler, hasScrolledBefore,
                 bg={useColorModeValue('gray.100', 'gray.500')} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg" >
                 <Flex ref={rootRefSetter} onScroll={handleRootScroll}
                     w='100%' h='80%' p={4} direction='column' align='center' justify='space-between' overflowX='hidden'
-                    bg={useColorModeValue('purple.800', 'purple.800')} boxShadow="lg" borderWidth={2} borderRadius="lg"
+                    bgGradient='linear(to-r, #5C258D, #4389A2)' boxShadow="lg" borderRadius="lg"
                     css={{
                         '&::-webkit-scrollbar': {
                             width: '4px',

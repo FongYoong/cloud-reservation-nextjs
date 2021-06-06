@@ -6,7 +6,7 @@ import { VStack, Heading, Box } from '@chakra-ui/react';
 export default memo(function Empty ({ children, ...props }) {
     return ( 
         <Zoom>
-            <VStack p={2} w='100%'>
+            <VStack m={2} p={2} w='100%'>
                 <Heading textAlign='center' mb={2} fontSize="xl" {...props} > Wow, such empty... </Heading>
                 <Box borderRadius='2xl' overflow="hidden" bg="white" lineHeight="0" >
                     <Image

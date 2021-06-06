@@ -3,7 +3,7 @@ import { Flex, Heading, CircularProgress } from '@chakra-ui/react';
 
 export default memo(function Searching({text = 'Searching...'}) {
     return (
-        <Flex align="center" justify="center">
+        <Flex p={8} align="center" justify="center">
             <Heading fontSize="xl" mb={2}>
                 {text}
             </Heading>

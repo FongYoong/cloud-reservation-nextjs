@@ -3,7 +3,7 @@ import { AnimateSharedLayout } from "framer-motion";
 import { MotionBox } from '../MotionElements';
 import ChatMenuItem from '../chats/ChatMenuItem';
 import Searching from '../Searching';
-import { useColorModeValue, VStack, Divider, Heading, Flex } from '@chakra-ui/react';
+import { VStack, Divider, Heading, Flex } from '@chakra-ui/react';
 
 export default memo(function ChatsDrawer({fetchingChats, chats, currentChatIndex, setCurrentChatIndex, drawerState}) {
 
@@ -19,7 +19,7 @@ export default memo(function ChatsDrawer({fetchingChats, chats, currentChatIndex
                 </Heading>
                 <Divider borderColor='black.300' />
                 <Flex h='60vh' w='100%' direction='column' align='center' justify='start' overflowX='hidden'
-                    bg={useColorModeValue('teal.700', 'teal.700')} boxShadow="lg" borderWidth={2} borderRadius="lg"
+                    bgGradient='linear(to-r, #24C6DC, #514A9D)' boxShadow="lg" borderWidth={2} borderRadius="lg"
                     css={{
                         '&::-webkit-scrollbar': {
                             width: '4px',

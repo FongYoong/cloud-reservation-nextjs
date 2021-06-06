@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { addNewOrder } from '../../lib/db';
-import { MotionBox } from '../MotionElements';
+import { MotionBox, MotionGetAttention } from '../MotionElements';
 import OrderForm from '../forms/OrderForm';
-import { Flex, useToast,
+import { useBreakpointValue, Flex, useToast, Box, Text, VStack, Button,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -11,6 +11,7 @@ import { Flex, useToast,
     ModalBody,
     CircularProgress,
 } from '@chakra-ui/react';
+import { MdNavigateNext } from 'react-icons/md';
 
 export default function AddOrder({auth, serviceId, serviceData}) {
     const router = useRouter();
@@ -56,6 +57,7 @@ export default function AddOrder({auth, serviceId, serviceData}) {
             alert("Firebase Error");
         });
     }
+    const breakpoint = useBreakpointValue({ base: "base", md: "md", lg: "lg" });
 
     return (
         <MotionBox
@@ -65,7 +67,25 @@ export default function AddOrder({auth, serviceId, serviceData}) {
             exit={{ rotateY: -90 }}
             transition={{ type: "tween" }}
         >
-            <OrderForm update={false} serviceType={serviceData.type} serviceData={serviceData} completeFormHandler={completeFormHandler} />
+            <Box position='relative'>
+                <OrderForm update={false} serviceType={serviceData.type} serviceData={serviceData} completeFormHandler={completeFormHandler} />
+                {!auth &&
+                    <Flex py={16} align='center' justify='center' position='absolute' top='0' left='0' width='100%' height='100%' zIndex='50' __css={{
+                        backdropFilter: 'blur(2px)',
+                    }} >
+                        <VStack p={8} bgGradient="linear(to-r, #cc2b5e, #753a88)" borderRadius="lg" >
+                            <Text color='white' textAlign='center' fontSize={breakpoint==='base'?'lg':'2xl'} lineHeight='normal' fontWeight="bold" >
+                                Please login or register to continue.
+                            </Text>
+                            <MotionGetAttention attentionType='expand' >
+                            <Button mt={4} rightIcon={<MdNavigateNext />} size='lg' colorScheme={"linkedin"} onClick={() => { router.push('/login'); }} >
+                                Give it a try?
+                            </Button>
+                            </MotionGetAttention>
+                        </VStack>
+                    </Flex>
+                }
+            </Box>
             <Modal motionPreset="scale" closeOnOverlayClick={false} closeOnEsc={false} isCentered={true} isOpen={creatingModal} onClose={() => {setCreatingModal(false)}}>
                 <ModalOverlay />
                 <ModalContent>

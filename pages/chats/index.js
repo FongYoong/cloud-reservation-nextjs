@@ -92,7 +92,6 @@ export default function Chats() {
             setChats(array);
             setFetchingChats(false);
           }, (e) => {
-            alert('Firebase error!');
             console.log(e);
           });
         }
