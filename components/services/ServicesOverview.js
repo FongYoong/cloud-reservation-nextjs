@@ -430,7 +430,7 @@ const PendingRow = memo(({noExpand, isHead=false, serviceDetails, orderDetails, 
                     {orderDetails.details.userRemarks}
                 </Td>
                 <Td>
-                    <Tooltip placement="top" hasArrow label={`View ${serviceDetails.type === 'service' ? 'Service':'Product'}`} >
+                    <Tooltip placement="top" hasArrow label={`View Order`} >
                         <Button rightIcon={<MdNavigateNext />} lineHeight='normal' colorScheme="green" fontSize="lg" isTruncated
                             onClick={ () => router.push(`/orders/${serviceDetails.serviceId}/${orderDetails.orderId}`) }>
                             View

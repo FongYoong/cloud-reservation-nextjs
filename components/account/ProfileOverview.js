@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { MotionBox, MotionButton } from '../MotionElements';
 import { Slide } from "react-awesome-reveal";
 import { getUserServices } from '../../lib/db';
-import { useColorModeValue, Flex, VStack, Divider, Box, Avatar, Heading, Text } from '@chakra-ui/react';
+import { useBreakpointValue, useColorModeValue, Flex, VStack, Divider, Box, Avatar, Heading, Text } from '@chakra-ui/react';
 import ServiceCard from '../services/ServiceCard';
 import Searching from '../../components/Searching';
 import Empty from '../Empty';
@@ -28,6 +28,8 @@ export default memo(function ProfileOverview({uid, sameUser=false, profileData})
         });
     }, [router, uid]);
 
+    const breakpoint = useBreakpointValue({ base: "base", md: "md", lg: "lg" });
+
     return (
         <MotionBox
             flex={5}
@@ -38,9 +40,9 @@ export default memo(function ProfileOverview({uid, sameUser=false, profileData})
             transition={{ type: "tween" }}
         >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <Flex p={2} bg={useColorModeValue('purple.800', 'purple.600')} boxShadow="lg" borderWidth={2} borderRadius="lg" align='center' justify='start' >
+                <Flex p={2} bg={useColorModeValue('purple.800', 'purple.600')} boxShadow="lg" borderWidth={2} borderRadius="lg" align='start' justify='start' >
                     <VStack m={2} align='center' justify ='center' >
-                        <Avatar size='2xl' src={profileData.profile_picture} />
+                        <Avatar size={breakpoint==='base'?'lg':'2xl'} src={profileData.profile_picture} />
                         {!sameUser &&
                             <MotionButton icon={<RiChatSmile3Line />} colorScheme={"yellow"} onClick={() => {
                                 router.push({
@@ -56,12 +58,12 @@ export default memo(function ProfileOverview({uid, sameUser=false, profileData})
                     </VStack>
                     <VStack align='start' justify ='center' >
                         <MotionBox p={4} bg={useColorModeValue('green.100', 'green.500')} borderWidth={2} borderRadius="lg" whileHover={{ scale: 1.1 }} >
-                            <Heading fontSize='lg' >
+                            <Heading fontSize={'lg'} >
                                 {profileData.username}
                             </Heading>
                         </MotionBox>
                         <MotionBox p={4} bg={useColorModeValue('orange.100', 'orange.500')} borderWidth={2} borderRadius="lg" whileHover={{ scale: 1.1 }} >
-                            <Text whiteSpace='pre-line' fontSize='lg' >
+                            <Text whiteSpace='pre-line' fontSize={breakpoint==='base'?'md':'lg'} >
                                 {profileData.description}
                             </Text>
                         </MotionBox>

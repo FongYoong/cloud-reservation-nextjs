@@ -1,32 +1,32 @@
 import {useState} from 'react';
+import Image from 'next/image';
 import { motion } from "framer-motion";
 import { MotionBox } from '../MotionElements';
 import UserAvatar from '../UserAvatar';
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
 import { days, transformAvailableDays } from '../Calendar';
-import { useBreakpointValue, useColorModeValue, Img, Flex, Box, VStack, Text, Tag, TagLabel, TagRightIcon } from '@chakra-ui/react';
+import { useBreakpointValue, useColorModeValue, Flex, Box, VStack, Text, Tag, TagLabel, TagRightIcon } from '@chakra-ui/react';
 import { FaProductHunt, FaHammer } from 'react-icons/fa';
 
 export default function ServiceOverview({publicData}) {
     const [availableDays, _] = useState(publicData.availableDays ? transformAvailableDays(publicData.availableDays).map((i)=>days[i]).join(', ') : null);
     const breakpoint = useBreakpointValue({ base: "base", md: "md", lg: "lg" });
-    let w = '60%';
-    let h = '25em';
-    if (breakpoint==='base') {
-        w = '70vw';
-        h = '20vh'
+
+    let w = 533;
+    let h = 300;
+    if (breakpoint === 'base') {
+        w = 267;
+        h = 150;
     }
-    else if (breakpoint==='md') {
-        w = '70vw';
-        h = '40vh';
-    }
+
     let images = publicData.imageUrls ? publicData.imageUrls.map((url) => ({
         original: url,
         thumbnail: url,
         renderItem: CustomImage,
         w, h
     })) : [];
+
     if (publicData.videoUrl) {
         images.unshift({
             original: publicData.videoUrl,
@@ -110,19 +110,31 @@ export default function ServiceOverview({publicData}) {
 const CustomImage = ({original, w, h}) => {
     return (
         <Flex justify='center' w='100%' >
-            <Box w={w} h={h} >
-                <Img
-                    w='100%'
-                    h='100%'
-                    objectFit='contain'
-                    borderRadius="md"
+            <Box borderRadius="md" overflow="hidden" bg="white" lineHeight="0" >
+                <Image
+                    width={w}
+                    height={h}
                     src={original}
-                    alt="Image"
+                    alt='Image'
                 />
             </Box>
         </Flex>
     )
 }
+/*
+<Flex justify='center' w='100%' >
+    <Box w={w} h={h} >
+        <Img
+            w='100%'
+            h='100%'
+            objectFit='contain'
+            borderRadius="md"
+            src={original}
+            alt="Image"
+        />
+    </Box>
+</Flex>
+*/
 
 const VideoPlayer = ({original, w, h}) => {
     return (

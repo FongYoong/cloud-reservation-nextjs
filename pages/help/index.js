@@ -1,6 +1,7 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import { Zoom } from "react-awesome-reveal";
-import { useBreakpointValue, Flex, VStack, Img, Heading, Text,   Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, } from "@chakra-ui/react";
+import { useBreakpointValue, Box, Flex, VStack, Heading, Text, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon, } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 
@@ -17,12 +18,14 @@ export default function NotFound() {
                 <Zoom>
                   <Flex justify='center' >
                     <VStack m={breakpoint==='base'?2:8} p={breakpoint==='base'?2:8} spacing={4} w="100%" h='100%' align="center" justify="center" borderWidth={2} borderRadius="lg" boxShadow="lg" >
-                        <Img
-                          borderRadius="lg"
-                          boxSize="20vh"
-                          src='/images/help.gif'
-                          alt="help"
-                        />
+                        <Box borderRadius="full" overflow="hidden" bg="white" lineHeight="0" >
+                          <Image
+                            width={200}
+                            height={200}
+                            src='/images/help.gif'
+                            alt="help"
+                          />
+                        </Box>
                         <Heading m={4} lineHeight='normal' bgGradient="linear(to-l, #7928CA,#FF0080)" bgClip="text" fontSize="4xl" fontWeight="extrabold" >
                             Help
                         </Heading>

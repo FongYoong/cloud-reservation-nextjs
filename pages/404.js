@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Zoom } from "react-awesome-reveal";
 import { MotionButton } from '../components/MotionElements';
-import { Flex, Img, Heading, Text } from "@chakra-ui/react";
+import { Flex, Heading, Text, Box } from "@chakra-ui/react";
 import Navbar from '../components/Navbar';
 import NavbarSpace from '../components/NavbarSpace';
 import StringSimilarity from "string-similarity";
@@ -29,11 +30,14 @@ export default function NotFound() {
                 <NavbarSpace />
                 <Zoom>
                     <Flex p={2} w="100%" direction="column" align="center" justify="center">
-                        <Img
-                            borderRadius="lg"
-                            src='/images/404.gif'
-                            alt="404 - Page Not Found"
-                        />
+                        <Box boxShadow="base" borderRadius="lg" overflow="hidden" bg="white" lineHeight="0" >
+                            <Image
+                                width='533'
+                                height='300'
+                                src='/images/404.gif'
+                                alt="404 - Page Not Found"
+                            />
+                        </Box>
                         <Heading m={4} textAlign='center' lineHeight='normal' bgGradient="linear(to-l, #7928CA,#FF0080)" bgClip="text" fontSize="4xl" fontWeight="extrabold" >
                             Page Not Found!
                         </Heading>

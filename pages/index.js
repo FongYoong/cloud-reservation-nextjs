@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Zoom, JackInTheBox } from "react-awesome-reveal";
 import { motion } from "framer-motion";
 import { MotionGetAttention, MotionButton } from '../components/MotionElements';
-import { useBreakpointValue, Divider, Flex, Img, Heading, Text, HStack, VStack, Box, Button, Icon } from "@chakra-ui/react";
+import { useBreakpointValue, Divider, Flex, Heading, Text, HStack, VStack, Box, Button, Icon } from "@chakra-ui/react";
 import Navbar from '../components/Navbar';
 import NavbarSpace from '../components/NavbarSpace';
 import { MdNavigateNext, MdWork, MdPeople, MdLocalGroceryStore } from 'react-icons/md';
@@ -32,17 +33,19 @@ export default function NotFound() {
                 <Navbar />
                 <NavbarSpace />
                 <Zoom>
-                    <VStack mb={16} spacing={4} w="100%" h='100%' align="center" justify="center">
+                    <VStack mb={24} spacing={4} w="100%" h='100%' align="center" justify="center">
                       <VStack p={4} w='100%' bgGradient="linear(to-r, #7F00FF, #E100FF)" >
                         <Flex p={2} w='100%' >
                           <Flex flex={2} align='start' justify='space-between' >
                             <Box />
-                            <Img
-                              borderRadius="lg"
-                              boxSize={breakpoint==='base'?'15vw':'20vh'}
-                              src='/images/cloud.gif'
-                              alt="Cloud"
-                            />
+                            <Box overflow="hidden" lineHeight="0" >
+                              <Image
+                                width='150'
+                                height='150'
+                                src='/images/cloud.gif'
+                                alt="Cloud"
+                              />
+                            </Box>
                           </Flex>
                           <Flex flex={5} align='center' justify='space-between' >
                             <VStack ml={breakpoint==='base'?0:8} >

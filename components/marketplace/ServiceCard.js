@@ -1,4 +1,5 @@
 import { memo, useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { motion } from "framer-motion";
 import { MotionBox } from '../MotionElements';
 import { Flip } from "react-awesome-reveal";
@@ -115,7 +116,7 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
                 type: "easeInOut",
             },
         },
-    } // imageUrls ? imageUrls[0] : ''
+    }
     return (
         <Box position='relative' borderWidth={1} borderRadius="sm" {...props} >
             <Box w='100%' h='100%'>
@@ -129,14 +130,15 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
                         <track src="" kind="captions" />
                     </video>
                     :
-                    <Img
-                        w='100%'
-                        h='100%'
-                        objectFit='fill'
-                        borderRadius="sm"
-                        src={imageUrls && imageUrls[1] ? imageUrls[1] : '/images/cat_hands.gif'}
-                        alt="Alternative Preview"
-                    /> }
+                    <Box rounded="md" overflow="hidden" bg="white" lineHeight="0" >
+                        <Image
+                            layout="fill"
+                            objectFit="cover"
+                            src={imageUrls && imageUrls[1] ? imageUrls[1] : '/images/cat_hands.gif'}
+                            alt="Alternative Preview"
+                        />
+                    </Box>
+                }
             </Box>
             <motion.div style={{
                 position: 'absolute',
@@ -169,15 +171,36 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
                         }
                     }
                 }} >
-                <Img
-                    w='100%'
-                    h='100%'
-                    objectFit='fill'
-                    borderRadius="sm"
-                    src={imageUrls ? imageUrls[0] : '/images/no_image.jpg'}
-                    alt="Photo"
-                />
+                <Box rounded="md" overflow="hidden" bg="white" lineHeight="0" >
+                    <Image
+                        layout="fill"
+                        objectFit="cover"
+                        src={imageUrls ? imageUrls[0] : '/images/no_image.jpg'}
+                        alt="No Image"
+                    />
+                </Box>
             </motion.div>
         </Box>
     )
 });
+
+/*
+
+<Img
+    w='100%'
+    h='100%'
+    objectFit='fill'
+    borderRadius="sm"
+    src={imageUrls && imageUrls[1] ? imageUrls[1] : '/images/cat_hands.gif'}
+    alt="Alternative Preview"
+/> 
+<Img
+    w='100%'
+    h='100%'
+    objectFit='fill'
+    borderRadius="sm"
+    src={imageUrls ? imageUrls[0] : '/images/no_image.jpg'}
+    alt="No Image"
+/>
+
+*/

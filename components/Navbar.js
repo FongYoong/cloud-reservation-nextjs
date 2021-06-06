@@ -80,7 +80,7 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                     });
                 }
             }, () => {
-                alert('Firebase chat error!')
+                console.log('Firebase chat error!');
             });
         }
     }, [auth, loading, router]);

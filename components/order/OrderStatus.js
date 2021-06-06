@@ -1,14 +1,15 @@
 import { memo, useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { updateOrder, addServiceReview } from '../../lib/db';
 import { motion } from "framer-motion";
 import { MotionButton, MotionGetAttention, MotionBox } from '../MotionElements';
-import { Fade, Zoom } from "react-awesome-reveal";
+import { Fade } from "react-awesome-reveal";
 import Ratings from '../Ratings';
 import UserAvatar from '../UserAvatar';
 import { CanvasRain } from '../CanvasRain';
 import { Calendar, formatEvents, calculateEventHours, dateIsToday } from '../Calendar';
 import { Views } from "react-big-calendar";
-import { Img, Flex, Box, VStack, HStack, Button, Heading, Text, Textarea, Stat, StatLabel, StatNumber, StatHelpText, Divider, Tag, TagLabel, TagRightIcon,
+import { Flex, Box, VStack, HStack, Button, Heading, Text, Textarea, Stat, StatLabel, StatNumber, StatHelpText, Divider, Tag, TagLabel, TagRightIcon,
 useBreakpointValue, useToast, useColorModeValue, useDisclosure,
 Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter,
 CircularProgress,
@@ -18,6 +19,19 @@ Table, Thead, Tbody, Tr, Th, Td,
 
 import { FaProductHunt, FaHammer, FaRegSmile, FaRegSadCry } from 'react-icons/fa';
 import { MdDelete, MdAttachMoney, MdCheckCircle, MdRateReview } from 'react-icons/md';
+
+const CustomImage = ({src, alt, ...props}) => {
+    return (
+        <Box borderRadius="full" overflow="hidden" bg="white" lineHeight="0" {...props} >
+            <Image
+                width='150'
+                height='150'
+                src={src}
+                alt={alt}
+            />
+        </Box>
+    )
+}
 
 export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, servicePublicData, orderData}) {
     const toast = useToast();
@@ -180,12 +194,13 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             Please wait for the client to make a payment. </b>
                         </Text>
                     </MotionGetAttention>
-                    <Img
+                    <CustomImage src='/images/waiting.gif' alt='Waiting' />
+                    {/*<Img
                         borderRadius="full"
                         boxSize="20vh"
                         src="/images/waiting.gif"
                         alt="Waiting"
-                    /> </>
+                    />*/} </>
                 }
                 {isServiceOwner && orderData.status === 'rejected' && <>
                     <MotionGetAttention attentionType='expand'>
@@ -193,12 +208,13 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> You have <Text as='span' color='red.500'> rejected </Text> the client&apos;s order. </b>
                         </Text>
                     </MotionGetAttention>
-                    <Img
+                    <CustomImage src='/images/sleeping.gif' alt='Rejected' />
+                    {/*<Img
                         borderRadius="full"
                         boxSize="20vh"
                         src="/images/sleeping.gif"
                         alt="Rejected"
-                    /> </>
+                    />*/} </>
                 }
                 {isServiceOwner && orderData.status === 'paidByUser' && <>
                     <MotionGetAttention attentionType='expand'>
@@ -208,13 +224,13 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             </b>
                         </Text>
                     </MotionGetAttention>
-                    <Img
+                    <CustomImage src='/images/work.gif' alt='Work' />
+                    {/*<Img
                         borderRadius="full"
                         boxSize="20vh"
                         src="/images/work.gif"
                         alt="Work"
-                    />
-                    </>
+                    />*/} </>
                 }
 
 {/* Client view */}
@@ -224,12 +240,13 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> Your order is waiting for approval by the seller. </b>
                         </Text>
                     </MotionGetAttention>
-                    <Img
+                    <CustomImage src='/images/waiting.gif' alt='Waiting' />
+                    {/*<Img
                         borderRadius="full"
                         boxSize="20vh"
                         src="/images/waiting.gif"
                         alt="Waiting"
-                    /> </>
+                    />*/} </>
                 }
                 {!isServiceOwner && orderData.status === 'accepted' && <>
                     <MotionGetAttention attentionType='expand'>
@@ -263,14 +280,17 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <Text w='100%' whiteSpace='pre-line' fontSize={["md", "lg"]} > <b> {orderData.approvalRemarks} </b> </Text>
                         </VStack>
                     </motion.div>
-                   <Img
+                    <CustomImage src='/images/angry.gif' alt='Rejected' borderRadius="lg" />
+                    {/*<Img
                         boxSize="20vh"
                         src="/images/angry.gif"
                         alt="Rejected"
-                    />
-                    <MotionButton icon={<FaRegSadCry />} colorScheme={"red"} onClick={() => {setShowRain(!showRain)}} >
-                        Make it rain!
-                    </MotionButton>
+                    />*/}
+                    {breakpoint!=='base' &&
+                        <MotionButton icon={<FaRegSadCry />} colorScheme={"red"} onClick={() => {setShowRain(!showRain)}} >
+                            Make it rain!
+                        </MotionButton>
+                    }
                     {showRain &&
                         <CanvasRain fullScreen={true} style={{
                             position: 'fixed',
@@ -304,11 +324,12 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                             <b> The order is <Text as='span' color='green.500'> completed </Text> ! <span role='img' aria-label="happy">😃</span> </b>
                         </Text>
                     </MotionGetAttention>
-                    <Img
+                    <CustomImage src='/images/happy.gif' alt='Happy' borderRadius="lg" />
+                    {/*<Img
                         boxSize="20vh"
                         src="/images/happy.gif"
                         alt="Happy"
-                    />
+                    />*/}
                     {!isServiceOwner && !orderData.reviewGiven && <>
                         <Divider borderColor='black.500' />
                         <MotionGetAttention>
@@ -428,16 +449,18 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         <TabPanels>
                             <TabPanel>
                                 <Fade duration={500} >
-                                <Table variant="simple" width='100%' p={2} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
-                                    <Thead>
-                                        <EventRow noExpand isHead />
-                                    </Thead>
-                                    <Tbody>
-                                        {calendarEvents && calendarEvents.map((event) => (
-                                            <EventRow key={event.start} event={event} />
-                                        ))}
-                                    </Tbody>
-                                </Table>
+                                    <Box overflowX='auto' overflowY='auto' >
+                                        <Table variant="simple" width='100%' p={2} rounded={{ md: 'lg' }} borderWidth={2} boxShadow="lg" >
+                                            <Thead>
+                                                <EventRow noExpand isHead />
+                                            </Thead>
+                                            <Tbody>
+                                                {calendarEvents && calendarEvents.map((event) => (
+                                                    <EventRow key={event.start} event={event} />
+                                                ))}
+                                            </Tbody>
+                                        </Table>
+                                    </Box>
                                 </Fade>
                             </TabPanel>
                             <TabPanel>
