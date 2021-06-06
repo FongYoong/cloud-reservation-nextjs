@@ -10,7 +10,14 @@ import 'nprogress/nprogress.css';
 Router.events.on('routeChangeStart', (url) => {
   NProgress.start()
 })
-Router.events.on('routeChangeComplete', () => NProgress.done())
+Router.events.on('routeChangeComplete', () => {
+  NProgress.done();
+  window.scroll({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  });
+})
 Router.events.on('routeChangeError', () => NProgress.done())
 
 function MyApp({ Component, pageProps }) {

@@ -8,12 +8,17 @@ import { AnimatePresence } from "framer-motion";
 import { ScaleFade, useBreakpointValue, useDisclosure, Flex, Box } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
+import Loading from '../../components/Loading';
 import AccountDrawer from '../../components/drawers/AccountDrawer';
 //import EditProfile from '../../components/account/EditProfile';
-const EditProfile = dynamic(() => import('../../components/account/EditProfile'));
+const EditProfile = dynamic(() => import('../../components/account/EditProfile'),
+  { loading: Loading }
+);
 import ProfileOverview from '../../components/account/ProfileOverview';
 import Searching from '../../components/Searching';
-const NotFound = dynamic(() => import('../../components/NotFound'));
+const NotFound = dynamic(() => import('../../components/NotFound'),
+  { loading: Loading }
+);
 
 export default function Account() {
   const { auth, loading } = useAuth();

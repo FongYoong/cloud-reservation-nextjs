@@ -13,11 +13,11 @@ Menu, MenuButton, MenuList, MenuItem, MenuGroup, MenuDivider,
 import { motion } from "framer-motion";
 import { MotionButton } from "./MotionElements";
 import { BsSun, BsMoon } from 'react-icons/bs';
-import { MdLocalGroceryStore, MdHome, MdWork, MdAttachMoney, MdHelp } from 'react-icons/md';
+import { MdLocalGroceryStore, MdWork, MdAttachMoney, MdHelp } from 'react-icons/md';
 import { RiChatSmile3Line, RiUserLine } from 'react-icons/ri';
 import { HiMenu } from 'react-icons/hi';
 import { FiLogOut } from 'react-icons/fi';
-import { IoReturnUpBack, IoStorefront } from 'react-icons/io5';
+import { IoLogoGithub, IoReturnUpBack, IoStorefront } from 'react-icons/io5';
 // Sound Effects
 import UIfx from 'uifx';
 import popMP3 from '../public/sounds/pop.mp3';
@@ -27,6 +27,7 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
     const bg = useColorModeValue("gray.100", "gray.600");
+    const logoutTextColor = useColorModeValue("red.500", "red.300");
     const toast = useToast();
     const toastId = "messageToast";
     const [newMessage, setNewMessage] = useState(false);
@@ -121,8 +122,8 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                             </DrawerContent>
                         </Drawer>
                     </>}
-                    {!showDrawerIcon && breakpoint==="base" && <IconButton icon={<MdHome size={20} />} onClick={() => router.push('/')}/>}
-                    {breakpoint!=="base" &&  <IconButton icon={<MdHome size={40} />} onClick={() => router.push('/')}/>}
+                    {!showDrawerIcon && breakpoint==="base" && <IconButton icon={<IoLogoGithub size={25} />} onClick={() => router.push('https://github.com/FongYoong/cloud-reservation-nextjs')}/>}
+                    {breakpoint!=="base" &&  <IconButton icon={<IoLogoGithub size={40} />} onClick={() => router.push('https://github.com/FongYoong/cloud-reservation-nextjs')}/>}
                     <Heading fontSize={["sm", "md", "lg", "2xl"]} onClick={() => router.push('/')} as="button">
                         <Link href='/' >
                             Cloud Reservation
@@ -194,15 +195,20 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
                                         Help
                                     </MenuItem>
                                 </Link>
+                                <Link href='https://github.com/FongYoong/cloud-reservation-nextjs' >
+                                    <MenuItem icon={<IoLogoGithub />} >
+                                        GitHub
+                                    </MenuItem>
+                                </Link>
                                 <MenuDivider />
-                                <MenuItem icon={<FiLogOut />} color="red.500" onClick={() => setIsLogoutOpen(true)}>
+                                <MenuItem icon={<FiLogOut />} color={logoutTextColor} onClick={() => setIsLogoutOpen(true)}>
                                     Logout
                                 </MenuItem>
                             </MenuList>
                         </Menu>
                     </>) : (
                         <Link href='/login' >
-                            <Button p={2} colorScheme="teal" >
+                            <Button ml={2} p={2} size={breakpoint==="base"?'sm':'md'} colorScheme="teal" >
                                 Login/Register
                             </Button>
                         </Link>
@@ -240,12 +246,5 @@ const Navbar = ({hideOnScroll=true, showDrawerIcon, drawerContent, drawerState }
     </>
     );
 };
-const MarketLink = ({ children, ...props }) => {
-    return (
-        <Link {...props} href='/marketplace' >
-            {children}
-        </Link>
-    )
-}
 
 export default memo(Navbar);

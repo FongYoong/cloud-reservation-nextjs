@@ -8,12 +8,17 @@ import { AnimatePresence } from "framer-motion";
 import { useBreakpointValue, useDisclosure, ScaleFade, Flex, Box } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
+import Loading from '../../components/Loading';
 import ServicesDrawer from '../../components/drawers/ServicesDrawer';
 import ServicesOverview from '../../components/services/ServicesOverview';
 //import AddService from '../../components/services/AddService';
-const AddService = dynamic(() => import('../../components/services/AddService'));
+const AddService = dynamic(() => import('../../components/services/AddService'),
+  { loading: Loading }
+);
 //import AllServices from '../../components/services/AllServices';
-const AllServices = dynamic(() => import('../../components/services/AllServices'));
+const AllServices = dynamic(() => import('../../components/services/AllServices'),
+  { loading: Loading }
+);
 
 
 export default function Services() {

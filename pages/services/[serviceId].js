@@ -20,16 +20,25 @@ import Searching from '../../components/Searching';
 const NotFound = dynamic(() => import('../../components/NotFound'));
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
+import Loading from '../../components/Loading';
 import ServiceDrawer from '../../components/drawers/ServiceDrawer';
 import ServiceOverview from '../../components/service/ServiceOverview';
 //import EditService from '../../components/service/EditService';
-const EditService = dynamic(() => import('../../components/service/EditService'));
+const EditService = dynamic(() => import('../../components/service/EditService'),
+  { loading: Loading }
+);
 //import AddOrder from '../../components/service/AddOrder';
-const AddOrder = dynamic(() => import('../../components/service/AddOrder'));
+const AddOrder = dynamic(() => import('../../components/service/AddOrder'),
+  { loading: Loading }
+);
 //import Reviews from '../../components/service/Reviews';
-const Reviews = dynamic(() => import('../../components/service/Reviews'));
+const Reviews = dynamic(() => import('../../components/service/Reviews'),
+  { loading: Loading }
+);
 //import AllOrders from '../../components/service/AllOrders';
-const AllOrders = dynamic(() => import('../../components/service/AllOrders'));
+const AllOrders = dynamic(() => import('../../components/service/AllOrders'),
+  { loading: Loading }
+);
 
 export default function Service () {
     // Only edit if owner of service

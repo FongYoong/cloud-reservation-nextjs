@@ -41,7 +41,7 @@ export default function NotFound() {
                             </h2>
                             <AccordionPanel pb={4}>
                               <Text textAlign="left" fontSize='lg'>
-                                Curiousity killed the cat.
+                                This site has a dark mode. Booyah!
                               </Text>
                             </AccordionPanel>
                           </AccordionItem>

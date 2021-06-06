@@ -8,9 +8,12 @@ import { AnimatePresence } from "framer-motion";
 import { useBreakpointValue, useDisclosure, ScaleFade, Flex, Box } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
+import Loading from '../../components/Loading';
 import OrdersDrawer from '../../components/drawers/OrdersDrawer';
 //import OrdersOverview from '../../components/orders/OrdersOverview';
-const OrdersOverview = dynamic(() => import('../../components/orders/OrdersOverview'));
+const OrdersOverview = dynamic(() => import('../../components/orders/OrdersOverview'),
+  { loading: Loading }
+);
 import AllOrders from '../../components/orders/AllOrders';
 
 export default function Orders() {
