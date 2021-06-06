@@ -59,7 +59,6 @@ export default function AddOrder({auth, serviceId, serviceData}) {
 
     return (
         <MotionBox
-            flex={5}
             minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}

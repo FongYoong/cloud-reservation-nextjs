@@ -14,7 +14,7 @@ export default memo(function ChatsDrawer({fetchingChats, chats, currentChatIndex
     return (
         <MotionBox flex={2} minWidth={0} whileHover={{ scale: 1.05 }} >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <Heading fontSize="xl" mb={2}>
+                <Heading mb={2} textAlign='center' fontSize="3xl" fontWeight="extrabold" >
                     Chats
                 </Heading>
                 <Divider borderColor='black.300' />

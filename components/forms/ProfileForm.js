@@ -1,6 +1,4 @@
 import { memo, useState } from 'react';
-import { Fade } from "react-awesome-reveal";
-
 // File Pond
 import { FilePond, registerPlugin } from 'react-filepond'; // Import React FilePond
 import 'filepond/dist/filepond.min.css'; // Import FilePond styles
@@ -15,7 +13,7 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, F
 
 import { motion } from "framer-motion";
 import { MotionButton } from '../MotionElements';
-import { Divider, Box, Flex, VStack, Heading, UnorderedList, ListItem,
+import { Box, Flex, VStack, Heading, UnorderedList, ListItem,
     Input,
     Textarea,
     FormControl,

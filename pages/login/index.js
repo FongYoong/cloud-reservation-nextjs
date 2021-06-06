@@ -4,7 +4,7 @@ import Head from 'next/head'
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import {EmailLogin, EmailRegister} from '../../components/Email';
-import { ScaleFade, Text, Heading, Flex, Spacer, Link, Input, Spinner, Stack, Box, Button, IconButton, Container, Center, HStack, VStack, Divider,
+import { ScaleFade, Text, Spinner, Button, Container, Center, HStack, VStack,
   useDisclosure,
   Modal,
   ModalOverlay,

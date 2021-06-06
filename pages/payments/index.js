@@ -2,9 +2,9 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
-import { Slide } from "react-awesome-reveal";
+import { Flip } from "react-awesome-reveal";
 import { getUserOrders } from '../../lib/db';
-import { useBreakpointValue, ScaleFade, Flex, Heading } from "@chakra-ui/react";
+import { ScaleFade, Flex, Heading } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import OrderCard from '../../components/service/OrderCard';
@@ -54,7 +54,7 @@ export default function Payments() {
     }
   }, [auth, loading, router]);
 
-  const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
+  //const breakpoint = useBreakpointValue({ base: "base", md: "base", lg: "lg" });
 
   return (
     <div>
@@ -66,11 +66,11 @@ export default function Payments() {
         <NavbarSpace />
         <ScaleFade initialScale={0.9} in={true}>
           <Flex p={2} w="100%" direction="column" align="center" justify="center" >
-            <Heading mb={4} >
+            <Heading mb={8} textAlign='center' fontSize="3xl" fontWeight="extrabold" >
               Payments
             </Heading>
             {ordersList && ordersList.length > 0 &&
-              <Slide cascade duration={500} direction='up' triggerOnce >
+              <Flip duration={500} direction='vertical' triggerOnce >
                   {ordersList.map((data, i) => (
                       <OrderCard isAllOrdersPage={true} mb={4} key={i} order={data} hide={targetCardKey === i}
                       onClick={() => {
@@ -80,7 +80,7 @@ export default function Payments() {
                       />
                   ))
                   }
-              </Slide>
+              </Flip>
             }
           </Flex>
         </ScaleFade>

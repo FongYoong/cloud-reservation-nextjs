@@ -21,7 +21,7 @@ export default memo(function ServicesDrawer({mode, setMode, drawerState}) {
     return (
         <MotionBox flex={1} whileHover={{ scale: 1.1 }} >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <Heading fontSize="xl" mb={2}>
+                <Heading mb={2} textAlign='center' fontSize="3xl" fontWeight="extrabold" >
                     My Account
                 </Heading>
                 <Divider borderColor='black.300' />

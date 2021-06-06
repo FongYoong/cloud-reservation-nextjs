@@ -58,8 +58,7 @@ export default memo(function EditProfile({auth, profileData}) {
 
     return (
         <MotionBox
-            width='70%'
-            flex={5}
+            width='100%'
             minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}

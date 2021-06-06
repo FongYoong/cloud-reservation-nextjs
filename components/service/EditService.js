@@ -94,7 +94,6 @@ export default function EditService({auth, cannotModify, serviceId, publicData})
 
     return (
         <MotionBox
-            flex={5}
             minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}

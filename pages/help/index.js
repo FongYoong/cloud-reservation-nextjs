@@ -26,7 +26,7 @@ export default function NotFound() {
                             alt="help"
                           />
                         </Box>
-                        <Heading m={4} lineHeight='normal' bgGradient="linear(to-l, #7928CA,#FF0080)" bgClip="text" fontSize="4xl" fontWeight="extrabold" >
+                        <Heading m={4} lineHeight='normal' bgGradient="linear(to-r, #f857a6,#ff5858)" bgClip="text" fontSize="4xl" fontWeight="extrabold" >
                             Help
                         </Heading>
                         <Accordion w='80%' allowMultiple allowToggle>

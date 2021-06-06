@@ -1,11 +1,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { AnimateSharedLayout } from "framer-motion";
 import { MotionBox, MotionButton } from '../MotionElements';
 import { useColorModeValue, useBreakpointValue, Box, Divider, Spinner, Flex, VStack, Textarea } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
-import Empty from '../Empty';
+const Empty = dynamic(() => import('../Empty'));
 import { MdSend } from 'react-icons/md';
 
 export default function Chat ({ chatData, sendMessageHandler, hasScrolledBefore, setHasScrolledBefore }) {

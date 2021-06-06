@@ -1,17 +1,19 @@
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { getUserProfile } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
-import { ScaleFade, useBreakpointValue, useDisclosure, Flex } from "@chakra-ui/react";
+import { ScaleFade, useBreakpointValue, useDisclosure, Flex, Box } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import AccountDrawer from '../../components/drawers/AccountDrawer';
-import EditProfile from '../../components/account/EditProfile';
+//import EditProfile from '../../components/account/EditProfile';
+const EditProfile = dynamic(() => import('../../components/account/EditProfile'));
 import ProfileOverview from '../../components/account/ProfileOverview';
 import Searching from '../../components/Searching';
-import NotFound from '../../components/NotFound';
+const NotFound = dynamic(() => import('../../components/NotFound'));
 
 export default function Account() {
   const { auth, loading } = useAuth();
@@ -56,10 +58,12 @@ export default function Account() {
             <Flex direction="column" align="center" justify="center">
               <Flex p={4} w="100%" align="start" justify="space-between">
                   {breakpoint!=="base" && <AccountDrawer {...drawerProps} />}
-                  <AnimatePresence exitBeforeEnter>
-                      {mode === "edit" && <EditProfile key="edit" {...{profileData, auth}} />}
-                      {mode === "overview" && <ProfileOverview key="overview" {...{uid: auth.uid, profileData, auth, sameUser:true}} />}
-                  </AnimatePresence>
+                  <Box flex={5} minWidth={0} >
+                    <AnimatePresence exitBeforeEnter>
+                        {mode === "edit" && <EditProfile key="edit" {...{profileData, auth}} />}
+                        {mode === "overview" && <ProfileOverview key="overview" {...{uid: auth.uid, profileData, auth, sameUser:true}} />}
+                    </AnimatePresence>
+                  </Box>
               </Flex>
             </Flex>
           </ScaleFade>

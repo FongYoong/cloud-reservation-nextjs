@@ -230,15 +230,13 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
     const breakpoint = useBreakpointValue({ base: "base", md: "md", lg: "lg" });
     return (
         <MotionBox
-            flex={5}
-            minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
             exit={{ rotateY: -90 }}
             transition={{ type: "tween" }}
         >
             <VStack m={2} p={4} spacing="4" borderWidth={2} borderRadius="lg" boxShadow="lg">
-                <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                <Heading mb={2} p={4} w='100%' color='white' bgGradient="linear(to-r, #085078, #85D8CE)" borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
                     Pending Confirmations
                 </Heading>
                 <Box maxHeight={breakpoint === 'base'?'100vh':'40vh'} w='100%' overflowX='auto' overflowY='auto'
@@ -268,7 +266,7 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
                         </Tbody>
                     </Table>
                 </Box>
-                <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                <Heading mb={2} p={4} w='100%' color='white' bgGradient="linear(to-r, #5C258D, #4389A2)" borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
                     Work In Progress
                 </Heading>
                 <Box maxHeight={breakpoint === 'base'?'100vh':'40vh'} w='100%' overflowX='auto' overflowY='auto'
@@ -298,12 +296,12 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
                         </Tbody>
                     </Table>
                 </Box>
-                <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                <Heading mb={2} p={4} w='100%' color='white' bgGradient="linear(to-r, #360033, #0b8793)" borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
                     Number of Orders
                 </Heading>
                 {breakpoint === 'base' ?
                     <Menu isLazy closeOnSelect={true}>
-                        <MenuButton as={Button} leftIcon={<IoFilter />} colorScheme="purple">
+                        <MenuButton as={Button} leftIcon={<IoFilter />} colorScheme="pink">
                             Filter
                         </MenuButton>
                         <MenuList>
@@ -359,7 +357,7 @@ export default function ServicesOverview({ fetchingServices, servicesList }) {
                     </TabPanels>
                 </Tabs>
                 <Divider borderColor='black.300' />
-                <Heading mb={2} p={4} w='100%' color='white' bg='purple' borderWidth={2} borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
+                <Heading mb={2} p={4} w='100%' color='white' bg='purple' bgGradient="linear(to-r, #5f2c82, #49a09d)" borderRadius="lg" boxShadow="lg" fontSize="xl" textAlign='center' >
                     Total Earnings (RM)
                 </Heading>
                 <Tabs isLazy isFitted width={breakpoint==='base'?'100%':'70%'} variant="solid-rounded" colorScheme="purple">

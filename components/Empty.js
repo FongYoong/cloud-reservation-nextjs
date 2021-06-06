@@ -8,7 +8,7 @@ export default memo(function Empty ({ children, ...props }) {
         <Zoom>
             <VStack p={2} w='100%'>
                 <Heading textAlign='center' mb={2} fontSize="xl" {...props} > Wow, such empty... </Heading>
-                <Box boxShadow="base" rounded="lg" overflow="hidden" bg="white" lineHeight="0" >
+                <Box borderRadius='2xl' overflow="hidden" bg="white" lineHeight="0" >
                     <Image
                         width='400'
                         height='300'

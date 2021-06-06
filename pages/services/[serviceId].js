@@ -1,10 +1,11 @@
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { getServicePublicDetails, getServiceReviews, getServiceOrders, deleteService } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
-import { useBreakpointValue, useDisclosure, useToast, ScaleFade, Heading, Box, Button, VStack, Flex,
+import { useBreakpointValue, useDisclosure, useToast, ScaleFade, Box, Button, Flex,
 Modal,
 ModalOverlay,
 ModalContent,
@@ -15,15 +16,20 @@ ModalFooter,
 CircularProgress
 } from "@chakra-ui/react";
 import Searching from '../../components/Searching';
-import NotFound from '../../components/NotFound';
+//import NotFound from '../../components/NotFound';
+const NotFound = dynamic(() => import('../../components/NotFound'));
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import ServiceDrawer from '../../components/drawers/ServiceDrawer';
-import EditService from '../../components/service/EditService';
-import AddOrder from '../../components/service/AddOrder';
 import ServiceOverview from '../../components/service/ServiceOverview';
-import Reviews from '../../components/service/Reviews';
-import AllOrders from '../../components/service/AllOrders';
+//import EditService from '../../components/service/EditService';
+const EditService = dynamic(() => import('../../components/service/EditService'));
+//import AddOrder from '../../components/service/AddOrder';
+const AddOrder = dynamic(() => import('../../components/service/AddOrder'));
+//import Reviews from '../../components/service/Reviews';
+const Reviews = dynamic(() => import('../../components/service/Reviews'));
+//import AllOrders from '../../components/service/AllOrders';
+const AllOrders = dynamic(() => import('../../components/service/AllOrders'));
 
 export default function Service () {
     // Only edit if owner of service
@@ -128,13 +134,15 @@ export default function Service () {
                     <Flex direction="column" align="center" justify="center">
                         <Flex p={4} w="100%" align="start" justify="space-between">
                             {breakpoint!=="base" && <ServiceDrawer {...drawerProps} />}
-                            <AnimatePresence exitBeforeEnter>
-                                {serviceMode === "edit" && isOwner && <EditService key="edit" {...{cannotModify, serviceId, publicData, auth}} />}
-                                {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData:publicData, auth}} />}
-                                {serviceMode === "overview" && <ServiceOverview key="overview" {...{serviceId, publicData, auth}} />}
-                                {serviceMode === "reviews" && <Reviews key="reviews" {...{fetchingReviews, reviews, auth}} />}
-                                {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{fetchingOrders, serviceId, ordersList, auth}} />}
-                            </AnimatePresence>
+                            <Box flex={5} minWidth={0} >
+                                <AnimatePresence exitBeforeEnter>
+                                    {serviceMode === "edit" && isOwner && <EditService key="edit" {...{cannotModify, serviceId, publicData, auth}} />}
+                                    {serviceMode === "addOrder" && !isOwner && <AddOrder key="addOrder" {...{serviceId, serviceData:publicData, auth}} />}
+                                    {serviceMode === "overview" && <ServiceOverview key="overview" {...{serviceId, publicData, auth}} />}
+                                    {serviceMode === "reviews" && <Reviews key="reviews" {...{fetchingReviews, reviews, auth}} />}
+                                    {serviceMode === "allOrders" && isOwner && <AllOrders key="allOrders" {...{fetchingOrders, serviceId, ordersList, auth}} />}
+                                </AnimatePresence>
+                            </Box>
                         </Flex>
                     </Flex>
                 </ScaleFade>

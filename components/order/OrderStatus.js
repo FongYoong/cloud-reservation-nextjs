@@ -1,10 +1,11 @@
 import { memo, useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { updateOrder, addServiceReview } from '../../lib/db';
 import { motion } from "framer-motion";
 import { MotionButton, MotionGetAttention, MotionBox } from '../MotionElements';
 import { Fade } from "react-awesome-reveal";
-import Ratings from '../Ratings';
+const Ratings = dynamic(() => import('../Ratings'));
 import UserAvatar from '../UserAvatar';
 import { CanvasRain } from '../CanvasRain';
 import { Calendar, formatEvents, calculateEventHours, dateIsToday } from '../Calendar';
@@ -314,7 +315,7 @@ export default function OrderStatus({auth, isServiceOwner, serviceId, orderId, s
                         <Text as='span' color='red.500'> ONLY </Text>
                         after your order is completed by the seller. </b>
                     </Text>
-                    <MotionButton icon={<MdCheckCircle />} colorScheme={"green"} onClick={completedModalState.onOpen} >
+                    <MotionButton size={breakpoint==='base'?'sm':'md'} icon={<MdCheckCircle />} colorScheme={"green"} onClick={completedModalState.onOpen} >
                         My order has been fulfilled by the seller.
                     </MotionButton> </>
                 }

@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
-import { Flip } from "react-awesome-reveal";
 import { getUserChats, sendMessage, deleteChatListeners } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
 import { ScaleFade, useBreakpointValue, useDisclosure, Flex,Text } from "@chakra-ui/react";

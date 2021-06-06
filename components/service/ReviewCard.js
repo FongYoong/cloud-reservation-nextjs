@@ -1,8 +1,7 @@
 import { MotionBox } from '../MotionElements';
 import UserAvatar from '../UserAvatar';
 import Ratings from '../Ratings';
-import { useBreakpointValue, useColorModeValue, Flex, Box, Divider, Heading, Text, HStack, VStack, Tag, TagRightIcon, TagLabel, IconButton } from "@chakra-ui/react";
-import { FaProductHunt, FaHammer, FaArrowAltCircleRight } from 'react-icons/fa';
+import { useBreakpointValue, useColorModeValue, Flex, Box, Text } from "@chakra-ui/react";
 
 export default function ReviewCard ({data, ...props}) {
 

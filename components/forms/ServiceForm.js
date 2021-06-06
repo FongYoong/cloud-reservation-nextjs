@@ -1,5 +1,4 @@
 import { memo, useState } from 'react';
-import { Fade } from "react-awesome-reveal";
 
 // File Pond
 import { FilePond, registerPlugin } from 'react-filepond'; // Import React FilePond

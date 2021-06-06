@@ -1,14 +1,16 @@
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
 import { getUserOrders } from '../../lib/db';
 import { AnimatePresence } from "framer-motion";
-import { useBreakpointValue, useDisclosure, ScaleFade, Flex } from "@chakra-ui/react";
+import { useBreakpointValue, useDisclosure, ScaleFade, Flex, Box } from "@chakra-ui/react";
 import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import OrdersDrawer from '../../components/drawers/OrdersDrawer';
-import OrdersOverview from '../../components/orders/OrdersOverview';
+//import OrdersOverview from '../../components/orders/OrdersOverview';
+const OrdersOverview = dynamic(() => import('../../components/orders/OrdersOverview'));
 import AllOrders from '../../components/orders/AllOrders';
 
 export default function Orders() {
@@ -63,10 +65,12 @@ export default function Orders() {
           <Flex direction="column" align="center" justify="center">
             <Flex p={4} w="100%" align="start" justify="space-between">
               {breakpoint!=="base" && <OrdersDrawer {...drawerProps} />}
-              <AnimatePresence exitBeforeEnter>
-                  {orderMode === "overview" && <OrdersOverview fetchingOrders={fetchingOrders} ordersList={ordersList} key="overview" auth={auth} />}
-                  {orderMode === "all" && <AllOrders fetchingOrders={fetchingOrders} ordersList={ordersList} key="all" auth={auth} />}
-              </AnimatePresence>
+              <Box flex={5} minWidth={0} >
+                <AnimatePresence exitBeforeEnter>
+                    {orderMode === "overview" && <OrdersOverview fetchingOrders={fetchingOrders} ordersList={ordersList} key="overview" auth={auth} />}
+                    {orderMode === "all" && <AllOrders fetchingOrders={fetchingOrders} ordersList={ordersList} key="all" auth={auth} />}
+                </AnimatePresence>
+              </Box>
             </Flex>
           </Flex>
         </ScaleFade>

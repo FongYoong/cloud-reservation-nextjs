@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../lib/auth';
@@ -8,14 +9,14 @@ import Navbar from '../../components/Navbar';
 import NavbarSpace from '../../components/NavbarSpace';
 import ProfileOverview from '../../components/account/ProfileOverview';
 import Searching from '../../components/Searching';
-import NotFound from '../../components/NotFound';
+const NotFound = dynamic(() => import('../../components/NotFound'));
 
 export default function Profile() {
     const { auth, loading } = useAuth();
     const router = useRouter();
     const userId = router.query.userId;
     const [fetchingProfile, setFetchingProfile] = useState(true);
-    const [profileData, setProfileData] = useState({});
+    const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {
     if (!loading) {

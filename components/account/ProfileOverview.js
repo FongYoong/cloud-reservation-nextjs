@@ -1,12 +1,13 @@
 import { memo, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { MotionBox, MotionButton } from '../MotionElements';
-import { Slide } from "react-awesome-reveal";
+import { Flip } from "react-awesome-reveal";
 import { getUserServices } from '../../lib/db';
 import { useBreakpointValue, useColorModeValue, Flex, VStack, Divider, Box, Avatar, Heading, Text } from '@chakra-ui/react';
 import ServiceCard from '../services/ServiceCard';
 import Searching from '../../components/Searching';
-import Empty from '../Empty';
+const Empty = dynamic(() => import('../Empty'));
 import { RiChatSmile3Line } from 'react-icons/ri';
 
 export default memo(function ProfileOverview({uid, sameUser=false, profileData}) {
@@ -32,7 +33,6 @@ export default memo(function ProfileOverview({uid, sameUser=false, profileData})
 
     return (
         <MotionBox
-            flex={5}
             minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
@@ -78,7 +78,7 @@ export default memo(function ProfileOverview({uid, sameUser=false, profileData})
                 {!fetchingServices ? <>
                     {servicesList && servicesList.length > 0 ?
                         <Flex p={2} w="100%" direction="column" align="start" justify="center">
-                            <Slide cascade duration={500} direction='up' triggerOnce >
+                            <Flip duration={500} direction='vertical' triggerOnce >
                                 {servicesList.map((data, i) => (
                                     <ServiceCard mb={4} key={data.serviceId} shallowData={data} hide={targetCardKey === i}
                                     onClick={() => {
@@ -88,7 +88,7 @@ export default memo(function ProfileOverview({uid, sameUser=false, profileData})
                                     />
                                 ))
                                 }
-                            </Slide>
+                            </Flip>
                         </Flex>
                         : 
                         <Empty />

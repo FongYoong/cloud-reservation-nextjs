@@ -86,8 +86,6 @@ export default function Order () {
             else {
                 router.replace('/marketplace');
             }
-            //console.log(servicePublicData);
-            //console.log(orderData);
         }
     }, [auth, loading, router, servicePublicData, orderData]);
 

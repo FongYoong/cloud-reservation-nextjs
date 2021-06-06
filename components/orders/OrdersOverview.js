@@ -1,13 +1,11 @@
 import { memo } from 'react';
+import Image from 'next/image';
 import { MotionBox } from '../MotionElements';
-import { Box, VStack, Heading, Text } from '@chakra-ui/react';
-import { Player, Youtube } from '@vime/react';
-import '@vime/core/themes/default.css';
+import { VStack, Heading, Text, Box } from '@chakra-ui/react';
 
 export default memo(function OrdersOverview({ fetchingOrders, ordersList}) {
     return (
         <MotionBox
-            flex={5}
             minWidth={0}
             initial={{ rotateY: 90 }}
             animate={{ rotateY: 0 }}
@@ -23,10 +21,13 @@ export default memo(function OrdersOverview({ fetchingOrders, ordersList}) {
                     After all, who would want to see a summary of everything they&apos;ve bought without feeling guilty for overspending?
                     <span role='img' aria-label='Grin' >😁</span>
                 </Text>
-                <Box width="60%" >
-                    <Player controls >
-                        <Youtube videoId="cUSVfImfAD8" />
-                    </Player>
+                <Box borderRadius="full" overflow="hidden" bg="white" lineHeight="0" >
+                    <Image
+                        width='150'
+                        height='150'
+                        src={'/images/sleeping.gif'}
+                        alt={'Lazy'}
+                    />
                 </Box>
             </VStack>
         </MotionBox>

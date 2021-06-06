@@ -4,24 +4,11 @@ import Link from 'next/link';
 import { useAuth } from '../lib/auth';
 import { getUserProfile, listenUserChats } from '../lib/db';
 import NavbarButton from './NavbarButton';
-import { Link as CLink, useToast, useColorMode, useColorModeValue, LinkBox, LinkOverlay, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
+import { useToast, useColorMode, useColorModeValue, VStack, Text, Avatar, AvatarBadge, Spacer, HStack, Button, IconButton, Flex, Heading,
 useBreakpointValue,
-AlertDialog,
-AlertDialogBody,
-AlertDialogFooter,
-AlertDialogHeader,
-AlertDialogContent,
-AlertDialogOverlay,
-Drawer,
-DrawerOverlay,
-DrawerContent,
-DrawerHeader,
-Menu,
-MenuButton,
-MenuList,
-MenuItem,
-MenuGroup,
-MenuDivider,
+AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay,
+Drawer, DrawerOverlay, DrawerContent, DrawerHeader,
+Menu, MenuButton, MenuList, MenuItem, MenuGroup, MenuDivider,
 } from '@chakra-ui/react';
 import { motion } from "framer-motion";
 import { MotionButton } from "./MotionElements";

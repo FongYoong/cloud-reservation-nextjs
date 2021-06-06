@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { MotionBox } from '../MotionElements';
 import { Flip } from "react-awesome-reveal";
 import { getServicePublicDetails } from '../../lib/db';
-import { useColorModeValue, useBreakpointValue, Flex, Box, Img, Divider, Heading, Text, VStack, Tag, TagRightIcon, TagLabel, Stat, StatNumber } from "@chakra-ui/react";
+import { useColorModeValue, useBreakpointValue, Flex, Box, Divider, Heading, Text, VStack, Tag, TagRightIcon, TagLabel, Stat, StatNumber } from "@chakra-ui/react";
 import UserAvatar from '../../components/UserAvatar';
 import { FaProductHunt, FaHammer } from 'react-icons/fa';
 
