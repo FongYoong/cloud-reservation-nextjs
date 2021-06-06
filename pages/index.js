@@ -198,10 +198,15 @@ export default function NotFound() {
                       </VStack>
                     </Flex>
                   </VStack>
-                  <Zoom>
+                  <Zoom cascade>
                     <MotionGetAttention attentionType='expand' >
                       <Button mt={4} rightIcon={<MdNavigateNext />} size='lg' colorScheme={"purple"} onClick={() => { router.push('/login'); }} >
                         Give it a try?
+                      </Button>
+                    </MotionGetAttention>
+                    <MotionGetAttention attentionType='expand' >
+                      <Button mt={4} rightIcon={<MdNavigateNext />} size='lg' colorScheme={"pink"} onClick={() => { router.push('/marketplace'); }} >
+                        View the Marketplace
                       </Button>
                     </MotionGetAttention>
                   </Zoom>
