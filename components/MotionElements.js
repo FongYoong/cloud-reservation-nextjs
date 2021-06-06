@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { motion } from "framer-motion";
 import { Box, Button } from '@chakra-ui/react';
 import { Fade } from "react-awesome-reveal";
@@ -6,7 +6,7 @@ import { Fade } from "react-awesome-reveal";
 export const MotionBox = motion(Box);
 // eslint-disable-next-line react/display-name
 export const MotionButton = memo(({children, hidden, disabled, getAttention, icon, colorScheme, ...props}) => {
-    const variants = {
+    const variants = useMemo(() => ({
         normal: {
             scale: 1,
             rotate: 0,
@@ -28,7 +28,7 @@ export const MotionButton = memo(({children, hidden, disabled, getAttention, ico
                 repeatDelay: 0.5,
             },
         }
-    }
+    }), []);
     let animateState;
     if (hidden) {
         animateState = 'hidden';
@@ -54,7 +54,7 @@ export const MotionButton = memo(({children, hidden, disabled, getAttention, ico
 });
 // eslint-disable-next-line react/display-name
 export const MotionGetAttention = memo(({attentionType='rotate', hover=false, children, ...props}) => {
-    const variants = {
+    const variants = useMemo(() => ({
         normal: {
             scale: 1,
             rotate: 0,
@@ -81,7 +81,7 @@ export const MotionGetAttention = memo(({attentionType='rotate', hover=false, ch
                 repeatDelay: 1,
             },
         }
-    }
+    }), []);
     const [animateState, setAnimateState] = useState(attentionType);
 
     return (
