@@ -47,6 +47,7 @@ export default function ServiceCard ({shallowData, blur, hide, ...props}) {
         <MotionBox m={2} layout transition={spring} variants={variants} animate={animateState} initial={false} _hover={{cursor: "pointer"}}
             w={breakpoint==='base'?'90%':'18em'}
             h={'24em'}
+            transform='translateZ(0)'
             __css={{
                 filter: blur?'blur(2px)':'',
             }}
