@@ -133,6 +133,7 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
                     :
                     <Box rounded="md" overflow="hidden" bg="white" lineHeight="0" >
                         <Image
+                            priority={true}
                             layout="fill"
                             objectFit="cover"
                             src={imageUrls && imageUrls[1] ? imageUrls[1] : '/images/cat_hands.gif'}
@@ -174,6 +175,7 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
                 }} >
                 <Box rounded="md" overflow="hidden" bg="white" lineHeight="0" >
                     <Image
+                        priority={true}
                         layout="fill"
                         objectFit="cover"
                         src={imageUrls ? imageUrls[0] : '/images/no_image.jpg'}

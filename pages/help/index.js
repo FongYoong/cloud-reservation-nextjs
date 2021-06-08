@@ -20,6 +20,7 @@ export default function NotFound() {
                     <VStack m={breakpoint==='base'?2:8} p={breakpoint==='base'?2:8} spacing={4} w="100%" h='100%' align="center" justify="center" borderWidth={2} borderRadius="lg" boxShadow="lg" >
                         <Box borderRadius="full" overflow="hidden" bg="white" lineHeight="0" >
                           <Image
+                            priority={true}
                             width={200}
                             height={200}
                             src='/images/help.gif'

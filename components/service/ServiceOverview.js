@@ -111,6 +111,7 @@ const CustomImage = ({original, w, h}) => {
         <Flex justify='center' w='100%' >
             <Box borderRadius="md" overflow="hidden" bg="white" lineHeight="0" >
                 <Image
+                    priority={true}
                     width={w}
                     height={h}
                     src={original}

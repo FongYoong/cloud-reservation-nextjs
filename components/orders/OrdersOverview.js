@@ -23,6 +23,7 @@ export default memo(function OrdersOverview({ fetchingOrders, ordersList}) {
                 </Text>
                 <Box borderRadius="full" overflow="hidden" bg="white" lineHeight="0" >
                     <Image
+                        priority={true}
                         width='150'
                         height='150'
                         src={'/images/sleeping.gif'}

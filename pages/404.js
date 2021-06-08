@@ -32,6 +32,7 @@ export default function NotFound() {
                     <Flex p={2} w="100%" direction="column" align="center" justify="center">
                         <Box boxShadow="base" borderRadius="lg" overflow="hidden" bg="white" lineHeight="0" >
                             <Image
+                                priority={true}
                                 width='533'
                                 height='300'
                                 src='/images/404.gif'

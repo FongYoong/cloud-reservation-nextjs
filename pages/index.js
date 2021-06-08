@@ -40,6 +40,7 @@ export default function NotFound() {
                         <Box />
                         <Box overflow="hidden" lineHeight="0" >
                           <Image
+                            priority={true}
                             width='150'
                             height='150'
                             src='/images/cloud.gif'

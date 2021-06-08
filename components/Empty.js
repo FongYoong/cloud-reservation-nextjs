@@ -10,6 +10,7 @@ export default memo(function Empty ({ children, ...props }) {
                 <Heading textAlign='center' mb={2} fontSize="xl" {...props} > Wow, such empty... </Heading>
                 <Box borderRadius='2xl' overflow="hidden" bg="white" lineHeight="0" >
                     <Image
+                        priority={true}
                         width='400'
                         height='300'
                         src='/images/cat_hands.gif'

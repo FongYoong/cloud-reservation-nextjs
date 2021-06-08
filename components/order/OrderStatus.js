@@ -25,6 +25,7 @@ const CustomImage = ({src, alt, ...props}) => {
     return (
         <Box borderRadius="full" overflow="hidden" bg="white" lineHeight="0" {...props} >
             <Image
+                priority={true}
                 width='150'
                 height='150'
                 src={src}
