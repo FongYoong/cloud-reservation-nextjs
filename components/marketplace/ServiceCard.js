@@ -135,7 +135,7 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
                         <Image
                             priority={true}
                             layout="fill"
-                            objectFit="cover"
+                            objectFit={imageUrls && imageUrls[1] ? "contain" : "cover"}
                             src={imageUrls && imageUrls[1] ? imageUrls[1] : '/images/cat_hands.gif'}
                             alt="Alternative Preview"
                         />
@@ -186,24 +186,3 @@ const MediaPreview = memo(({imageUrls, videoUrl, ...props}) => {
         </Box>
     )
 });
-
-/*
-
-<Img
-    w='100%'
-    h='100%'
-    objectFit='fill'
-    borderRadius="sm"
-    src={imageUrls && imageUrls[1] ? imageUrls[1] : '/images/cat_hands.gif'}
-    alt="Alternative Preview"
-/> 
-<Img
-    w='100%'
-    h='100%'
-    objectFit='fill'
-    borderRadius="sm"
-    src={imageUrls ? imageUrls[0] : '/images/no_image.jpg'}
-    alt="No Image"
-/>
-
-*/

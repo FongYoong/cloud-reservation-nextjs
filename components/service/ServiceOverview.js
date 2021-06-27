@@ -114,6 +114,7 @@ const CustomImage = ({original, w, h}) => {
                     priority={true}
                     width={w}
                     height={h}
+                    objectFit="contain"
                     src={original}
                     alt='Image'
                 />
